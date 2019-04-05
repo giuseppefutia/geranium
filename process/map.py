@@ -1,6 +1,14 @@
 import json
 import pprint
 from rdflib import URIRef, Literal, Namespace, Graph
+from rdflib.namespace import FOAF
+
+def add_author_name(author):
+	if author['authority'] not in authors:
+		graph.add( ( GERANIUM_AUT[author['authority']],
+			FOAF.name,
+			Literal(author['author']) ) )
+		authors.add(author['authority'])
 
 # read json file
 with open('publications-sample.json', 'r') as file:
@@ -18,6 +26,9 @@ PURL = Namespace("http://purl.org/dc/terms/")
 # create RDF graph
 graph = Graph()
 
+# authors set
+authors = set()
+
 # list for publications URIs
 for record in records:
 	try:
@@ -34,12 +45,16 @@ for record in records:
 	graph.add( ( GERANIUM_PUB[str(record['handle'])], 
 				PURL.creator,
 				GERANIUM_AUT[author['authority']] ) )
-
+	# add author name relationship
+	add_author_name(author)
+	
 	# add publication contributor relationship
 	for author in record['internalAuthors'][1:]:
 			graph.add( ( GERANIUM_PUB[str(record['handle'])], 
 				PURL.contributor,
 				GERANIUM_AUT[author['authority']]) )
+			# add author name relationship
+			add_author_name(author)
 
 # serialize graph
 serialized = graph.serialize(format='xml')

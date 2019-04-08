@@ -3,11 +3,17 @@ import pprint
 from rdflib import URIRef, Literal, Namespace, Graph
 from rdflib.namespace import FOAF
 
-def add_author_name(author):
+def add_author(author):
 	if author['authority'] not in authors:
+		# add author name relationship
 		graph.add( ( GERANIUM_AUT[author['authority']],
 			FOAF.name,
 			Literal(author['author']) ) )
+		# add author identifier relationship
+		graph.add( ( GERANIUM_AUT[author['authority']],
+			PURL.identifier,
+			Literal(author['authority']) ) )
+
 		authors.add(author['authority'])
 
 # read json file
@@ -34,9 +40,13 @@ for record in records:
 	try:
 		# add publication abstract relationship
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
-		PURL.abstract, 
-		Literal(record['metadata']['dc.description.abstract'][0]['value'])) )
-		
+			PURL.abstract, 
+			Literal(record['metadata']['dc.description.abstract'][0]['value'])) )
+
+		# add publication identifier relationship
+		graph.add( (GERANIUM_PUB[str(record['handle'])], 
+			PURL.identifier, 
+			Literal(str(record['handle']))) )
 	except:
 		pass
 
@@ -45,16 +55,14 @@ for record in records:
 	graph.add( ( GERANIUM_PUB[str(record['handle'])], 
 				PURL.creator,
 				GERANIUM_AUT[author['authority']] ) )
-	# add author name relationship
-	add_author_name(author)
+	add_author(author)
 	
 	# add publication contributor relationship
 	for author in record['internalAuthors'][1:]:
-			graph.add( ( GERANIUM_PUB[str(record['handle'])], 
-				PURL.contributor,
-				GERANIUM_AUT[author['authority']]) )
-			# add author name relationship
-			add_author_name(author)
+		graph.add( ( GERANIUM_PUB[str(record['handle'])], 
+			PURL.contributor,
+			GERANIUM_AUT[author['authority']]) )
+		add_author(author)
 
 # serialize graph
 serialized = graph.serialize(format='xml')

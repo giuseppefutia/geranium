@@ -47,6 +47,11 @@ for record in records:
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
 			PURL.identifier, 
 			Literal(str(record['handle']))) )
+
+		# add publication issued date relationship
+		graph.add( (GERANIUM_PUB[str(record['handle'])], 
+			PURL.issued, 
+			Literal(str(record['metadata']['dc.date.issued'][0]['value']))) )
 	except:
 		pass
 

@@ -24,7 +24,7 @@ def get_topics(text, num_topics=5):
 	return topics
 
 def add_author(author):
-	if author['authority'] not in authors:
+	if author['authority'] not in authors  and author['authority']:
 		# add author name relationship
 		graph.add( ( GERANIUM_AUT[author['authority']],
 			FOAF.name,

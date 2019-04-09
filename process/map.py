@@ -1,7 +1,27 @@
 import json
 import pprint
+import requests
 from rdflib import URIRef, Literal, Namespace, Graph
-from rdflib.namespace import FOAF
+from rdflib.namespace import FOAF, XSD
+
+def get_topics(text, num_topics=5):
+	"""
+	Sends a POST request to TellMeFirst and retrieves n topics (Where n is equal to num_topics).
+	:return: List of strings containing the topics extracted by TellMeFirst
+	"""
+
+	# TellMeFirst API interaction
+	files = {'text': text,
+	         'numTopics': num_topics,
+	         'lang': 'english'}
+	r = requests.post(url='http://tellmefirst.polito.it:2222/rest/classify', files=files)
+
+	topics = []
+	if r.status_code == 200:
+	    data = r.json()
+	    for resource in data['Resources']:
+	        topics.append(resource['@label'])
+	return topics
 
 def add_author(author):
 	if author['authority'] not in authors:
@@ -39,21 +59,34 @@ authors = set()
 for record in records:
 	try:
 		# add publication abstract relationship
+		abstract = record['metadata']['dc.description.abstract'][0]['value']
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
 			PURL.abstract, 
-			Literal(record['metadata']['dc.description.abstract'][0]['value'])) )
+			Literal(abstract)) )
 
-		# add publication identifier relationship
+		# add topics to publication
+		num_topics = 5
+		topics = get_topics(abstract, num_topics)
+		for topic in topics:
+			graph.add( (GERANIUM_PUB[str(record['handle'])], 
+				PURL.subject, 
+				Literal(topic)) )
+
+	except:
+		pass
+
+	# add publication identifier relationship
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
 			PURL.identifier, 
 			Literal(str(record['handle']))) )
-
-		# add publication issued date relationship
-		graph.add( (GERANIUM_PUB[str(record['handle'])], 
-			PURL.issued, 
-			Literal(str(record['metadata']['dc.date.issued'][0]['value']))) )
-	except:
-		pass
+	# add publication submission date relationship
+	graph.add( (GERANIUM_PUB[str(record['handle'])], 
+		PURL.dateSubmitted, 
+		Literal(str(record['lookupValues']['subdate'])[:10], datatype=XSD.date)) )
+	# add publication journal relationship
+	graph.add( (GERANIUM_PUB[str(record['handle'])], 
+		PURL.publisher, 
+		Literal(str(record['lookupValues']['jissn']))) )
 
 	# add publication creator relationship
 	author = record['internalAuthors'][0]

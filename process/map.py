@@ -47,13 +47,15 @@ records = data['records']
 # define namespaces 
 GERANIUM_PUB = Namespace("http://geranium-project.org/publications/")
 GERANIUM_AUT = Namespace("http://geranium-project.org/authors/")
+GERANIUM_JOU = Namespace("http://geranium-project.org/journals/")
 PURL = Namespace("http://purl.org/dc/terms/")
 
 # create RDF graph
 graph = Graph()
 
-# authors set
+# authors and journals set
 authors = set()
+journals = set()
 
 # list for publications URIs
 for record in records:
@@ -65,7 +67,7 @@ for record in records:
 			Literal(abstract)) )
 
 		# add topics to publication
-		num_topics = 5
+		num_topics = 7
 		topics = get_topics(abstract, num_topics)
 		for topic in topics:
 			graph.add( (GERANIUM_PUB[str(record['handle'])], 
@@ -83,10 +85,14 @@ for record in records:
 	graph.add( (GERANIUM_PUB[str(record['handle'])], 
 		PURL.dateSubmitted, 
 		Literal(str(record['lookupValues']['subdate'])[:10], datatype=XSD.date)) )
+	# add journal entity
+	graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+		PURL.identifier,
+		Literal(str(record['lookupValues']['jissn']))) )
 	# add publication journal relationship
 	graph.add( (GERANIUM_PUB[str(record['handle'])], 
 		PURL.publisher, 
-		Literal(str(record['lookupValues']['jissn']))) )
+		GERANIUM_JOU[str(record['lookupValues']['jissn'])]) )
 
 	# add publication creator relationship
 	author = record['internalAuthors'][0]

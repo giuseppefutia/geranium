@@ -24,7 +24,7 @@ def get_topics(text, num_topics=5):
 	return topics
 
 def add_author(author):
-	if author['authority'] not in authors  and author['authority']:
+	if author['authority'] not in authors and author['authority']:
 		# add author name relationship
 		graph.add( ( GERANIUM_AUT[author['authority']],
 			FOAF.name,
@@ -58,7 +58,7 @@ authors = set()
 journals = set()
 
 # list for publications URIs
-for record in records:
+for record in records[:10]:
 	try:
 		# add publication abstract relationship
 		abstract = record['metadata']['dc.description.abstract'][0]['value']
@@ -85,14 +85,17 @@ for record in records:
 	graph.add( (GERANIUM_PUB[str(record['handle'])], 
 		PURL.dateSubmitted, 
 		Literal(str(record['lookupValues']['subdate'])[:10], datatype=XSD.date)) )
-	# add journal entity
-	graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
-		PURL.identifier,
-		Literal(str(record['lookupValues']['jissn']))) )
-	# add publication journal relationship
-	graph.add( (GERANIUM_PUB[str(record['handle'])], 
-		PURL.publisher, 
-		GERANIUM_JOU[str(record['lookupValues']['jissn'])]) )
+	
+	# control if the publication is associated with a journal
+	if record['lookupValues']['jissn']:
+		# add journal entity
+		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+			PURL.identifier,
+			Literal(str(record['lookupValues']['jissn']))) )
+		# add publication journal relationship
+		graph.add( (GERANIUM_PUB[str(record['handle'])], 
+			PURL.publisher, 
+			GERANIUM_JOU[str(record['lookupValues']['jissn'])]) )
 
 	# add publication creator relationship
 	author = record['internalAuthors'][0]

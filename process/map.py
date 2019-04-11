@@ -4,10 +4,16 @@ import requests
 from rdflib import URIRef, Literal, Namespace, Graph
 from rdflib.namespace import FOAF, XSD, RDF
 
+def assign_type(topics, subject_type):
+	for topic in topics:
+		graph.add( (topic,
+			RDF.type,
+			subject_type) )
+
 def get_topics(text, num_topics=7):
 	"""
 	Sends a POST request to TellMeFirst and retrieves n topics (Where n is equal to num_topics).
-	:return: List of strings containing the topics extracted by TellMeFirst
+	:return: List of strings containing the topic URIs extracted by TellMeFirst
 	"""
 
 	# TellMeFirst API interaction
@@ -24,7 +30,10 @@ def get_topics(text, num_topics=7):
 	return topics
 
 def add_author(author):
-	if author['authority'] not in authors and author['authority']:
+	'''
+	Add author entity to the graph
+	'''
+	if author['authority'] not in authors:
 		# add author name relationship
 		graph.add( ( GERANIUM_AUT[author['authority']],
 			FOAF.name,
@@ -51,6 +60,10 @@ GERANIUM_JOU = Namespace("http://geranium-project.org/journals/")
 GERANIUM_KEY = Namespace("http://geranium-project.org/keywords/") 
 PURL = Namespace("http://purl.org/dc/terms/")
 
+# define types
+GERANIUM_ONTOLOGY_TMF = URIRef("http://geranium-project.org/ontology/TMFResource")
+GERANIUM_ONTOLOGY_KEY = URIRef("http://geranium-project.org/ontology/AuthorKeyword")
+
 # create RDF graph
 graph = Graph()
 
@@ -59,7 +72,7 @@ authors = set()
 journals = set()
 
 # list for publications URIs
-for record in records[:10]:
+for record in records[:100]:
 	topics = []
 	abstract = None
 	json_topics = []
@@ -71,27 +84,32 @@ for record in records[:10]:
 			PURL.abstract, 
 			Literal(abstract)) )
 
-	except:
-		pass
+	except Exception as error:
+		print(error)
 
 	try:
 		# add topics to publication		
 		json_topics = record['metadata']['dc.subject.keywords'][0]['value']
 		
 		if json_topics:
-			json_topics = json_topics.replace(',',';').split(';')
-			topics = [GERANIUM_KEY[str(t.strip().replace(' ', '%20'))] for t in json_topics]
-	except:
-		pass
+			json_topics = json_topics.replace(',',';').replace('·',';').split(';')
+			json_topics = [GERANIUM_KEY[str(t.strip().replace(' ', '%20'))] for t in json_topics]
+			assign_type(json_topics, GERANIUM_ONTOLOGY_KEY)
+	except Exception as error:
+		print(error)
 
 	try:
 		num_topics = 7
 		tmf_topics = get_topics(abstract, num_topics)		
-		tmf_topics = [URIRef(uri) for uri in tmf_topics]		
+		tmf_topics = [URIRef(uri) for uri in tmf_topics]
+		assign_type(tmf_topics, GERANIUM_ONTOLOGY_TMF)		
+	except Exception as error:
+		print(error)
 
-		topics.extend(tmf_topics)
-	except:
-		pass
+	topics.extend(json_topics)
+	topics.extend(tmf_topics)
+
+
 	if topics:
 		for topic in topics:
 			graph.add( (GERANIUM_PUB[str(record['handle'])], 
@@ -120,17 +138,19 @@ for record in records[:10]:
 
 	# add publication creator relationship
 	author = record['internalAuthors'][0]
-	graph.add( ( GERANIUM_PUB[str(record['handle'])], 
-				PURL.creator,
-				GERANIUM_AUT[author['authority']] ) )
-	add_author(author)
+	if author['authority']:
+		graph.add( ( GERANIUM_PUB[str(record['handle'])], 
+					PURL.creator,
+					GERANIUM_AUT[author['authority']] ) )
+		add_author(author)
 	
 	# add publication contributor relationship
 	for author in record['internalAuthors'][1:]:
-		graph.add( ( GERANIUM_PUB[str(record['handle'])], 
-			PURL.contributor,
-			GERANIUM_AUT[author['authority']]) )
-		add_author(author)
+		if author['authority']:
+			graph.add( ( GERANIUM_PUB[str(record['handle'])], 
+				PURL.contributor,
+				GERANIUM_AUT[author['authority']]) )
+			add_author(author)
 
 # serialize graph
 serialized = graph.serialize(format='xml')

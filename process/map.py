@@ -72,7 +72,7 @@ authors = set()
 journals = set()
 
 # list for publications URIs
-for record in records[:100]:
+for record in records:
 	topics = []
 	abstract = None
 	json_topics = []
@@ -92,7 +92,7 @@ for record in records[:100]:
 		json_topics = record['metadata']['dc.subject.keywords'][0]['value']
 		
 		if json_topics:
-			json_topics = json_topics.replace(',',';').replace('·',';').split(';')
+			json_topics = json_topics.replace('\t',';').replace('\r\n',';').replace(',',';').replace('·',';').split(';')
 			json_topics = [GERANIUM_KEY[str(t.strip().replace(' ', '%20'))] for t in json_topics]
 			assign_type(json_topics, GERANIUM_ONTOLOGY_KEY)
 	except Exception as error:

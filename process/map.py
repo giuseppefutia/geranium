@@ -1,8 +1,19 @@
 import json
 import pprint
+import sys
 import requests
 from rdflib import URIRef, Literal, Namespace, Graph
 from rdflib.namespace import FOAF, XSD, RDF
+from urllib.parse import quote
+
+def progressBar(value, endvalue, bar_length=20):
+
+        percent = float(value) / endvalue
+        arrow = '-' * int(round(percent * bar_length)-1) + '>'
+        spaces = ' ' * (bar_length - len(arrow))
+
+        sys.stdout.write("\rPercent: [{0}] {1}%".format(arrow + spaces, int(round(percent * 100))))
+        sys.stdout.flush()
 
 def assign_type(topics, subject_type):
 	for topic in topics:
@@ -72,6 +83,7 @@ authors = set()
 journals = set()
 
 # list for publications URIs
+progress = 0
 for record in records:
 	topics = []
 	abstract = None
@@ -85,18 +97,21 @@ for record in records:
 			Literal(abstract)) )
 
 	except Exception as error:
-		print(error)
+		#print(error)
+		pass
 
 	try:
 		# add topics to publication		
 		json_topics = record['metadata']['dc.subject.keywords'][0]['value']
 		
 		if json_topics:
-			json_topics = json_topics.replace('\t',';').replace('\r\n',';').replace(',',';').replace('·',';').split(';')
-			json_topics = [GERANIUM_KEY[str(t.strip().replace(' ', '%20'))] for t in json_topics]
+			json_topics = json_topics.replace('#',';').replace('\t',';').replace('\r\n',';').replace(',',';').replace('·',';').split(';')
+			json_topics = [str(t.replace('"', '').strip().replace(' ', '%20')) for t in json_topics]
+			json_topics = [GERANIUM_KEY[quote(t)] for t in json_topics if len(t)>0]
 			assign_type(json_topics, GERANIUM_ONTOLOGY_KEY)
 	except Exception as error:
-		print(error)
+		#print(error)
+		pass
 
 	try:
 		num_topics = 7
@@ -104,7 +119,8 @@ for record in records:
 		tmf_topics = [URIRef(uri) for uri in tmf_topics]
 		assign_type(tmf_topics, GERANIUM_ONTOLOGY_TMF)		
 	except Exception as error:
-		print(error)
+		#print(error)
+		pass
 
 	topics.extend(json_topics)
 	topics.extend(tmf_topics)
@@ -151,6 +167,11 @@ for record in records:
 				PURL.contributor,
 				GERANIUM_AUT[author['authority']]) )
 			add_author(author)
+
+	progress+=1
+	progressBar(progress, len(records), bar_length=100)
+
+print('\n')
 
 # serialize graph
 serialized = graph.serialize(format='xml')

@@ -2,9 +2,9 @@ import json
 import pprint
 import requests
 from rdflib import URIRef, Literal, Namespace, Graph
-from rdflib.namespace import FOAF, XSD
+from rdflib.namespace import FOAF, XSD, RDF
 
-def get_topics(text, num_topics=5):
+def get_topics(text, num_topics=7):
 	"""
 	Sends a POST request to TellMeFirst and retrieves n topics (Where n is equal to num_topics).
 	:return: List of strings containing the topics extracted by TellMeFirst
@@ -15,12 +15,12 @@ def get_topics(text, num_topics=5):
 	         'numTopics': num_topics,
 	         'lang': 'english'}
 	r = requests.post(url='http://tellmefirst.polito.it:2222/rest/classify', files=files)
-
+	
 	topics = []
 	if r.status_code == 200:
 	    data = r.json()
 	    for resource in data['Resources']:
-	        topics.append(resource['@label'])
+	        topics.append(resource['@uri'])
 	return topics
 
 def add_author(author):
@@ -48,6 +48,7 @@ records = data['records']
 GERANIUM_PUB = Namespace("http://geranium-project.org/publications/")
 GERANIUM_AUT = Namespace("http://geranium-project.org/authors/")
 GERANIUM_JOU = Namespace("http://geranium-project.org/journals/")
+GERANIUM_KEY = Namespace("http://geranium-project.org/keywords/") 
 PURL = Namespace("http://purl.org/dc/terms/")
 
 # create RDF graph
@@ -59,6 +60,10 @@ journals = set()
 
 # list for publications URIs
 for record in records[:10]:
+	topics = []
+	abstract = None
+	json_topics = []
+	tmf_topics = []
 	try:
 		# add publication abstract relationship
 		abstract = record['metadata']['dc.description.abstract'][0]['value']
@@ -66,16 +71,32 @@ for record in records[:10]:
 			PURL.abstract, 
 			Literal(abstract)) )
 
-		# add topics to publication
+	except:
+		pass
+
+	try:
+		# add topics to publication		
+		json_topics = record['metadata']['dc.subject.keywords'][0]['value']
+		
+		if json_topics:
+			json_topics = json_topics.replace(',',';').split(';')
+			topics = [GERANIUM_KEY[str(t.strip().replace(' ', '%20'))] for t in json_topics]
+	except:
+		pass
+
+	try:
 		num_topics = 7
-		topics = get_topics(abstract, num_topics)
+		tmf_topics = get_topics(abstract, num_topics)		
+		tmf_topics = [URIRef(uri) for uri in tmf_topics]		
+
+		topics.extend(tmf_topics)
+	except:
+		pass
+	if topics:
 		for topic in topics:
 			graph.add( (GERANIUM_PUB[str(record['handle'])], 
 				PURL.subject, 
-				Literal(topic)) )
-
-	except:
-		pass
+				topic) )
 
 	# add publication identifier relationship
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 

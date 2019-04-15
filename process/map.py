@@ -64,16 +64,17 @@ with open('publications-sample.json', 'r') as file:
 data = json.loads(content)
 records = data['records']
 
-# define namespaces 
-GERANIUM_PUB = Namespace("http://geranium-project.org/publications/")
-GERANIUM_AUT = Namespace("http://geranium-project.org/authors/")
-GERANIUM_JOU = Namespace("http://geranium-project.org/journals/")
-GERANIUM_KEY = Namespace("http://geranium-project.org/keywords/") 
+# define namespaces
+BASE_URL = 'http://geranium-project.org/'
+GERANIUM_PUB = Namespace(BASE_URL+"publications/")
+GERANIUM_AUT = Namespace(BASE_URL+"authors/")
+GERANIUM_JOU = Namespace(BASE_URL+"journals/")
+GERANIUM_KEY = Namespace(BASE_URL+"keywords/") 
 PURL = Namespace("http://purl.org/dc/terms/")
 
 # define types
-GERANIUM_ONTOLOGY_TMF = URIRef("http://geranium-project.org/ontology/TMFResource")
-GERANIUM_ONTOLOGY_KEY = URIRef("http://geranium-project.org/ontology/AuthorKeyword")
+GERANIUM_ONTOLOGY_TMF = URIRef(BASE_URL+"ontology/TMFResource")
+GERANIUM_ONTOLOGY_KEY = URIRef(BASE_URL+"ontology/AuthorKeyword")
 
 # create RDF graph
 graph = Graph()

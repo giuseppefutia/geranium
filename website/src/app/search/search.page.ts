@@ -18,6 +18,6 @@ export class SearchPage implements OnInit {
       return;
     }
     const searchKey = form.value.searchkey;
-    this.router.navigate(['/', 'search', searchKey]);
+    this.router.navigate(['/', 'results', searchKey]);
   }
 }

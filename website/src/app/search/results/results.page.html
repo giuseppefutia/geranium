@@ -1,43 +1,159 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Results</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/search"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Results for "{{ searchKey }}"</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-grid>
+    <ion-row>
+      <ion-col no-padding>
+        <div text-center>
+          <ion-text color="primary">
+            <h2>
+              <b>Papers</b>
+            </h2>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
     <ion-row justify-content-center align-items-center>
       <ion-col size-md="1" text-center class="ion-hide-sm-down">
-        <ion-button shape="round" expand="block" no-padding (click)="goLeft()">
+        <ion-button
+          shape="round"
+          expand="block"
+          no-padding
+          (click)="papersLeft()"
+        >
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
       <ion-col size-md="10">
         <ion-slides
-          [options]="sliderOpts"
+          [options]="papersOpts"
           scrollbar="true"
           #papersSlides
-          (ionSlideTransitionEnd)="onTransitionEnd()"
+          (ionSlideTransitionEnd)="papersTransitionEnd()"
         >
           <ion-slide *ngFor="let paper of showedPapers">
             <ion-card>
               <ion-card-header>
-                <ion-card-title
-                  ><h2>
+                <ion-card-title>
+                  <h3>
                     <b>{{ paper.title }}</b>
-                  </h2></ion-card-title
-                >
-                <ion-card-content text-center>
-                  <p>{{ paper.authors.join(', ') }}</p>
-                  <ion-button color="primary" fill="outline">More</ion-button>
-                </ion-card-content>
+                  </h3>
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content text-center>
+                <p>{{ paper.authors.join(', ') }}</p>
+                <ion-button color="primary" fill="outline">More</ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+        <ion-button
+          shape="round"
+          expand="block"
+          no-padding
+          (click)="papersRight()"
+        >
+          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col padding-top>
+        <div text-center>
+          <ion-text color="primary">
+            <h2>
+              <b>Authors</b>
+            </h2>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-center align-items-center>
+      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+        <ion-button
+          shape="round"
+          expand="block"
+          no-padding
+          (click)="authorsLeft()"
+        >
+          <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size-md="10">
+        <ion-slides [options]="authorsOpts" scrollbar="true" #authorsSlides>
+          <ion-slide *ngFor="let paper of showedPapers" tappable>
+            <ion-card>
+              <ion-card-header text-center>
+                <ion-card-subtitle>
+                  {{ paper.authors.join(', ') }}
+                </ion-card-subtitle>
               </ion-card-header>
             </ion-card>
           </ion-slide>
         </ion-slides>
       </ion-col>
       <ion-col size-md="1" text-center class="ion-hide-sm-down">
-        <ion-button shape="round" expand="block" no-padding (click)="goRight()">
+        <ion-button
+          shape="round"
+          expand="block"
+          no-padding
+          (click)="authorsRight()"
+        >
+          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col padding-top>
+        <div text-center>
+          <ion-text color="primary">
+            <h2>
+              <b>Journals</b>
+            </h2>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-center align-items-center>
+      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+        <ion-button
+          shape="round"
+          expand="block"
+          no-padding
+          (click)="journalsLeft()"
+        >
+          <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size-md="10">
+        <ion-slides [options]="authorsOpts" scrollbar="true" #journalsSlides>
+          <ion-slide *ngFor="let paper of showedPapers" tappable>
+            <ion-card>
+              <ion-card-header text-center>
+                <ion-card-subtitle>
+                  {{ paper.authors.join(', ') }}
+                </ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+        <ion-button
+          shape="round"
+          expand="block"
+          no-padding
+          (click)="journalsRight()"
+        >
           <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, IonSlides } from '@ionic/angular';
 import { PapersService } from '../services/papers.service';
+import { IonSlides, NavController } from '@ionic/angular';
 import { Paper } from '../models/paper.model';
 
 @Component({
@@ -10,36 +10,56 @@ import { Paper } from '../models/paper.model';
   styleUrls: ['./results.page.scss']
 })
 export class ResultsPage implements OnInit {
-  @ViewChild('papersSlides') slides: IonSlides;
+  @ViewChild('papersSlides') papersSlides: IonSlides;
+  @ViewChild('authorsSlides') authorsSlides: IonSlides;
+  @ViewChild('journalsSlides') journalsSlides: IonSlides;
+  searchKey: string;
   allPapers: Paper[];
   showedPapers: Paper[];
 
-  sliderOpts = {
+  papersOpts = {
     zoom: false,
-    slidesPerView: 4.5,
+    slidesPerView: 4.3,
     grabCursor: true,
     spaceBetween: 5,
     centeredSlides: false,
     breakpoints: {
-      // Ionic Responsive Grid breakpoints
-      520: {
+      550: {
         slidesPerView: 1,
-        spaceBetween: 5
       },
-      720: {
+      870: {
         slidesPerView: 2.2,
-        spaceBetween: 5
       },
-      960: {
+      1200: {
         slidesPerView: 3.2,
-        spaceBetween: 5
-      },
-      1140: {
-        slidesPerView: 4.2,
-        spaceBetween: 5
       }
     }
   };
+
+  authorsOpts = {
+    zoom: false,
+    slidesPerView: 6.5,
+    grabCursor: true,
+    spaceBetween: 5,
+    centeredSlides: false,
+    breakpoints: {
+      350: {
+        slidesPerView: 1.5,
+      },
+      550: {
+        slidesPerView: 2.5,
+      },
+      768: {
+        slidesPerView: 3.5,
+      },
+      1000: {
+        slidesPerView: 4.5,
+      },
+      1200: {
+        slidesPerView: 5.5,
+      }
+    }
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -53,37 +73,61 @@ export class ResultsPage implements OnInit {
         this.navCtrl.navigateBack(['/']);
         return;
       }
-      const searchKey = paramMap.get('searchKey');
-      this.allPapers = this.papersService.getPapers();
+      this.searchKey = paramMap.get('searchKey');
+      this.allPapers = this.papersService.getPapers(this.searchKey);
       this.showedPapers = this.allPapers;
     });
   }
 
-  onTransitionEnd() {
-    this.slides.getActiveIndex().then(actIndex => {
-      this.slides.length().then(len => {
+  papersTransitionEnd() {
+    this.papersSlides.getActiveIndex().then(actIndex => {
+      this.papersSlides.length().then(len => {
         if (actIndex >= len - 10) {
-          this.slides.lockSwipes(true).then();
+          this.papersSlides.lockSwipes(true).then();
           // Add papers to showedPapers
           this.showedPapers = this.showedPapers.concat(
-            this.papersService.getPapers()
+            this.papersService.getPapers('abc')
           );
-          this.slides.update().then();
-          this.slides.lockSwipes(false).then();
+          this.papersSlides.update().then();
+          this.papersSlides.lockSwipes(false).then();
         }
       });
     });
   }
 
-  goLeft() {
-    this.slides.getActiveIndex().then(i => {
-      this.slides.slideTo(i - 3).then();
+  papersLeft() {
+    this.papersSlides.getActiveIndex().then(i => {
+      this.papersSlides.slideTo(i - 3).then();
     });
   }
 
-  goRight() {
-    this.slides.getActiveIndex().then(i => {
-      this.slides.slideTo(i + 3).then();
+  papersRight() {
+    this.papersSlides.getActiveIndex().then(i => {
+      this.papersSlides.slideTo(i + 3).then();
+    });
+  }
+
+  authorsLeft() {
+    this.authorsSlides.getActiveIndex().then(i => {
+      this.authorsSlides.slideTo(i - 3).then();
+    });
+  }
+
+  authorsRight() {
+    this.authorsSlides.getActiveIndex().then(i => {
+      this.authorsSlides.slideTo(i + 3).then();
+    });
+  }
+
+  journalsLeft() {
+    this.journalsSlides.getActiveIndex().then(i => {
+      this.journalsSlides.slideTo(i + 3).then();
+    });
+  }
+
+  journalsRight() {
+    this.journalsSlides.getActiveIndex().then(i => {
+      this.journalsSlides.slideTo(i + 3).then();
     });
   }
 }

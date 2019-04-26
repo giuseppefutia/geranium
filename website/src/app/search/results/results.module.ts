@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ActivatedRoute } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-
 import { ResultsPage } from './results.page';
 
 const routes: Routes = [
@@ -19,8 +18,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes)
   ],
   declarations: [ResultsPage]
 })
-export class ResultsPageModule {}
+export class ResultsPageModule { }

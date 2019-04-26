@@ -5,16 +5,11 @@ const routes: Routes = [
   { path: '', redirectTo: 'search', pathMatch: 'full' },
   {
     path: 'search',
-    children: [
-      {
-        path: '',
-        loadChildren: './search/search.module#SearchPageModule'
-      },
-      {
-        path: ':searchKey',
-        loadChildren: './search/results/results.module#ResultsPageModule'
-      }
-    ]
+    loadChildren: './search/search.module#SearchPageModule'
+  },
+  {
+    path: 'results/:searchKey',
+    loadChildren: './search/results/results.module#ResultsPageModule'
   }
 ];
 
@@ -24,4 +19,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

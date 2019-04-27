@@ -101,7 +101,7 @@ journals = set()
 
 # list for publications URIs
 progress = 0
-for record in records[:10]:
+for record in records:
 	topics = []
 	abstract = None
 	json_topics = []

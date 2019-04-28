@@ -3,6 +3,7 @@ export class Paper {
     public id: string,
     public title: string,
     public abstract: string,
-    public authors: string[]
+    public authors: string[],
+    public publicationDate: Date
   ) {}
 }

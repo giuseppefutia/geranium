@@ -21,7 +21,7 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-center align-items-center>
-      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
@@ -31,7 +31,7 @@
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col size-md="10">
+      <ion-col size-lg="10">
         <ion-slides
           [options]="papersOpts"
           scrollbar="true"
@@ -49,13 +49,13 @@
               </ion-card-header>
               <ion-card-content text-center>
                 <p>{{ paper.authors.join(', ') }}</p>
-                <ion-button color="primary" fill="outline">More</ion-button>
+                <ion-button color="primary" fill="outline" (click)="onPaperDetailClick(paper.id)">More</ion-button>
               </ion-card-content>
             </ion-card>
           </ion-slide>
         </ion-slides>
       </ion-col>
-      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
@@ -78,7 +78,7 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-center align-items-center>
-      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
@@ -88,7 +88,7 @@
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col size-md="10">
+      <ion-col size-lg="10">
         <ion-slides [options]="authorsOpts" scrollbar="true" #authorsSlides>
           <ion-slide *ngFor="let paper of showedPapers" tappable>
             <ion-card>
@@ -101,7 +101,7 @@
           </ion-slide>
         </ion-slides>
       </ion-col>
-      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
@@ -124,7 +124,7 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-center align-items-center>
-      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
@@ -134,7 +134,7 @@
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col size-md="10">
+      <ion-col size-lg="10">
         <ion-slides [options]="authorsOpts" scrollbar="true" #journalsSlides>
           <ion-slide *ngFor="let paper of showedPapers" tappable>
             <ion-card>
@@ -147,7 +147,7 @@
           </ion-slide>
         </ion-slides>
       </ion-col>
-      <ion-col size-md="1" text-center class="ion-hide-sm-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"

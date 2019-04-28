@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PapersService } from '../services/papers.service';
-import { IonSlides, NavController } from '@ionic/angular';
+import { IonSlides, NavController, ModalController } from '@ionic/angular';
 import { Paper } from '../models/paper.model';
+import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 
 @Component({
   selector: 'app-results',
@@ -25,13 +26,13 @@ export class ResultsPage implements OnInit {
     centeredSlides: false,
     breakpoints: {
       550: {
-        slidesPerView: 1,
+        slidesPerView: 1
       },
-      870: {
-        slidesPerView: 2.2,
+      768: {
+        slidesPerView: 2.2
       },
       1200: {
-        slidesPerView: 3.2,
+        slidesPerView: 3.2
       }
     }
   };
@@ -44,27 +45,28 @@ export class ResultsPage implements OnInit {
     centeredSlides: false,
     breakpoints: {
       350: {
-        slidesPerView: 1.5,
+        slidesPerView: 1.5
       },
       550: {
-        slidesPerView: 2.5,
+        slidesPerView: 2.5
       },
       768: {
-        slidesPerView: 3.5,
+        slidesPerView: 3.5
       },
       1000: {
-        slidesPerView: 4.5,
+        slidesPerView: 4.5
       },
       1200: {
-        slidesPerView: 5.5,
+        slidesPerView: 5.5
       }
     }
-  }
+  };
 
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private papersService: PapersService
+    private papersService: PapersService,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
@@ -77,6 +79,18 @@ export class ResultsPage implements OnInit {
       this.allPapers = this.papersService.getPapers(this.searchKey);
       this.showedPapers = this.allPapers;
     });
+  }
+
+  onPaperDetailClick(id: string) {
+    this.allPapers.find(el => el.id === id);
+    this.modalCtrl
+      .create({
+        component: PaperDetailComponent,
+        componentProps: { selectedPaper: this.showedPapers.find(el => el.id === id) }
+      })
+      .then(modalEl => {
+        modalEl.present();
+      });
   }
 
   papersTransitionEnd() {

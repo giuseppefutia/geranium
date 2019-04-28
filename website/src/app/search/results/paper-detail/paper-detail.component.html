@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Paper Detail</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onClose()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row no-padding>
+      <ion-col margin-top margin-start>
+        <h3 no-margin><b>Title</b></h3>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col offset="1" size="10">
+        <h5 no-margin>{{ selectedPaper.title }}</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col margin-top margin-start>
+        <h3 no-margin><b>Authors</b></h3>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col offset="1" size="10">
+        <p no-margin>{{ selectedPaper.authors.join(', ') }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col margin-top margin-start>
+        <h3 no-margin><b>Publication Date</b></h3>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col offset="1" size="10">
+        <p no-margin>
+          <i>{{ selectedPaper.publicationDate.toLocaleDateString() }}</i>
+        </p>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col margin-top margin-start>
+        <h3 no-margin><b>Abstract</b></h3>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col offset="1" size="10">
+        <p no-margin>
+          {{ selectedPaper.abstract }}
+        </p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

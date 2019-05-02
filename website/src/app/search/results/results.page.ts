@@ -1,14 +1,38 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PapersService } from '../services/papers.service';
 import { IonSlides, NavController, ModalController } from '@ionic/angular';
 import { Paper } from '../models/paper.model';
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate
+} from '@angular/animations';
 
 @Component({
   selector: 'app-results',
   templateUrl: './results.page.html',
-  styleUrls: ['./results.page.scss']
+  styleUrls: ['./results.page.scss'],
+  animations: [
+    trigger('fadeVisibility', [
+      state(
+        'visible',
+        style({
+          opacity: 1
+        })
+      ),
+      state(
+        'invisible',
+        style({
+          opacity: 0
+        })
+      ),
+      transition('* => *', animate('.2s ease-out'))
+    ])
+  ]
 })
 export class ResultsPage implements OnInit {
   @ViewChild('papersSlides') papersSlides: IonSlides;
@@ -16,7 +40,11 @@ export class ResultsPage implements OnInit {
   @ViewChild('journalsSlides') journalsSlides: IonSlides;
   searchKey: string;
   allPapers: Paper[];
-  showedPapers: Paper[];
+  showedPapers = new Array<Paper>();
+  private showedCount = 0;
+  isUpdating = false;
+  isLoading = true;
+  fadeState = 'invisible';
 
   papersOpts = {
     zoom: false,
@@ -70,15 +98,40 @@ export class ResultsPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('searchKey')) {
         this.navCtrl.navigateBack(['/']);
         return;
       }
       this.searchKey = paramMap.get('searchKey');
-      this.allPapers = this.papersService.getPapers(this.searchKey);
-      this.showedPapers = this.allPapers;
     });
+    setTimeout(() => {
+      this.allPapers = this.papersService.getPapers(this.searchKey);
+      this.allPapers = this.allPapers.concat(this.allPapers);
+      this.allPapers = this.allPapers.concat(this.allPapers);
+      this.allPapers = this.allPapers.concat(this.allPapers);
+      this.allPapers = this.allPapers.concat(this.allPapers);
+      this.allPapers = this.allPapers.concat(this.allPapers);
+      this.addToShowedPapers(10);
+      this.isLoading = false;
+    }, 1500);
+  }
+
+  ionViewDidEnter() {
+    this.fadeState = 'visible';
+  }
+
+  addToShowedPapers(howmany: number) {
+    let i: number;
+    for (
+      i = this.showedCount;
+      i < howmany + this.showedCount && i < this.allPapers.length;
+      i++
+    ) {
+      this.showedPapers.push(this.allPapers[i]);
+    }
+    this.showedCount = i;
   }
 
   onPaperDetailClick(id: string) {
@@ -86,7 +139,9 @@ export class ResultsPage implements OnInit {
     this.modalCtrl
       .create({
         component: PaperDetailComponent,
-        componentProps: { selectedPaper: this.showedPapers.find(el => el.id === id) }
+        componentProps: {
+          selectedPaper: this.showedPapers.find(el => el.id === id)
+        }
       })
       .then(modalEl => {
         modalEl.present();
@@ -97,13 +152,15 @@ export class ResultsPage implements OnInit {
     this.papersSlides.getActiveIndex().then(actIndex => {
       this.papersSlides.length().then(len => {
         if (actIndex >= len - 10) {
-          this.papersSlides.lockSwipes(true).then();
+          this.papersSlides
+            .lockSwipes(true)
+            .then(() => (this.isUpdating = true));
           // Add papers to showedPapers
-          this.showedPapers = this.showedPapers.concat(
-            this.papersService.getPapers('abc')
-          );
+          this.addToShowedPapers(6);
           this.papersSlides.update().then();
-          this.papersSlides.lockSwipes(false).then();
+          this.papersSlides
+            .lockSwipes(false)
+            .then(() => (this.isUpdating = false));
         }
       });
     });
@@ -135,7 +192,7 @@ export class ResultsPage implements OnInit {
 
   journalsLeft() {
     this.journalsSlides.getActiveIndex().then(i => {
-      this.journalsSlides.slideTo(i + 3).then();
+      this.journalsSlides.slideTo(i - 3).then();
     });
   }
 

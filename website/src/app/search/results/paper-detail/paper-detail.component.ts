@@ -5,17 +5,28 @@ import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'app-paper-detail',
   templateUrl: './paper-detail.component.html',
-  styleUrls: ['./paper-detail.component.scss'],
+  styleUrls: ['./paper-detail.component.scss']
 })
 export class PaperDetailComponent implements OnInit {
   @Input() selectedPaper: Paper;
 
-  constructor(private modalCtrl: ModalController) { }
+  authorsOpts = {
+    zoom: false,
+    slidesPerView: 3.5,
+    grabCursor: true,
+    centeredSlides: false,
+    breakpoints: {
+      1000: {
+        slidesPerView: 2.5
+      }
+    }
+  };
+
+  constructor(private modalCtrl: ModalController) {}
 
   ngOnInit() {}
 
   onClose() {
     this.modalCtrl.dismiss(null, 'close');
   }
-
 }

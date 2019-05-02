@@ -13,7 +13,9 @@
   <ion-grid>
     <ion-row no-padding>
       <ion-col margin-top margin-start>
-        <h3 no-margin><b>Title</b></h3>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Title</b></h3></ion-text
+        >
       </ion-col>
     </ion-row>
     <ion-row no-padding>
@@ -23,17 +25,31 @@
     </ion-row>
     <ion-row no-padding>
       <ion-col margin-top margin-start>
-        <h3 no-margin><b>Authors</b></h3>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Authors</b></h3></ion-text
+        >
       </ion-col>
     </ion-row>
     <ion-row no-padding>
       <ion-col offset="1" size="10">
-        <p no-margin>{{ selectedPaper.authors.join(', ') }}</p>
+        <ion-slides [options]="authorsOpts" #authorsSlides no-padding>
+          <ion-slide *ngFor="let author of selectedPaper.authors" tappable>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-content text-center no-padding>
+                  <h3>{{ author }}</h3>
+                </ion-card-content>
+              </ion-card-header>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
       </ion-col>
     </ion-row>
     <ion-row no-padding>
       <ion-col margin-top margin-start>
-        <h3 no-margin><b>Publication Date</b></h3>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Publication Date</b></h3></ion-text
+        >
       </ion-col>
     </ion-row>
     <ion-row no-padding>
@@ -45,7 +61,9 @@
     </ion-row>
     <ion-row no-padding>
       <ion-col margin-top margin-start>
-        <h3 no-margin><b>Abstract</b></h3>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Abstract</b></h3></ion-text
+        >
       </ion-col>
     </ion-row>
     <ion-row no-padding>

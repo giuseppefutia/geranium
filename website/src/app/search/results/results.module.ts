@@ -5,7 +5,7 @@ import { Routes, RouterModule} from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 import { ResultsPage } from './results.page';
-import { PaperDetailComponent } from "./paper-detail/paper-detail.component";
+import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 
 const routes: Routes = [
   {

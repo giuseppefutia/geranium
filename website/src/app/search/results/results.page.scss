@@ -1,13 +1,27 @@
 h3 {
-    line-height: 1em;
-    height: 3em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  line-height: 1em;
+  height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 p {
-    line-height: 1em;
-    height: 3em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  line-height: 1em;
+  height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ion-card {
+  border-radius: 20px !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

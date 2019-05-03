@@ -106,6 +106,7 @@ export class ResultsPage implements OnInit {
       }
       this.searchKey = paramMap.get('searchKey');
     });
+    this.addDummySlides(6);
     setTimeout(() => {
       this.allPapers = this.papersService.getPapers(this.searchKey);
       this.allPapers = this.allPapers.concat(this.allPapers);
@@ -113,9 +114,17 @@ export class ResultsPage implements OnInit {
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
+      this.showedPapers = [];
       this.addToShowedPapers(10);
       this.isLoading = false;
-    }, 1500);
+    }, 2000);
+  }
+
+  addDummySlides(howmany: number) {
+    let i: number;
+    for (i = 0; i < howmany; i++) {
+      this.showedPapers.push(new Paper('', '', '', [], new Date(0, 0, 0)));
+    }
   }
 
   ionViewDidEnter() {

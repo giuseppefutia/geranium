@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row [@fadeVisibility]="fadeState">
+    <ion-row>
       <ion-col no-padding>
         <div text-center>
           <ion-text color="primary">
@@ -20,19 +20,14 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row
-      justify-content-center
-      align-items-center
-      *ngIf="!isLoading"
-      [@fadeVisibility]="fadeState"
-    >
+    <ion-row justify-content-center align-items-center>
       <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
           no-padding
           (click)="papersLeft()"
-          [disabled]="isUpdating"
+          [disabled]="isUpdating || isLoading"
         >
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
@@ -51,17 +46,52 @@
             <ion-card>
               <ion-card-header>
                 <ion-card-title>
-                  <h3>
-                    <b>{{ paper.title }}</b>
-                  </h3>
+                  <div *ngIf="!isLoading">
+                    <h3>
+                      <b>{{ paper.title }}</b>
+                    </h3>
+                  </div>
+
+                  <div *ngIf="isLoading">
+                    <h2 style="width:200px">
+                      <ion-skeleton-text
+                        animated
+                        style="width: 100%"
+                      ></ion-skeleton-text>
+                    </h2>
+                    <h2>
+                      <ion-skeleton-text
+                        animated
+                        style="width: 100%"
+                      ></ion-skeleton-text>
+                    </h2>
+                    <h2>
+                      <ion-skeleton-text
+                        animated
+                        style="width: 100%"
+                      ></ion-skeleton-text>
+                    </h2>
+                  </div>
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content text-center>
-                <p>{{ paper.authors.join(', ') }}</p>
+                <div *ngIf="!isLoading">
+                  <p>{{ paper.authors.join(', ') }}</p>
+                </div>
+                <div *ngIf="isLoading">
+                  <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
+                  <h5>
+                    <ion-skeleton-text
+                      animated
+                      style="width: 100%"
+                    ></ion-skeleton-text>
+                  </h5>
+                </div>
                 <ion-button
                   color="primary"
                   fill="outline"
                   (click)="onPaperDetailClick(paper.id)"
+                  [disabled]="isLoading"
                   >More</ion-button
                 >
               </ion-card-content>
@@ -74,73 +104,9 @@
           shape="round"
           expand="block"
           no-padding
-          [disabled]="isUpdating"
+          [disabled]="isUpdating || isLoading"
           (click)="papersRight()"
         >
-          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row
-      justify-content-center
-      align-items-center
-      *ngIf="isLoading"
-      [@fadeVisibility]="fadeState"
-    >
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
-        <ion-button shape="round" expand="block" no-padding disabled="true"
-          ><ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-      <ion-col size-lg="10">
-        <ion-slides [options]="papersOpts" scrollbar="true">
-          <ion-slide *ngFor="let dummy of [1, 2, 3, 4, 5]">
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>
-                  <h2 style="width:200px">
-                    <ion-skeleton-text
-                      animated
-                      style="width: 100%"
-                    ></ion-skeleton-text>
-                  </h2>
-                  <h2>
-                    <ion-skeleton-text
-                      animated
-                      style="width: 100%"
-                    ></ion-skeleton-text>
-                  </h2>
-                  <h2>
-                    <ion-skeleton-text
-                      animated
-                      style="width: 100%"
-                    ></ion-skeleton-text>
-                  </h2>
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content text-center>
-                <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
-                <h5>
-                  <ion-skeleton-text
-                    animated
-                    style="width: 100%"
-                  ></ion-skeleton-text>
-                </h5>
-                <ion-button
-                  color="primary"
-                  fill="outline"
-                  (click)="onPaperDetailClick(paper.id)"
-                  disabled="true"
-                  >More</ion-button
-                >
-              </ion-card-content>
-            </ion-card>
-          </ion-slide>
-        </ion-slides>
-      </ion-col>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
-        <ion-button shape="round" expand="block" no-padding disabled="true">
           <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
@@ -157,17 +123,13 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row
-      justify-content-center
-      align-items-center
-      *ngIf="!isLoading"
-      [@fadeVisibility]="fadeState"
-    >
+    <ion-row justify-content-center align-items-center>
       <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
           no-padding
+          [disabled]="isLoading"
           (click)="authorsLeft()"
         >
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
@@ -182,9 +144,19 @@
           >
             <ion-card>
               <ion-card-header text-center>
-                <ion-card-subtitle>
-                  {{ paper.authors.join(', ') }}
-                </ion-card-subtitle>
+                <div *ngIf="!isLoading">
+                  <ion-card-subtitle>
+                    {{ paper.authors.join(', ') }}
+                  </ion-card-subtitle>
+                </div>
+                <div *ngIf="isLoading">
+                  <h2 style="width:100px" no-margin>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </h2>
+                  <h2 style="width:100px" no-margin>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </h2>
+                </div>
               </ion-card-header>
             </ion-card>
           </ion-slide>
@@ -195,44 +167,9 @@
           shape="round"
           expand="block"
           no-padding
+          [disabled]="isLoading"
           (click)="authorsRight()"
         >
-          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row
-      justify-content-center
-      align-items-center
-      *ngIf="isLoading"
-      [@fadeVisibility]="fadeState"
-    >
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
-        <ion-button shape="round" expand="block" no-padding disabled="true"
-          ><ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-      <ion-col size-lg="10">
-        <ion-slides [options]="authorsOpts" scrollbar="true">
-          <ion-slide *ngFor="let dummy of [1, 2, 3, 4, 5, 6, 7, 8, 9]">
-            <ion-card>
-              <ion-card-header text-center>
-                <ion-card-subtitle>
-                  <h2 style="width:100px" no-margin>
-                    <ion-skeleton-text animated></ion-skeleton-text>
-                  </h2>
-                  <h2 style="width:100px" no-margin>
-                    <ion-skeleton-text animated></ion-skeleton-text>
-                  </h2>
-                </ion-card-subtitle>
-              </ion-card-header>
-            </ion-card>
-          </ion-slide>
-        </ion-slides>
-      </ion-col>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
-        <ion-button shape="round" expand="block" no-padding disabled="true">
           <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
@@ -249,17 +186,13 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row
-      justify-content-center
-      align-items-center
-      *ngIf="!isLoading"
-      [@fadeVisibility]="fadeState"
-    >
+    <ion-row justify-content-center align-items-center>
       <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
           expand="block"
           no-padding
+          [disabled]="isLoading"
           (click)="journalsLeft()"
         >
           <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
@@ -275,7 +208,17 @@
             <ion-card>
               <ion-card-header text-center>
                 <ion-card-subtitle>
-                  {{ paper.authors.join(', ') }}
+                  <div *ngIf="!isLoading">
+                    {{ paper.authors.join(', ') }}
+                  </div>
+                  <div *ngIf="isLoading">
+                    <h2 style="width:100px" no-margin>
+                      <ion-skeleton-text animated></ion-skeleton-text>
+                    </h2>
+                    <h2 style="width:100px" no-margin>
+                      <ion-skeleton-text animated></ion-skeleton-text>
+                    </h2>
+                  </div>
                 </ion-card-subtitle>
               </ion-card-header>
             </ion-card>
@@ -287,44 +230,9 @@
           shape="round"
           expand="block"
           no-padding
+          [disabled]="isLoading"
           (click)="journalsRight()"
         >
-          <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row
-      justify-content-center
-      align-items-center
-      *ngIf="isLoading"
-      [@fadeVisibility]="fadeState"
-    >
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
-        <ion-button shape="round" expand="block" no-padding disabled="true"
-          ><ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-      <ion-col size-lg="10">
-        <ion-slides [options]="authorsOpts" scrollbar="true">
-          <ion-slide *ngFor="let dummy of [1, 2, 3, 4, 5, 6, 7, 8, 9]">
-            <ion-card>
-              <ion-card-header text-center>
-                <ion-card-subtitle>
-                  <h2 style="width:100px" no-margin>
-                    <ion-skeleton-text animated></ion-skeleton-text>
-                  </h2>
-                  <h2 style="width:100px" no-margin>
-                    <ion-skeleton-text animated></ion-skeleton-text>
-                  </h2>
-                </ion-card-subtitle>
-              </ion-card-header>
-            </ion-card>
-          </ion-slide>
-        </ion-slides>
-      </ion-col>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
-        <ion-button shape="round" expand="block" no-padding disabled="true">
           <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>

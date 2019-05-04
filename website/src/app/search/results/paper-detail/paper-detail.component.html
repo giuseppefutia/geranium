@@ -20,7 +20,7 @@
     </ion-row>
     <ion-row no-padding>
       <ion-col offset="1" size="10">
-        <h5 no-margin>{{ selectedPaper.title }}</h5>
+        <h4 no-margin>{{ selectedPaper.title }}</h4>
       </ion-col>
     </ion-row>
     <ion-row no-padding>
@@ -33,13 +33,11 @@
     <ion-row no-padding>
       <ion-col offset="1" size="10">
         <ion-slides [options]="authorsOpts" #authorsSlides no-padding>
-          <ion-slide *ngFor="let author of selectedPaper.authors" tappable>
+          <ion-slide *ngFor="let author of selectedPaper.authors" tappable (click)="onAuthorSlideClick(author)">
             <ion-card>
-              <ion-card-header>
-                <ion-card-content text-center no-padding>
-                  <h3>{{ author }}</h3>
-                </ion-card-content>
-              </ion-card-header>
+              <ion-item lines="none">
+                <ion-label>{{ author.name }}</ion-label>
+              </ion-item>
             </ion-card>
           </ion-slide>
         </ion-slides>
@@ -62,15 +60,33 @@
     <ion-row no-padding>
       <ion-col margin-top margin-start>
         <ion-text color="primary"
-          ><h3 no-margin><b>Abstract</b></h3></ion-text
+          ><h3 no-margin><b>Journal</b></h3></ion-text
         >
       </ion-col>
     </ion-row>
     <ion-row no-padding>
       <ion-col offset="1" size="10">
         <p no-margin>
-          {{ selectedPaper.abstract }}
+          {{ selectedPaper.journals.join(', ') }}
         </p>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col margin-top margin-start>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Abstract</b></h3></ion-text
+        >
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col offset="1" size="10">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle>
+              <h5>{{ selectedPaper.abstract }}</h5>
+            </ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

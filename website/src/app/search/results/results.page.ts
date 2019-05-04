@@ -2,49 +2,28 @@ import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PapersService } from '../services/papers.service';
 import { IonSlides, NavController, ModalController } from '@ionic/angular';
-import { Paper } from '../models/paper.model';
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate
-} from '@angular/animations';
+import { SimplifiedPaper } from '../models/simplified-paper.model';
+import { SimplifiedAuthor } from '../models/simplified-author.model';
+import { AuthorDetailComponent } from './author-detail/author-detail.component';
 
 @Component({
   selector: 'app-results',
   templateUrl: './results.page.html',
-  styleUrls: ['./results.page.scss'],
-  animations: [
-    trigger('fadeVisibility', [
-      state(
-        'visible',
-        style({
-          opacity: 1
-        })
-      ),
-      state(
-        'invisible',
-        style({
-          opacity: 0
-        })
-      ),
-      transition('* => *', animate('.2s ease-out'))
-    ])
-  ]
+  styleUrls: ['./results.page.scss']
 })
 export class ResultsPage implements OnInit {
   @ViewChild('papersSlides') papersSlides: IonSlides;
   @ViewChild('authorsSlides') authorsSlides: IonSlides;
   @ViewChild('journalsSlides') journalsSlides: IonSlides;
   searchKey: string;
-  allPapers: Paper[];
-  showedPapers = new Array<Paper>();
+  allPapers: SimplifiedPaper[];
+  showedPapers = new Array<SimplifiedPaper>();
+  showedAuthors = new Array<SimplifiedAuthor>();
+  showedJournals = new Array<string>();
   private showedCount = 0;
   isUpdating = false;
   isLoading = true;
-  fadeState = 'invisible';
 
   papersOpts = {
     zoom: false,
@@ -108,13 +87,15 @@ export class ResultsPage implements OnInit {
     });
     this.addDummySlides(6);
     setTimeout(() => {
-      this.allPapers = this.papersService.getPapers(this.searchKey);
+      this.allPapers = this.papersService.getSimplifiedPapers(this.searchKey);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.showedPapers = [];
+      this.showedAuthors = [];
+      this.showedJournals = [];
       this.addToShowedPapers(10);
       this.isLoading = false;
     }, 2000);
@@ -123,34 +104,70 @@ export class ResultsPage implements OnInit {
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
-      this.showedPapers.push(new Paper('', '', '', [], new Date(0, 0, 0)));
+      this.showedPapers.push(
+        new SimplifiedPaper('', '', [new SimplifiedAuthor('', '')], [''])
+      );
+      this.showedAuthors.push(new SimplifiedAuthor('', ''));
+      this.showedJournals.push('');
     }
-  }
-
-  ionViewDidEnter() {
-    this.fadeState = 'visible';
   }
 
   addToShowedPapers(howmany: number) {
     let i: number;
+    let found: boolean;
     for (
       i = this.showedCount;
       i < howmany + this.showedCount && i < this.allPapers.length;
       i++
     ) {
+      // Add to papers
       this.showedPapers.push(this.allPapers[i]);
+      // Add to authors
+      for (const author of this.allPapers[i].authors) {
+        found = false;
+        for (const added of this.showedAuthors) {
+          if (added.id === author.id) {
+            found = true;
+          }
+        }
+        if (!found) {
+          this.showedAuthors.push(author);
+        }
+      }
+      // Add to journals
+      for (const journal of this.allPapers[i].journals) {
+        this.showedJournals.push(journal);
+      }
     }
     this.showedCount = i;
   }
 
+  authorsToStringArray(paper: SimplifiedPaper): string[] {
+    const temp = new Array<string>();
+    for (const author of paper.authors) {
+      temp.push(author.name);
+    }
+    return temp;
+  }
+
   onPaperDetailClick(id: string) {
-    this.allPapers.find(el => el.id === id);
     this.modalCtrl
       .create({
         component: PaperDetailComponent,
         componentProps: {
-          selectedPaper: this.showedPapers.find(el => el.id === id)
+          selectedPaperId: id
         }
+      })
+      .then(modalEl => {
+        modalEl.present();
+      });
+  }
+
+  onAuthorSlideClick(author: SimplifiedAuthor) {
+    this.modalCtrl
+      .create({
+        component: AuthorDetailComponent,
+        componentProps: { id: author.id }
       })
       .then(modalEl => {
         modalEl.present();
@@ -164,7 +181,6 @@ export class ResultsPage implements OnInit {
           this.papersSlides
             .lockSwipes(true)
             .then(() => (this.isUpdating = true));
-          // Add papers to showedPapers
           this.addToShowedPapers(6);
           this.papersSlides.update().then();
           this.papersSlides

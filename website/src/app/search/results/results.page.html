@@ -76,7 +76,7 @@
               </ion-card-header>
               <ion-card-content text-center>
                 <div *ngIf="!isLoading">
-                  <p>{{ paper.authors.join(', ') }}</p>
+                  <p>{{ authorsToStringArray(paper).join(', ') }}</p>
                 </div>
                 <div *ngIf="isLoading">
                   <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
@@ -112,7 +112,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row [@fadeVisibility]="fadeState">
+    <ion-row>
       <ion-col padding-top>
         <div text-center>
           <ion-text color="primary">
@@ -138,16 +138,15 @@
       <ion-col size-lg="10">
         <ion-slides [options]="authorsOpts" scrollbar="true" #authorsSlides>
           <ion-slide
-            *ngFor="let paper of showedPapers"
+            *ngFor="let author of showedAuthors"
             tappable
             style="animation-name: fadeIn; animation-duration: 1s;"
+            (click)="onAuthorSlideClick(author)"
           >
             <ion-card>
-              <ion-card-header text-center>
+              <ion-item lines="none">
                 <div *ngIf="!isLoading">
-                  <ion-card-subtitle>
-                    {{ paper.authors.join(', ') }}
-                  </ion-card-subtitle>
+                  <ion-label>{{ author.name }}</ion-label>
                 </div>
                 <div *ngIf="isLoading">
                   <h2 style="width:100px" no-margin>
@@ -157,7 +156,7 @@
                     <ion-skeleton-text animated></ion-skeleton-text>
                   </h2>
                 </div>
-              </ion-card-header>
+              </ion-item>
             </ion-card>
           </ion-slide>
         </ion-slides>
@@ -175,7 +174,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row [@fadeVisibility]="fadeState">
+    <ion-row>
       <ion-col padding-top>
         <div text-center>
           <ion-text color="primary">
@@ -201,26 +200,24 @@
       <ion-col size-lg="10">
         <ion-slides [options]="authorsOpts" scrollbar="true" #journalsSlides>
           <ion-slide
-            *ngFor="let paper of showedPapers"
+            *ngFor="let journal of showedJournals"
             tappable
             style="animation-name: fadeIn; animation-duration: 1s;"
           >
             <ion-card>
-              <ion-card-header text-center>
-                <ion-card-subtitle>
-                  <div *ngIf="!isLoading">
-                    {{ paper.authors.join(', ') }}
-                  </div>
-                  <div *ngIf="isLoading">
-                    <h2 style="width:100px" no-margin>
-                      <ion-skeleton-text animated></ion-skeleton-text>
-                    </h2>
-                    <h2 style="width:100px" no-margin>
-                      <ion-skeleton-text animated></ion-skeleton-text>
-                    </h2>
-                  </div>
-                </ion-card-subtitle>
-              </ion-card-header>
+              <ion-item lines="none">
+                <div *ngIf="!isLoading">
+                  <ion-label>{{ journal }}</ion-label>
+                </div>
+                <div *ngIf="isLoading">
+                  <h2 style="width:100px" no-margin>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </h2>
+                  <h2 style="width:100px" no-margin>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </h2>
+                </div>
+              </ion-item>
             </ion-card>
           </ion-slide>
         </ion-slides>

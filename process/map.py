@@ -101,7 +101,7 @@ journals = set()
 
 # list for publications URIs
 progress = 0
-for record in records:
+for record in records[:10]:
 	topics = []
 	abstract = None
 	json_topics = []
@@ -175,6 +175,10 @@ for record in records:
 		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
 			PURL.identifier,
 			Literal(str(record['lookupValues']['jissn']))) )
+		# add journal name to journal as label
+		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+			RDFS.label,
+			Literal(str(record['lookupValues']['jtitle']))) )
 		# add publication journal relationship
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
 			PURL.publisher, 

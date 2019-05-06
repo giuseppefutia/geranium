@@ -175,9 +175,13 @@ for record in records[:10]:
 		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
 			PURL.identifier,
 			Literal(str(record['lookupValues']['jissn']))) )
-		# add journal name to journal as label
+		# add journal title to journal as label
 		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
 			RDFS.label,
+			Literal(str(record['lookupValues']['jtitle']))) )
+		# add journal title to journal as title
+		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+			PURL.title,
 			Literal(str(record['lookupValues']['jtitle']))) )
 		# add publication journal relationship
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 

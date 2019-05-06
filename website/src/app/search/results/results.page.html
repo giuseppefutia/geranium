@@ -7,8 +7,32 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-grid>
+<ion-content no-padding>
+  <ion-grid no-padding>
+    <ion-row no-padding>
+      <ion-col no-padding>
+        <div
+          [ngClass]="topViewVisible === false ? 'topView' : 'topView showing'"
+        >
+          <ion-grid>
+            <ion-row
+              style="animation-name: fadeIn; animation-duration: 1s;"
+              *ngIf="!isLoading"
+            >
+              <ion-col size-md="10" offset-md="1">
+                <h2 no-padding style="text-transform: capitalize;">
+                  <b>{{ searchKey }}</b>
+                </h2>
+                <a href="https://en.wikipedia.org/wiki/Deep_learning">
+                  More on this topic
+                </a>
+                <p>6 papers on this topic in the last 2 years</p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col no-padding>
         <div text-center>
@@ -21,7 +45,7 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-center align-items-center>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down" padding>
         <ion-button
           shape="round"
           expand="block"
@@ -41,7 +65,7 @@
         >
           <ion-slide
             *ngFor="let paper of showedPapers"
-            style="animation-name: fadeIn; animation-duration: 1s;"
+            style="animation-name: fadeIn; animation-duration: 0.8s;"
           >
             <ion-card>
               <ion-card-header>
@@ -76,7 +100,9 @@
               </ion-card-header>
               <ion-card-content text-center>
                 <div *ngIf="!isLoading">
-                  <p>{{ authorsToStringArray(paper).join(', ') }}</p>
+                  <p class="two-lines-par">
+                    {{ authorsToStringArray(paper).join(', ') }}
+                  </p>
                 </div>
                 <div *ngIf="isLoading">
                   <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
@@ -99,7 +125,7 @@
           </ion-slide>
         </ion-slides>
       </ion-col>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down" padding>
         <ion-button
           shape="round"
           expand="block"
@@ -123,7 +149,7 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row justify-content-center align-items-center>
+    <ion-row justify-content-center align-items-center padding>
       <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
@@ -161,7 +187,7 @@
           </ion-slide>
         </ion-slides>
       </ion-col>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down" padding>
         <ion-button
           shape="round"
           expand="block"
@@ -185,7 +211,7 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row justify-content-center align-items-center>
+    <ion-row justify-content-center align-items-center padding>
       <ion-col size-lg="1" text-center class="ion-hide-md-down">
         <ion-button
           shape="round"
@@ -222,7 +248,7 @@
           </ion-slide>
         </ion-slides>
       </ion-col>
-      <ion-col size-lg="1" text-center class="ion-hide-md-down">
+      <ion-col size-lg="1" text-center class="ion-hide-md-down" padding>
         <ion-button
           shape="round"
           expand="block"

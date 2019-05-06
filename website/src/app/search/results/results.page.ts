@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PapersService } from '../services/papers.service';
+import { ResultsService } from '../services/results.service';
 import { IonSlides, NavController, ModalController } from '@ionic/angular';
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 import { SimplifiedPaper } from '../models/simplified-paper.model';
@@ -21,6 +21,7 @@ export class ResultsPage implements OnInit {
   showedPapers = new Array<SimplifiedPaper>();
   showedAuthors = new Array<SimplifiedAuthor>();
   showedJournals = new Array<string>();
+  topViewVisible = false;
   private showedCount = 0;
   isUpdating = false;
   isLoading = true;
@@ -72,7 +73,7 @@ export class ResultsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private papersService: PapersService,
+    private resultsService: ResultsService,
     private modalCtrl: ModalController
   ) {}
 
@@ -87,7 +88,7 @@ export class ResultsPage implements OnInit {
     });
     this.addDummySlides(6);
     setTimeout(() => {
-      this.allPapers = this.papersService.getSimplifiedPapers(this.searchKey);
+      this.allPapers = this.resultsService.getSimplifiedPapers(this.searchKey);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
       this.allPapers = this.allPapers.concat(this.allPapers);
@@ -98,6 +99,7 @@ export class ResultsPage implements OnInit {
       this.showedJournals = [];
       this.addToShowedPapers(10);
       this.isLoading = false;
+      this.topViewVisible = true;
     }, 2000);
   }
 
@@ -167,7 +169,7 @@ export class ResultsPage implements OnInit {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { id: author.id }
+        componentProps: { authorId: author.id }
       })
       .then(modalEl => {
         modalEl.present();

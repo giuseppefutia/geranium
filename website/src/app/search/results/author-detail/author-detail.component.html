@@ -1,6 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Author Detail</ion-title>
+    <ion-title>
+      <div *ngIf="isLoading">
+        Loading
+      </div>
+      <div *ngIf="!isLoading">
+        {{ selectedAuthor.name }}
+      </div>
+    </ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onClose()">
         <ion-icon name="close"></ion-icon>
@@ -10,7 +17,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <ion-grid *ngIf="!isLoading">
     <ion-row no-padding>
       <ion-col margin-top margin-start>
         <ion-text color="primary"

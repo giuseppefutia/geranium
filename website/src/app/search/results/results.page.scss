@@ -1,11 +1,11 @@
 h3 {
   line-height: 1em;
-  height: 3.1em;
+  height: 3em;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-p {
+.two-lines-par {
   line-height: 1em;
   height: 3em;
   overflow: hidden;
@@ -14,6 +14,17 @@ p {
 
 ion-card {
   border-radius: 8px !important;
+}
+
+.topView {
+  background: #f0f0f0; 
+  overflow-y: hidden;
+  max-height: 0;
+}
+
+.showing {
+  max-height: 250px;
+  transition: max-height 1s ease;
 }
 
 @keyframes fadeIn {
@@ -25,3 +36,5 @@ ion-card {
     opacity: 1;
   }
 }
+
+

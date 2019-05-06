@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Paper } from '../../models/paper.model';
 import { ModalController } from '@ionic/angular';
-import { PapersService } from '../../services/papers.service';
+import { ResultsService } from '../../services/results.service';
 import { SimplifiedAuthor } from '../../models/simplified-author.model';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
@@ -31,11 +31,11 @@ export class PaperDetailComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private papersService: PapersService
+    private resultsService: ResultsService
   ) {}
 
   ngOnInit() {
-    this.selectedPaper = this.papersService.getPaperFromId(
+    this.selectedPaper = this.resultsService.getPaperFromId(
       this.selectedPaperId
     );
   }
@@ -44,7 +44,7 @@ export class PaperDetailComponent implements OnInit {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { id: author.id },
+        componentProps: { authorId: author.id },
         showBackdrop: false
       })
       .then(modalEl => {

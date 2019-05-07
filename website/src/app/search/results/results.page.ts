@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../services/results.service';
 import { IonSlides, NavController, ModalController } from '@ionic/angular';
+import { Chart } from 'chart.js';
+
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../models/simplified-author.model';
@@ -16,6 +18,9 @@ export class ResultsPage implements OnInit {
   @ViewChild('papersSlides') papersSlides: IonSlides;
   @ViewChild('authorsSlides') authorsSlides: IonSlides;
   @ViewChild('journalsSlides') journalsSlides: IonSlides;
+  @ViewChild('barCanvas') barCanvas: ElementRef;
+
+  topicChart: Chart;
   searchKey: string;
   allPapers: SimplifiedPaper[];
   showedPapers = new Array<SimplifiedPaper>();
@@ -100,7 +105,53 @@ export class ResultsPage implements OnInit {
       this.addToShowedPapers(10);
       this.isLoading = false;
       this.topViewVisible = true;
+      setTimeout(() => {
+        this.createChart();
+      }, 500);
     }, 2000);
+  }
+
+  createChart() {
+    this.topicChart = new Chart(this.barCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+          {
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
   }
 
   addDummySlides(howmany: number) {

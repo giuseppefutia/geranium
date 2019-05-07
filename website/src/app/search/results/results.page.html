@@ -19,7 +19,7 @@
               style="animation-name: fadeIn; animation-duration: 1s;"
               *ngIf="!isLoading"
             >
-              <ion-col size-md="10" offset-md="1">
+              <ion-col size-md="4" offset-md="1">
                 <h2 no-padding style="text-transform: capitalize;">
                   <b>{{ searchKey }}</b>
                 </h2>
@@ -27,6 +27,11 @@
                   More on this topic
                 </a>
                 <p>6 papers on this topic in the last 2 years</p>
+              </ion-col>
+              <ion-col size-md="3">
+                <div class='chart-container'>
+                  <canvas #barCanvas height="150"></canvas>
+                </div>
               </ion-col>
             </ion-row>
           </ion-grid>

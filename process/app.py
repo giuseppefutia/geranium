@@ -1,7 +1,10 @@
 import flask
 import requests
+from requests.auth import HTTPBasicAuth
 from flask import Flask
 from urllib.parse import unquote, quote
+
+import config
 
 app = Flask(__name__)
 
@@ -11,8 +14,8 @@ def api():
 	if flask.request.method == 'GET':
 		query = flask.request.args.get('query')
 	if query:
-		result = requests.get('http://127.0.0.1:7200/repositories/Test?query=' + query)
-		return result.text
+		result = requests.get('https://blazegraph.nexacenter.org/blazegraph/sparql?query=' + query, auth=HTTPBasicAuth(config.db_user,config.db_password), verify=False)		
+		return result.json()
 	return 'Invalid arguments!'
 
 if __name__ == '__main__':

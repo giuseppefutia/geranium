@@ -57,6 +57,10 @@ def add_author(author):
 	Add author entity to the graph
 	'''
 	if author['authority'] not in authors:
+		# author type
+		graph.add( ( GERANIUM_AUT[author['authority']], 
+			RDF.type, 
+			GERANIUM_ONTOLOGY_AUT ) )
 		# add author name relationship
 		graph.add( ( GERANIUM_AUT[author['authority']],
 			FOAF.name,
@@ -73,7 +77,7 @@ def add_author(author):
 		authors.add(author['authority'])
 
 # read json file
-with open('publications-sample.json', 'r') as file:
+with open('anni2013-17', 'r') as file:
 	content = file.read()
 
 # create records list, every element in records is a dictionary
@@ -89,8 +93,12 @@ GERANIUM_KEY = Namespace(BASE_URL+"keywords/")
 PURL = Namespace("http://purl.org/dc/terms/")
 
 # define types
-GERANIUM_ONTOLOGY_TMF = URIRef(BASE_URL+"ontology/TMFResource")
-GERANIUM_ONTOLOGY_KEY = URIRef(BASE_URL+"ontology/AuthorKeyword")
+GERANIUM_ONTOLOGY = URIRef(BASE_URL+"ontology/")
+GERANIUM_ONTOLOGY_PUB = URIRef(GERANIUM_ONTOLOGY+"Publication")
+GERANIUM_ONTOLOGY_AUT = URIRef(GERANIUM_ONTOLOGY+"Author")
+GERANIUM_ONTOLOGY_JOU = URIRef(GERANIUM_ONTOLOGY+"Journal")
+GERANIUM_ONTOLOGY_TMF = URIRef(GERANIUM_ONTOLOGY+"TMFResource")
+GERANIUM_ONTOLOGY_KEY = URIRef(GERANIUM_ONTOLOGY+"AuthorKeyword")
 
 # create RDF graph
 graph = Graph()
@@ -101,12 +109,17 @@ journals = set()
 
 # list for publications URIs
 progress = 0
-for record in records[:10]:
+for record in records[:100]:
 	topics = []
 	abstract = None
 	json_topics = []
+	json_topics_clean = []
 	tmf_topics = []
 	try:
+		# publication type
+		graph.add( (GERANIUM_PUB[str(record['handle'])], 
+			RDF.type, 
+			GERANIUM_ONTOLOGY_PUB ) )
 		# add publication abstract relationship
 		abstract = record['metadata']['dc.description.abstract'][0]['value']
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
@@ -137,7 +150,7 @@ for record in records[:10]:
 			assign_label_json(dict(zip(json_topics_clean,json_topics)))
 			assign_type(json_topics_clean, GERANIUM_ONTOLOGY_KEY)
 	except Exception as error:
-		print(error)
+		#print(error)
 		pass
 
 	try:
@@ -147,7 +160,7 @@ for record in records[:10]:
 		tmf_topics = [URIRef(uri) for uri in [*tmf_topics]]
 		assign_type(tmf_topics, GERANIUM_ONTOLOGY_TMF)		
 	except Exception as error:
-		print(error)
+		#print(error)
 		pass
 
 	topics.extend(json_topics_clean)
@@ -171,6 +184,10 @@ for record in records[:10]:
 	
 	# control if the publication is associated with a journal
 	if record['lookupValues']['jissn']:
+		# journal type
+		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])], 
+			RDF.type, 
+			GERANIUM_ONTOLOGY_JOU ) )
 		# add journal entity
 		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
 			PURL.identifier,

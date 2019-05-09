@@ -109,7 +109,7 @@ journals = set()
 
 # list for publications URIs
 progress = 0
-for record in records[:100]:
+for record in records:
 	topics = []
 	abstract = None
 	json_topics = []
@@ -184,26 +184,27 @@ for record in records[:100]:
 	
 	# control if the publication is associated with a journal
 	if record['lookupValues']['jissn']:
+		jissn = str(record['lookupValues']['jissn']).strip()
 		# journal type
-		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])], 
+		graph.add( (GERANIUM_JOU[jissn], 
 			RDF.type, 
 			GERANIUM_ONTOLOGY_JOU ) )
 		# add journal entity
-		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+		graph.add( (GERANIUM_JOU[jissn],
 			PURL.identifier,
-			Literal(str(record['lookupValues']['jissn']))) )
+			Literal(jissn)) )
 		# add journal title to journal as label
-		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+		graph.add( (GERANIUM_JOU[jissn],
 			RDFS.label,
 			Literal(str(record['lookupValues']['jtitle']))) )
 		# add journal title to journal as title
-		graph.add( (GERANIUM_JOU[str(record['lookupValues']['jissn'])],
+		graph.add( (GERANIUM_JOU[jissn],
 			PURL.title,
 			Literal(str(record['lookupValues']['jtitle']))) )
 		# add publication journal relationship
 		graph.add( (GERANIUM_PUB[str(record['handle'])], 
 			PURL.publisher, 
-			GERANIUM_JOU[str(record['lookupValues']['jissn'])]) )
+			GERANIUM_JOU[jissn]) )
 
 	# add publication creator relationship
 	author = record['internalAuthors'][0]

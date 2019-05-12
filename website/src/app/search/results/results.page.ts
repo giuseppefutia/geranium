@@ -8,16 +8,23 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../services/results.service';
 import { IonSlides, NavController, ModalController } from '@ionic/angular';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../models/simplified-author.model';
 import { AuthorDetailComponent } from './author-detail/author-detail.component';
 
-interface YearsData {
-  year: string;
-  papers: number;
+class YearsData {
+  constructor(
+    public year: string,
+    public papers: number,
+    public shown: boolean
+  ) {}
+}
+
+class BarData {
+  constructor(public datasetIndex: number, public dataIndex: number) {}
 }
 
 @Component({
@@ -31,12 +38,17 @@ export class ResultsPage implements OnInit, AfterViewInit {
   @ViewChild('journalsSlides') journalsSlides: IonSlides;
   @ViewChild('barCanvas') barCanvas: ElementRef;
 
+  primaryColor = 'rgba(44, 101, 201, 0.5)';
+  lightColor = 'rgba(44, 101, 201, 0.2)';
+  hiddenColor = 'rgba(0, 0, 0, 0.5)';
+  lightHiddenColor = 'rgba(0, 0, 0, 0.1)';
   topicChart: Chart;
   searchKey: string;
   allPapers: SimplifiedPaper[];
-  showedPapers = new Array<SimplifiedPaper>();
-  showedAuthors = new Array<SimplifiedAuthor>();
-  showedJournals = new Array<string>();
+  allPapersYears: YearsData[] = [];
+  showedPapers: SimplifiedPaper[] = [];
+  showedAuthors: SimplifiedAuthor[] = [];
+  showedJournals: string[] = [];
   topViewVisible = false;
   private showedCount = 0;
   isUpdating = false;
@@ -86,6 +98,48 @@ export class ResultsPage implements OnInit, AfterViewInit {
     }
   };
 
+  chartData = {
+    labels: [], // Must be configured with appropriate data
+    datasets: [
+      {
+        label: '', // Must be configured with appropriate data
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1
+      }
+    ]
+  };
+
+  chartOpts: ChartConfiguration = {
+    type: 'bar',
+    data: {},
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ],
+        xAxes: [
+          {
+            barPercentage: 1
+          }
+        ]
+      },
+      onClick: (v, e) => {
+        this.onChartClick.call(
+          this,
+          new BarData(e[0]._datasetIndex, e[0]._index)
+        );
+      }
+    }
+  };
+
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
@@ -130,55 +184,65 @@ export class ResultsPage implements OnInit, AfterViewInit {
   }
 
   getPapersYears() {
-    /* const yearsSet = this.allPapers.reduce((values, v) => {
-      if (!values.set[v.publicationDate.getFullYear()]) {
-        values.set[v.publicationDate.getFullYear()] = 1;
-      } else {
-        values.set[v.publicationDate.getFullYear()]++;
-      }
-      return values;
-    }, { set: {}}).set; */
     let i: number;
-    let data: YearsData[] = [];
+    const data: YearsData[] = [];
+    let found = false;
     for (i = 0; i < this.allPapers.length; i++) {
-      for (const el in data) {
-        
+      found = false;
+      for (const el of data) {
+        if (
+          this.allPapers[i].publicationDate.getFullYear().toString() === el.year
+        ) {
+          el.papers++;
+          found = true;
+        }
+      }
+      if (found === false) {
+        data.push(
+          new YearsData(
+            this.allPapers[i].publicationDate.getFullYear().toString(),
+            1,
+            true
+          )
+        );
       }
     }
+    data.sort(
+      (a, b) => Number.parseInt(a.year, 10) - Number.parseInt(b.year, 10)
+    );
+    return data;
   }
 
   createChart() {
-    this.topicChart = new Chart(this.barCanvas.nativeElement, {
-      type: 'bar',
-      data: {
-        labels: this.getPapersYears(),
-        datasets: [
-          {
-            label: '# of Publications',
-            data: [1, 2, 1, 6],
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ],
-          xAxes: [
-            {
-              barPercentage: 1
-            }
-          ]
-        }
-      }
-    });
+    this.allPapersYears = this.getPapersYears();
+    this.chartData.labels = this.allPapersYears.map(el => el.year);
+    this.chartData.datasets[0].label = '# of publications';
+    this.chartData.datasets[0].data = this.allPapersYears.map(el => el.papers);
+    this.chartData.datasets[0].backgroundColor = new Array<string>(
+      this.allPapersYears.length
+    );
+    this.chartData.datasets[0].borderColor = new Array<string>(
+      this.allPapersYears.length
+    );
+    for (let i = 0; i < this.allPapersYears.length; i++) {
+      this.chartData.datasets[0].backgroundColor[i] =
+        this.lightColor;
+      this.chartData.datasets[0].borderColor[i] = this.primaryColor;
+    }
+    this.chartOpts.data = this.chartData;
+    this.topicChart = new Chart(this.barCanvas.nativeElement, this.chartOpts);
+  }
+
+  onChartClick(bar: BarData) {
+    this.allPapersYears[bar.dataIndex].shown = !this.allPapersYears[
+      bar.dataIndex
+    ].shown;
+    this.chartData.datasets[bar.datasetIndex].backgroundColor[bar.dataIndex] =
+      (this.allPapersYears[bar.dataIndex].shown === true) ? this.lightColor : this.lightHiddenColor;
+    this.chartData.datasets[bar.datasetIndex].borderColor[bar.dataIndex] =
+      (this.allPapersYears[bar.dataIndex].shown === true) ? this.primaryColor : this.hiddenColor;
+    // TODO: Filter results accordingly
+    this.topicChart.update();
   }
 
   addDummySlides(howmany: number) {

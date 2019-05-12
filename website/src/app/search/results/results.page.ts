@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../services/results.service';
 import { IonSlides, NavController, ModalController } from '@ionic/angular';
@@ -9,12 +15,17 @@ import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../models/simplified-author.model';
 import { AuthorDetailComponent } from './author-detail/author-detail.component';
 
+interface YearsData {
+  year: string;
+  papers: number;
+}
+
 @Component({
   selector: 'app-results',
   templateUrl: './results.page.html',
   styleUrls: ['./results.page.scss']
 })
-export class ResultsPage implements OnInit {
+export class ResultsPage implements OnInit, AfterViewInit {
   @ViewChild('papersSlides') papersSlides: IonSlides;
   @ViewChild('authorsSlides') authorsSlides: IonSlides;
   @ViewChild('journalsSlides') journalsSlides: IonSlides;
@@ -91,14 +102,12 @@ export class ResultsPage implements OnInit {
       }
       this.searchKey = paramMap.get('searchKey');
     });
+  }
+
+  ngAfterViewInit() {
     this.addDummySlides(6);
     setTimeout(() => {
-      this.allPapers = this.resultsService.getSimplifiedPapers(this.searchKey);
-      this.allPapers = this.allPapers.concat(this.allPapers);
-      this.allPapers = this.allPapers.concat(this.allPapers);
-      this.allPapers = this.allPapers.concat(this.allPapers);
-      this.allPapers = this.allPapers.concat(this.allPapers);
-      this.allPapers = this.allPapers.concat(this.allPapers);
+      this.fetchData();
       this.showedPapers = [];
       this.showedAuthors = [];
       this.showedJournals = [];
@@ -111,42 +120,60 @@ export class ResultsPage implements OnInit {
     }, 2000);
   }
 
+  fetchData() {
+    this.allPapers = this.resultsService.getSimplifiedPapers(this.searchKey);
+    this.allPapers = this.allPapers.concat(this.allPapers);
+    this.allPapers = this.allPapers.concat(this.allPapers);
+    this.allPapers = this.allPapers.concat(this.allPapers);
+    this.allPapers = this.allPapers.concat(this.allPapers);
+    this.allPapers = this.allPapers.concat(this.allPapers);
+  }
+
+  getPapersYears() {
+    /* const yearsSet = this.allPapers.reduce((values, v) => {
+      if (!values.set[v.publicationDate.getFullYear()]) {
+        values.set[v.publicationDate.getFullYear()] = 1;
+      } else {
+        values.set[v.publicationDate.getFullYear()]++;
+      }
+      return values;
+    }, { set: {}}).set; */
+    let i: number;
+    let data: YearsData[] = [];
+    for (i = 0; i < this.allPapers.length; i++) {
+      for (const el in data) {
+        
+      }
+    }
+  }
+
   createChart() {
     this.topicChart = new Chart(this.barCanvas.nativeElement, {
       type: 'bar',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: this.getPapersYears(),
         datasets: [
           {
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
+            label: '# of Publications',
+            data: [1, 2, 1, 6],
             borderWidth: 1
           }
         ]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: true,
         scales: {
           yAxes: [
             {
               ticks: {
                 beginAtZero: true
               }
+            }
+          ],
+          xAxes: [
+            {
+              barPercentage: 1
             }
           ]
         }
@@ -158,7 +185,13 @@ export class ResultsPage implements OnInit {
     let i: number;
     for (i = 0; i < howmany; i++) {
       this.showedPapers.push(
-        new SimplifiedPaper('', '', [new SimplifiedAuthor('', '')], [''])
+        new SimplifiedPaper(
+          '',
+          '',
+          [new SimplifiedAuthor('', '')],
+          [''],
+          new Date('')
+        )
       );
       this.showedAuthors.push(new SimplifiedAuthor('', ''));
       this.showedJournals.push('');

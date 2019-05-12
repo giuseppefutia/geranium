@@ -27,6 +27,17 @@ ion-card {
   transition: max-height 1s ease;
 }
 
+.barCanvasClass {
+  max-width: 300px !important;
+  max-height: 150px !important;
+}
+
+@media screen and (max-width: 992px) {
+  .showing {
+    max-height: 400px;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

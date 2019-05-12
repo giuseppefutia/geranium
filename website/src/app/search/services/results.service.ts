@@ -3,6 +3,8 @@ import { Paper } from '../models/paper.model';
 import { Author } from '../models/author.model';
 import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../models/simplified-author.model';
+import { HttpClient } from '@angular/common/http';
+import { pipe } from 'rxjs';
 
 /*papers = [
     new Paper(
@@ -70,7 +72,8 @@ export class ResultsService {
         new SimplifiedAuthor('123', 'Joanne Rowling'),
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
-      ['Journal1']
+      ['Journal1'],
+      new Date(2010, 1, 10)
     ),
     new SimplifiedPaper(
       'cba',
@@ -79,7 +82,8 @@ export class ResultsService {
         new SimplifiedAuthor('123', 'Joanne Rowling'),
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
-      ['Journal2']
+      ['Journal2'],
+      new Date(2011, 1, 10)
     ),
     new SimplifiedPaper(
       '111',
@@ -89,25 +93,28 @@ export class ResultsService {
         new SimplifiedAuthor('782', 'Dave Eggers'),
         new SimplifiedAuthor('900', 'Modest Mussorgsky')
       ],
-      ['Journal3', 'Journal3Bis']
+      ['Journal3', 'Journal3Bis'],
+      new Date(2011, 1, 10)
     ),
     new SimplifiedPaper(
       'ABC',
       'Paper11',
       [
         new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers'),
+        new SimplifiedAuthor('782', 'Dave Eggers')
       ],
-      ['Journal4']
+      ['Journal4'],
+      new Date(2012, 1, 10)
     ),
     new SimplifiedPaper(
       'CBA',
       'Paper22',
       [
         new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers'),
+        new SimplifiedAuthor('782', 'Dave Eggers')
       ],
-      ['Journal5']
+      ['Journal5'],
+      new Date(2011, 1, 10)
     ),
     new SimplifiedPaper(
       '222',
@@ -117,11 +124,12 @@ export class ResultsService {
         new SimplifiedAuthor('782', 'Dave Eggers'),
         new SimplifiedAuthor('900', 'Modest Mussorgsky')
       ],
-      ['Journal6', 'Journal6Bis']
+      ['Journal6', 'Journal6Bis'],
+      new Date(2016, 1, 10)
     )
   ];
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   simplifyAuthorName(name: string): string {
     let builder = '';
@@ -173,7 +181,15 @@ PREFIX gpk:<http://geranium-project.org/keywords/>
 PREFIX purl:<http://purl.org/dc/terms/>
 PREFIX dbp:<http://dbpedia.org/resource/>
 select * where {
-    ?publication purl:subject dbp:{${query.replace(regex, '_')}}
+    ?publication purl:subject dbp:${query.replace(regex, '_')}
 } limit 1000000`;
+    this.http
+      .get(
+        'https://blazegraph.nexacenter.org/blazegraph/sparql?query=' +
+          encodeURI('{}')
+      )
+      .subscribe(resData => {
+        console.log(resData);
+      });
   }
 }

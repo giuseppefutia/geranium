@@ -41,18 +41,22 @@ export class ResultsPage implements OnInit, AfterViewInit {
   primaryColor = 'rgba(44, 101, 201, 0.5)';
   lightColor = 'rgba(44, 101, 201, 0.2)';
   hiddenColor = 'rgba(0, 0, 0, 0.5)';
-  lightHiddenColor = 'rgba(0, 0, 0, 0.1)';
+  lightHiddenColor = 'rgba(0, 0, 0, 0.05)';
   topicChart: Chart;
   searchKey: string;
   allPapers: SimplifiedPaper[];
   allPapersYears: YearsData[] = [];
+  filteredPapers: SimplifiedPaper[] = [];
+  private showedCount = 0;
+
   showedPapers: SimplifiedPaper[] = [];
   showedAuthors: SimplifiedAuthor[] = [];
   showedJournals: string[] = [];
   topViewVisible = false;
-  private showedCount = 0;
   isUpdating = false;
   isLoading = true;
+  papersCount = 0;
+  papersYears = 0;
 
   papersOpts = {
     zoom: false,
@@ -111,7 +115,7 @@ export class ResultsPage implements OnInit, AfterViewInit {
     ]
   };
 
-  chartOpts: ChartConfiguration = {
+  chartOpts = {
     type: 'bar',
     data: {},
     options: {
@@ -181,6 +185,12 @@ export class ResultsPage implements OnInit, AfterViewInit {
     this.allPapers = this.allPapers.concat(this.allPapers);
     this.allPapers = this.allPapers.concat(this.allPapers);
     this.allPapers = this.allPapers.concat(this.allPapers);
+    this.filteredPapers = [...this.allPapers];
+    this.papersCount = this.allPapers.length;
+    this.allPapersYears = this.getPapersYears();
+    this.papersYears =
+      new Date().getFullYear() -
+      Number.parseInt(this.allPapersYears[0].year, 10);
   }
 
   getPapersYears() {
@@ -214,7 +224,6 @@ export class ResultsPage implements OnInit, AfterViewInit {
   }
 
   createChart() {
-    this.allPapersYears = this.getPapersYears();
     this.chartData.labels = this.allPapersYears.map(el => el.year);
     this.chartData.datasets[0].label = '# of publications';
     this.chartData.datasets[0].data = this.allPapersYears.map(el => el.papers);
@@ -225,8 +234,7 @@ export class ResultsPage implements OnInit, AfterViewInit {
       this.allPapersYears.length
     );
     for (let i = 0; i < this.allPapersYears.length; i++) {
-      this.chartData.datasets[0].backgroundColor[i] =
-        this.lightColor;
+      this.chartData.datasets[0].backgroundColor[i] = this.lightColor;
       this.chartData.datasets[0].borderColor[i] = this.primaryColor;
     }
     this.chartOpts.data = this.chartData;
@@ -238,10 +246,28 @@ export class ResultsPage implements OnInit, AfterViewInit {
       bar.dataIndex
     ].shown;
     this.chartData.datasets[bar.datasetIndex].backgroundColor[bar.dataIndex] =
-      (this.allPapersYears[bar.dataIndex].shown === true) ? this.lightColor : this.lightHiddenColor;
+      this.allPapersYears[bar.dataIndex].shown === true
+        ? this.lightColor
+        : this.lightHiddenColor;
     this.chartData.datasets[bar.datasetIndex].borderColor[bar.dataIndex] =
-      (this.allPapersYears[bar.dataIndex].shown === true) ? this.primaryColor : this.hiddenColor;
-    // TODO: Filter results accordingly
+      this.allPapersYears[bar.dataIndex].shown === true
+        ? this.primaryColor
+        : this.hiddenColor;
+    this.filteredPapers = this.allPapers.filter(el => {
+      return (
+        this.allPapersYears.find(
+          y =>
+            el.publicationDate.getFullYear().toString() === y.year &&
+            y.shown === true
+        ) !== undefined
+      );
+    });
+    this.showedCount = 0;
+    this.showedPapers = [];
+    this.showedAuthors = [];
+    this.showedJournals = [];
+    this.addToShowedPapers(10);
+    this.papersSlides.update().then();
     this.topicChart.update();
   }
 
@@ -267,13 +293,13 @@ export class ResultsPage implements OnInit, AfterViewInit {
     let found: boolean;
     for (
       i = this.showedCount;
-      i < howmany + this.showedCount && i < this.allPapers.length;
+      i < howmany + this.showedCount && i < this.filteredPapers.length;
       i++
     ) {
       // Add to papers
-      this.showedPapers.push(this.allPapers[i]);
+      this.showedPapers.push(this.filteredPapers[i]);
       // Add to authors
-      for (const author of this.allPapers[i].authors) {
+      for (const author of this.filteredPapers[i].authors) {
         found = false;
         for (const added of this.showedAuthors) {
           if (added.id === author.id) {
@@ -285,7 +311,7 @@ export class ResultsPage implements OnInit, AfterViewInit {
         }
       }
       // Add to journals
-      for (const journal of this.allPapers[i].journals) {
+      for (const journal of this.filteredPapers[i].journals) {
         this.showedJournals.push(journal);
       }
     }

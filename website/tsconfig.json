@@ -18,5 +18,9 @@
       "es2018",
       "dom"
     ]
-  }
+  },
+  "include": [
+    "src",
+    "node_modules/@ionic-super-tabs/core/dist/types/interface.d.ts"
+  ]
 }

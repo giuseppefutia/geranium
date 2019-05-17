@@ -63,6 +63,11 @@ import { pipe } from 'rxjs';
   providedIn: 'root'
 })
 export class ResultsService {
+  public searchKey = '';
+
+  // TODO: Change when connecting to server
+  // It represents the size of the chunks retrieved from the server (pagination)
+  private _blockSize = 6;
   simplifiedPapers = [
     new SimplifiedPaper(
       'abc',
@@ -73,7 +78,8 @@ export class ResultsService {
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
       ['Journal1'],
-      new Date(2010, 1, 10)
+      new Date(2010, 1, 10),
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     ),
     new SimplifiedPaper(
       'cba',
@@ -83,7 +89,8 @@ export class ResultsService {
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
       ['Journal2'],
-      new Date(2011, 1, 10)
+      new Date(2011, 1, 10),
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     ),
     new SimplifiedPaper(
       '111',
@@ -94,7 +101,8 @@ export class ResultsService {
         new SimplifiedAuthor('900', 'Modest Mussorgsky')
       ],
       ['Journal3', 'Journal3Bis'],
-      new Date(2011, 1, 10)
+      new Date(2011, 1, 10),
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     ),
     new SimplifiedPaper(
       'ABC',
@@ -104,7 +112,8 @@ export class ResultsService {
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
       ['Journal4'],
-      new Date(2012, 1, 10)
+      new Date(2012, 1, 10),
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     ),
     new SimplifiedPaper(
       'CBA',
@@ -114,7 +123,8 @@ export class ResultsService {
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
       ['Journal5'],
-      new Date(2011, 1, 10)
+      new Date(2011, 1, 10),
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     ),
     new SimplifiedPaper(
       '222',
@@ -125,11 +135,16 @@ export class ResultsService {
         new SimplifiedAuthor('900', 'Modest Mussorgsky')
       ],
       ['Journal6', 'Journal6Bis'],
-      new Date(2016, 1, 10)
+      new Date(2016, 1, 10),
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     )
   ];
 
   constructor(private http: HttpClient) {}
+
+  get blockSize(): number {
+    return this._blockSize;
+  }
 
   simplifyAuthorName(name: string): string {
     let builder = '';
@@ -144,7 +159,7 @@ export class ResultsService {
     return builder;
   }
 
-  getSimplifiedPapers(query: string) {
+  getSimplifiedPapersBlock(query: string, block: number) {
     for (const paper of this.simplifiedPapers) {
       for (const author of paper.authors) {
         author.name = this.simplifyAuthorName(author.name);
@@ -166,7 +181,8 @@ export class ResultsService {
         new SimplifiedAuthor('900', 'P. Mussorgsky')
       ],
       new Date(2019, 1, 14),
-      ['Journal1']
+      ['Journal1'],
+      "https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png"
     );
   }
 

@@ -8,7 +8,7 @@ const routes: Routes = [
     loadChildren: './search/search.module#SearchPageModule'
   },
   {
-    path: 'results/:searchKey',
+    path: 'results',
     loadChildren: './search/results/results.module#ResultsPageModule'
   }
 ];

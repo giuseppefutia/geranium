@@ -7,20 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { ResultsPage } from './results.page';
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 import { AuthorDetailComponent } from './author-detail/author-detail.component';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: ResultsPage
-  }
-];
+import { ResultsRoutingModule } from './results-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    ResultsRoutingModule
   ],
   declarations: [ResultsPage, PaperDetailComponent, AuthorDetailComponent],
   entryComponents: [PaperDetailComponent, AuthorDetailComponent]

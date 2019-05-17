@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-grid no-padding [myScrollVanish]="scrollArea">
+    <ion-row no-padding>
+      <ion-col no-padding>
+        <div class="topView">
+          <ion-grid no-padding>
+            <ion-row justify-content-center align-items-center no-padding>
+              <ion-col size="2" size-lg="1" text-center>
+                <ion-button fill="clear" (click)="onBackClick()"
+                  ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
+                ></ion-button>
+              </ion-col>
+              <ion-col size-lg="4">
+                <h2 no-padding style="text-transform: capitalize;">
+                  <b>{{ searchKey }}</b>
+                </h2>
+                <a href="https://en.wikipedia.org/wiki/Deep_learning">
+                  More on this topic
+                </a>
+                <p>
+                  {{ papersCount }} showed papers on this topic in the last
+                  {{ papersYears }} years
+                </p>
+              </ion-col>
+              <ion-col class="ion-hide-sm-down">
+                <div class="chart-container">
+                  <canvas #barCanvas class="barCanvasClass"></canvas>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
+
+<ion-content #scrollArea scrollEvents="true">
+  <ion-grid>
+    <ion-row wrap>
+      <ion-col
+        size="12"
+        size-sm="6"
+        size-lg="3"
+        *ngFor="let paper of filteredPapers"
+      >
+        <ion-card>
+          <ion-img [src]="paper.imageUrl"></ion-img>
+          <ion-card-header>
+            <ion-card-title class="card-title">{{
+              paper.title
+            }}</ion-card-title>
+            <ion-card-subtitle>{{
+              authorsToStringArray(paper).join(', ')
+            }}</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p>{{ paper.title }}</p>
+          </ion-card-content>
+          <div padding>
+            <ion-button
+              fill="clear"
+              color="primary"
+              [routerLink]="['/', 'places', 'tabs', 'discover']"
+              >More</ion-button
+            >
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="onMorePapers($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading papers..."
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

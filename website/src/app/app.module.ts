@@ -10,7 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ScrollVanishDirective } from './directives/scroll-vanish.directive';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +19,7 @@ import { ScrollVanishDirective } from './directives/scroll-vanish.directive';
     BrowserAnimationsModule,
     HttpClientModule,
     IonicModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [
     StatusBar,

@@ -6,7 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { PapersPage } from './papers.page';
-import { ScrollVanishDirective } from '../../../directives/scroll-vanish.directive';
+import { SharedModule } from '../../../shared/shared.module';
+import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
+import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 
 const routes: Routes = [
   {
@@ -20,8 +22,10 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PapersPage, ScrollVanishDirective]
+  declarations: [PapersPage, PaperDetailComponent],
+  entryComponents: [PaperDetailComponent]
 })
 export class PapersPageModule {}

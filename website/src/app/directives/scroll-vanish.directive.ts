@@ -6,6 +6,7 @@ import { DomController } from '@ionic/angular';
 })
 export class ScrollVanishDirective implements OnInit {
   @Input('myScrollVanish') scrollArea;
+  @Input('myHeaderMaxHeight') headerMaxHeight;
 
   private hidden = false;
   private triggerDistance = 20;
@@ -39,7 +40,7 @@ export class ScrollVanishDirective implements OnInit {
         'transition',
         '0.2s linear'
       );
-      this.renderer.setStyle(this.element.nativeElement, 'height', '175px');
+      this.renderer.setStyle(this.element.nativeElement, 'height', this.headerMaxHeight);
     });
   }
 
@@ -57,7 +58,7 @@ export class ScrollVanishDirective implements OnInit {
   show() {
     this.domCtrl.write(() => {
       this.renderer.removeStyle(this.element.nativeElement, 'min-height');
-      this.renderer.setStyle(this.element.nativeElement, 'height', '175px');
+      this.renderer.setStyle(this.element.nativeElement, 'height', this.headerMaxHeight);
       this.renderer.removeStyle(this.element.nativeElement, 'opacity');
       this.renderer.removeStyle(this.element.nativeElement, 'padding');
     });

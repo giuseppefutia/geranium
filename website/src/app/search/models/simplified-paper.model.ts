@@ -5,7 +5,7 @@ export class SimplifiedPaper {
     public id: string,
     public title: string,
     public authors: SimplifiedAuthor[],
-    public journals: string[],
+    public topics: string[],
     public publicationDate: Date,
     public imageUrl: string
   ) {}

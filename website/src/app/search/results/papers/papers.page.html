@@ -1,5 +1,5 @@
-<ion-header>
-  <ion-grid no-padding [myScrollVanish]="scrollArea">
+<ion-header *ngIf="!isRedirecting">
+  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="175px">
     <ion-row no-padding>
       <ion-col no-padding>
         <div class="topView">
@@ -14,12 +14,25 @@
                 <h2 no-padding style="text-transform: capitalize;">
                   <b>{{ searchKey }}</b>
                 </h2>
-                <a href="https://en.wikipedia.org/wiki/Deep_learning">
+                <a tappable (click)="openNewTab('https://en.wikipedia.org/wiki/Deep_learning')">
                   More on this topic
                 </a>
-                <p>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 80%; height: 0.8em;"
+                  padding
+                ></ion-skeleton-text>
+                <p *ngIf="!isLoading">
                   {{ papersCount }} showed papers on this topic in the last
                   {{ papersYears }} years
+                </p>
+                <p
+                  class="ion-hide-sm-down"
+                  style="color: grey; font-size: small"
+                  *ngIf="!isLoading"
+                >
+                  Click on chart bars to filter results
                 </p>
               </ion-col>
               <ion-col class="ion-hide-sm-down">
@@ -36,7 +49,14 @@
 </ion-header>
 
 <ion-content #scrollArea scrollEvents="true">
-  <ion-grid>
+  <ion-grid *ngIf="filteredPapers.length <= 0 && !isRedirecting">
+    <ion-row>
+      <ion-col text-center>
+        <p>Sorry, there are no results for {{ searchKey }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="filteredPapers.length > 0 && !isRedirecting">
     <ion-row wrap>
       <ion-col
         size="12"
@@ -44,25 +64,64 @@
         size-lg="3"
         *ngFor="let paper of filteredPapers"
       >
-        <ion-card>
-          <ion-img [src]="paper.imageUrl"></ion-img>
+        <ion-card style="animation-name: fadeIn; animation-duration: 1s;">
+          <ion-skeleton-text
+            *ngIf="isLoading"
+            style="width:100%; height: 130px;"
+            no-padding
+            no-margin
+          ></ion-skeleton-text>
+          <ion-img
+            *ngIf="!isLoading"
+            [src]="paper.imageUrl"
+            alt="Loading image..."
+          ></ion-img>
           <ion-card-header>
-            <ion-card-title class="card-title">{{
+            <ion-card-title *ngIf="isLoading">
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+              ></ion-skeleton-text>
+            </ion-card-title>
+            <ion-card-title *ngIf="!isLoading" class="card-title">{{
               paper.title
             }}</ion-card-title>
-            <ion-card-subtitle>{{
+            <ion-card-subtitle *ngIf="isLoading">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-card-subtitle>
+            <ion-card-subtitle *ngIf="!isLoading">{{
               authorsToStringArray(paper).join(', ')
             }}</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <p>{{ paper.title }}</p>
+            <ion-skeleton-text
+              style="height: 1em;"
+              *ngIf="isLoading"
+            ></ion-skeleton-text>
+            <div *ngIf="!isLoading">
+              <ion-chip
+                *ngFor="let topic of paper.topics; let i = index"
+                color="primary"
+              >
+                <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
+                <ion-label color="primary">{{ topic }}</ion-label>
+              </ion-chip>
+            </div>
           </ion-card-content>
-          <div padding>
+          <div padding-start padding-bottom>
             <ion-button
               fill="clear"
               color="primary"
-              [routerLink]="['/', 'places', 'tabs', 'discover']"
+              (click)="onPaperDetails(paper)"
               >More</ion-button
             >
           </div>

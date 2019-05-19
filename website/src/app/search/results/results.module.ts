@@ -1,13 +1,13 @@
-import { NgModule, OnInit } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule} from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 import { ResultsPage } from './results.page';
 import { PaperDetailComponent } from './paper-detail/paper-detail.component';
 import { AuthorDetailComponent } from './author-detail/author-detail.component';
 import { ResultsRoutingModule } from './results-routing.module';
+import { JournalDetailComponent } from './journal-detail/journal-detail.component';
 
 @NgModule({
   imports: [
@@ -16,7 +16,6 @@ import { ResultsRoutingModule } from './results-routing.module';
     IonicModule,
     ResultsRoutingModule
   ],
-  declarations: [ResultsPage, PaperDetailComponent, AuthorDetailComponent],
-  entryComponents: [PaperDetailComponent, AuthorDetailComponent]
+  declarations: [ResultsPage]
 })
 export class ResultsPageModule { }

@@ -9,15 +9,45 @@ const routes: Routes = [
     children: [
       {
         path: 'papers',
-        loadChildren: './papers/papers.module#PapersPageModule'
+        children: [
+          {
+            path: '',
+            loadChildren: './papers/papers.module#PapersPageModule',
+            pathMatch: 'full'
+          },
+          {
+            path: ':searchKey',
+            loadChildren: './papers/papers.module#PapersPageModule'
+          }
+        ]
       },
       {
         path: 'authors',
-        loadChildren: './authors/authors.module#AuthorsPageModule'
+        children: [
+          {
+            path: '',
+            loadChildren: './authors/authors.module#AuthorsPageModule',
+            pathMatch: 'full'
+          },
+          {
+            path: ':searchKey',
+            loadChildren: './authors/authors.module#AuthorsPageModule'
+          }
+        ]
       },
       {
         path: 'journals',
-        loadChildren: './journals/journals.module#JournalsPageModule'
+        children: [
+          {
+            path: '',
+            loadChildren: './journals/journals.module#JournalsPageModule',
+            pathMatch: 'full'
+          },
+          {
+            path: ':searchKey',
+            loadChildren: './journals/journals.module#JournalsPageModule'
+          }
+        ]
       }
     ]
   },

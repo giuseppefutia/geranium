@@ -32,15 +32,13 @@
     </ion-row>
     <ion-row no-padding>
       <ion-col offset="1" size="10">
-        <ion-slides [options]="authorsOpts" #authorsSlides no-padding>
-          <ion-slide *ngFor="let author of selectedPaper.authors" tappable (click)="onAuthorSlideClick(author)">
-            <ion-card>
-              <ion-item lines="none">
-                <ion-label>{{ author.name }}</ion-label>
-              </ion-item>
-            </ion-card>
-          </ion-slide>
-        </ion-slides>
+        <ion-chip
+          *ngFor="let author of selectedPaper.authors"
+          (click)="onAuthorChipClick(author)"
+        >
+          <ion-icon name="person"></ion-icon>
+          <ion-label>{{ author.name }}</ion-label>
+        </ion-chip>
       </ion-col>
     </ion-row>
     <ion-row no-padding>
@@ -60,15 +58,20 @@
     <ion-row no-padding>
       <ion-col margin-top margin-start>
         <ion-text color="primary"
-          ><h3 no-margin><b>Journal</b></h3></ion-text
+          ><h3 no-margin><b>Topics</b></h3></ion-text
         >
       </ion-col>
     </ion-row>
     <ion-row no-padding>
       <ion-col offset="1" size="10">
-        <p no-margin>
-          {{ selectedPaper.journals.join(', ') }}
-        </p>
+          <ion-chip
+          *ngFor="let topic of selectedPaper.topics"
+          (click)="onTopicChipClick(author)"
+          color="primary"
+        >
+          <ion-icon name="bulb"></ion-icon>
+          <ion-label color="primary">{{ topic }}</ion-label>
+        </ion-chip>
       </ion-col>
     </ion-row>
     <ion-row no-padding>

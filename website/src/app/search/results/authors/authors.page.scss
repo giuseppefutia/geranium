@@ -1,0 +1,16 @@
+.topView {
+  background: var(--ion-color-primary-light);
+  overflow-y: hidden;
+  height: 102px; // If changed change also myHeaderMaxHeight in HTML
+}
+
+.card-img {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-img ion-img {
+  position: absolute;
+  width: 100%;
+}

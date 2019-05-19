@@ -3,13 +3,15 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  AfterViewInit
+  AfterContentInit
 } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { ResultsService } from '../../services/results.service';
+import { NavController, ModalController } from '@ionic/angular';
+import { PapersService } from '../../services/papers.service';
 import { SimplifiedPaper } from '../../models/simplified-paper.model';
 import { Chart } from 'chart.js';
 import { SimplifiedAuthor } from '../../models/simplified-author.model';
+import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
+import { ActivatedRoute } from '@angular/router';
 
 class YearsData {
   constructor(
@@ -28,7 +30,7 @@ class BarData {
   templateUrl: './papers.page.html',
   styleUrls: ['./papers.page.scss']
 })
-export class PapersPage implements OnInit, AfterViewInit {
+export class PapersPage implements OnInit, AfterContentInit {
   @ViewChild('barCanvas') barCanvas: ElementRef;
 
   primaryColor = 'rgba(44, 101, 201, 0.5)';
@@ -46,6 +48,7 @@ export class PapersPage implements OnInit, AfterViewInit {
   filteredPapers: SimplifiedPaper[] = [];
 
   isLoading = false;
+  isRedirecting = false;
   endOfResults = false;
 
   chartData = {
@@ -74,9 +77,10 @@ export class PapersPage implements OnInit, AfterViewInit {
               beginAtZero: true,
               callback(value) {
                 if (value % 1 === 0) {
+                  // To show only integer numbers
                   return value;
                 }
-              } // To show only integer numbers
+              }
             }
           }
         ],
@@ -97,67 +101,115 @@ export class PapersPage implements OnInit, AfterViewInit {
 
   constructor(
     private navCtrl: NavController,
-    private resultsService: ResultsService
+    private papersService: PapersService,
+    private route: ActivatedRoute,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
-    if (this.resultsService.searchKey === '') {
-      this.navCtrl.navigateBack(['/search']);
-    } else {
-      this.searchKey = this.resultsService.searchKey;
+    this.route.paramMap.subscribe(paramMap => {
+      if (paramMap.has('searchKey')) {
+        this.searchKey = paramMap.get('searchKey');
+        this.papersService.searchKey = this.searchKey;
+      } else {
+        if (this.papersService.searchKey === '') {
+          this.navCtrl.navigateBack(['/search']);
+          return;
+        } else {
+          this.searchKey = this.papersService.searchKey;
+          this.isRedirecting = true;
+          this.navCtrl.navigateForward([
+            '/',
+            'results',
+            'tabs',
+            'papers',
+            this.searchKey
+          ]);
+        }
+      }
+    });
+  }
+
+  ngAfterContentInit() {
+    if (!this.isRedirecting) {
+      this.fetchData();
     }
   }
 
-  ngAfterViewInit() {
-    this.fetchData();
+  fetchData() {
+    this.isLoading = true;
+    this.addDummySlides(10);
+    setTimeout(() => {
+      this.filteredPapers = [];
+      this.isLoading = false;
+      this.addToShowedPapers(10);
+
+      setTimeout(() => {
+        this.createChart();
+      }, 300);
+    }, 2000);
   }
 
-  fetchData() {
-    this.addToShowedPapers(10);
-
-    setTimeout(() => {
-      this.createChart();
-    }, 300);
+  filterTopics(topics: string[], topicsLimit: number): string[] {
+    return topics
+      .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
+      .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
   // Add papers that will actually be shown in the grid
   addToShowedPapers(atleast: number) {
+    const maxUnshownResults = 20;
+    const maxTopicsPerCard = 4;
+    const oldFiltered = this.filteredPapers.length;
+    const oldAll = this.allPapers.length;
     while (1) {
-      const temp = this.resultsService.getSimplifiedPapersBlock(
+      const temp = this.papersService.getSimplifiedPapersBlock(
         this.searchKey,
         this.currentBlock
       );
       if (temp.length === 0) {
         // If there are no results
+        this.endOfResults = true;
         break;
       }
       for (const newPaper of temp) {
+        newPaper.topics = this.filterTopics(newPaper.topics, maxTopicsPerCard);
         this.allPapers.push(newPaper);
       }
       this.currentBlock++;
 
-      this.allPapersYears = this.getPapersYears();
+      this.updatePapersYears(temp);
       this.papersCount = this.allPapers.length;
       this.papersYears =
         new Date().getFullYear() -
         Number.parseInt(this.allPapersYears[0].year, 10);
 
       this.filterPapers();
-      if (temp.length !== this.resultsService.blockSize) {
+      if (temp.length !== this.papersService.blockSize) {
+        // If the length of the results of the last block
+        // is not the size of a block, than results have ended
+        // which in turn disables the infinite-scroll
         this.endOfResults = true;
         break;
       }
-      if (this.filteredPapers.length >= atleast) {
+      if (
+        this.filteredPapers.length - oldFiltered >= atleast ||
+        this.allPapers.length - oldAll >= maxUnshownResults
+      ) {
         break;
       }
     }
-    //this.topicChart.update();
+  }
+
+  openNewTab(url: string) {
+    window.open(url, '_blank');
   }
 
   // Called by infinite scroll to load more data
   onMorePapers(event) {
     setTimeout(() => {
       this.addToShowedPapers(10);
+      this.updateChart();
       event.target.complete();
 
       // disable the infinite scroll
@@ -165,6 +217,18 @@ export class PapersPage implements OnInit, AfterViewInit {
         event.target.disabled = true;
       }
     }, 1500);
+  }
+
+  // Open modal when clicked on MORE in a card 
+  onPaperDetails(paper: SimplifiedPaper) {
+    this.modalCtrl
+      .create({
+        component: PaperDetailComponent,
+        componentProps: { selectedPaperId: paper.id }
+      })
+      .then(modalEl => {
+        modalEl.present();
+      });
   }
 
   // Called when top button is clicked -> returns to search page
@@ -184,8 +248,21 @@ export class PapersPage implements OnInit, AfterViewInit {
 
   // Adjusts the configuration of the chart in the top view and shows it
   createChart() {
-    this.chartData.labels = this.allPapersYears.map(el => el.year);
     this.chartData.datasets[0].label = '# of publications';
+    this.updateChartData();
+    this.chartOpts.data = this.chartData;
+    this.topicChart = new Chart(this.barCanvas.nativeElement, this.chartOpts);
+  }
+
+  // Update chart with newly fetched data
+  updateChart() {
+    this.updateChartData();
+    this.topicChart.update();
+  }
+
+  // Maps the new received data in the graph view
+  updateChartData() {
+    this.chartData.labels = this.allPapersYears.map(el => el.year);
     this.chartData.datasets[0].data = this.allPapersYears.map(el => el.papers);
     this.chartData.datasets[0].backgroundColor = new Array<string>(
       this.allPapersYears.length
@@ -194,43 +271,42 @@ export class PapersPage implements OnInit, AfterViewInit {
       this.allPapersYears.length
     );
     for (let i = 0; i < this.allPapersYears.length; i++) {
-      this.chartData.datasets[0].backgroundColor[i] = this.lightColor;
-      this.chartData.datasets[0].borderColor[i] = this.primaryColor;
+      this.chartData.datasets[0].backgroundColor[i] =
+        this.allPapersYears[i].shown === true
+          ? this.lightColor
+          : this.lightHiddenColor;
+      this.chartData.datasets[0].borderColor[i] =
+        this.allPapersYears[i].shown === true
+          ? this.primaryColor
+          : this.hiddenColor;
     }
-    this.chartOpts.data = this.chartData;
-    this.topicChart = new Chart(this.barCanvas.nativeElement, this.chartOpts);
   }
 
-  // Returns an array of type YearsData containing information about
-  // the number of papers for each year sorted by ascending year number
-  getPapersYears() {
-    let i: number;
-    const data: YearsData[] = [];
-    let found = false;
-    for (i = 0; i < this.allPapers.length; i++) {
+  // Updates the allPapersYears array containing information about
+  // the number of papers for each year sorted by ascending year number with newly received papers
+  updatePapersYears(newPapers: SimplifiedPaper[]) {
+    let found: boolean;
+    for (const newPaper of newPapers) {
       found = false;
-      for (const el of data) {
-        if (
-          this.allPapers[i].publicationDate.getFullYear().toString() === el.year
-        ) {
+      for (const el of this.allPapersYears) {
+        if (newPaper.publicationDate.getFullYear().toString() === el.year) {
           el.papers++;
           found = true;
         }
       }
       if (found === false) {
-        data.push(
+        this.allPapersYears.push(
           new YearsData(
-            this.allPapers[i].publicationDate.getFullYear().toString(),
+            newPaper.publicationDate.getFullYear().toString(),
             1,
             true
           )
         );
       }
     }
-    data.sort(
+    this.allPapersYears.sort(
       (a, b) => Number.parseInt(a.year, 10) - Number.parseInt(b.year, 10)
     );
-    return data;
   }
 
   // Called when a bar on the chart is clicked
@@ -253,6 +329,8 @@ export class PapersPage implements OnInit, AfterViewInit {
     this.topicChart.update();
   }
 
+  // The allPapers array is filtered by the value of allPapersYears[i].shown
+  // corresponding to each year. The result is stored in filteredPapers
   filterPapers() {
     this.filteredPapers = this.allPapers.filter(el => {
       return (
@@ -265,6 +343,7 @@ export class PapersPage implements OnInit, AfterViewInit {
     });
   }
 
+  // Adds dummy slides while fetching data
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
@@ -275,7 +354,7 @@ export class PapersPage implements OnInit, AfterViewInit {
           [new SimplifiedAuthor('', '')],
           [''],
           new Date(''),
-          'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+          ''
         )
       );
     }

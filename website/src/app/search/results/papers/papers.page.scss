@@ -1,7 +1,7 @@
 .topView {
   background: var(--ion-color-primary-light);
   overflow-y: hidden;
-  height: 175px; // If changed change also the directive
+  height: 175px; // If changed change also myHeaderMaxHeight in HTML
 }
 
 .barCanvasClass {
@@ -9,12 +9,22 @@
   max-height: 150px !important;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* mixin for multiline */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
   overflow: hidden;
   position: relative;
   line-height: $lineHeight;
-  max-height: $lineHeight * $lineCount; 
+  max-height: $lineHeight * $lineCount;
   text-align: justify;
   padding-right: 1em;
   &:before {
@@ -36,4 +46,8 @@
 
 .card-title {
   @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
+}
+
+.card-abstract {
+  @include multiLineEllipsis($lineHeight: 1em, $lineCount: 3, $bgColor: white);
 }

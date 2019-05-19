@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router} from '@angular/router';
-import { ResultsService } from './services/results.service';
+import { PapersService } from './services/papers.service';
 
 @Component({
   selector: 'app-search',
@@ -9,19 +9,19 @@ import { ResultsService } from './services/results.service';
   styleUrls: ['./search.page.scss']
 })
 export class SearchPage implements OnInit {
-  constructor(private router: Router, private resultsService: ResultsService) { }
+  constructor(private router: Router, private papersService: PapersService) { }
 
   ngOnInit() {}
 
   ionViewDidEnter() {
-    this.resultsService.searchKey = '';
+    this.papersService.searchKey = '';
   }
 
   onSubmit(form: NgForm) {
     if (!form.valid) {
       return;
     }
-    this.resultsService.searchKey = form.value.searchkey;
+    this.papersService.searchKey = form.value.searchkey;
     this.router.navigate(['/', 'results', 'tabs', 'papers']);
   }
 }

@@ -6,6 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { AuthorsPage } from './authors.page';
+import { SharedModule } from '../../../shared/shared.module';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 const routes: Routes = [
   {
@@ -19,8 +21,10 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AuthorsPage]
+  declarations: [AuthorsPage, AuthorDetailComponent],
+  entryComponents: [AuthorDetailComponent]
 })
 export class AuthorsPageModule {}

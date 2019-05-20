@@ -56,6 +56,11 @@ def add_author(author):
 	'''
 	Add author entity to the graph
 	'''
+	if not author['authority']:
+		if author['author']:
+			author['authority'] = quote(author['author'])
+		else:
+			return
 	if author['authority'] not in authors:
 		# author type
 		graph.add( ( GERANIUM_AUT[author['authority']], 
@@ -208,19 +213,20 @@ for record in records:
 
 	# add publication creator relationship
 	author = record['internalAuthors'][0]
+	add_author(author)
 	if author['authority']:
 		graph.add( ( GERANIUM_PUB[str(record['handle'])], 
 			PURL.creator,
 			GERANIUM_AUT[author['authority']] ) )
-		add_author(author)
+		
 	
 	# add publication contributor relationship
 	for author in record['internalAuthors'][1:]:
+		add_author(author)
 		if author['authority']:
 			graph.add( ( GERANIUM_PUB[str(record['handle'])], 
 				PURL.contributor,
 				GERANIUM_AUT[author['authority']]) )
-			add_author(author)
 
 	progress+=1
 	progressBar(progress, len(records), bar_length=100)

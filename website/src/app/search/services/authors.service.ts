@@ -61,8 +61,6 @@ export class AuthorsService {
   simplifyAuthorName(name: string): string {
     let builder = '';
     let i: number;
-    name = name.replace(/[\p{P}\p{S}\p{C}\p{N}]+/g, '');
-    name = name.replace(/\s+(?:[JS]R|I{1,3}|I[VX]|VI{0,3})$/gi, '');
     const names = name.split(' ');
     for (i = 0; i < names.length - 1; i++) {
       builder += names[i].charAt(0).toUpperCase() + '. ';

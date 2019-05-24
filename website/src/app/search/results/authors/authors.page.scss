@@ -4,8 +4,19 @@
   height: 102px; // If changed change also myHeaderMaxHeight in HTML
 }
 
+@mixin imgResponsiveHeight() {
+  width: 100%;
+  height: 270px;
+  @media screen and (min-width: 768px) {
+    height: 250px;
+  }
+  @media screen and (min-width: 992px) {
+    height: 200px;
+  }
+}
+
 .card-img {
-  height: 200px;
+  @include imgResponsiveHeight();
   overflow: hidden;
   position: relative;
 }

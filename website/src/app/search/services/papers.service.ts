@@ -70,50 +70,127 @@ export class PapersService {
   private _blockSize = 6;
   simplifiedPapers = [
     new SimplifiedPaper(
-      'abc',
-      "This is the title of a very long and complex paper and I don't want \
-      to break anything but I think that if the title is too long the card will be excessively tall",
+      'PP1',
+      'Carbon Nanotubes as an Effective Opportunity for Cancer Diagnosis and Treatment',
       [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers')
+        new SimplifiedAuthor('fafa', 'Alessandro Sanginario'),
+        new SimplifiedAuthor('bea', 'Beatrice Miccoli'),
+        new SimplifiedAuthor('danda', 'Danilo Demarchi')
       ],
-      ['Deep Learning', 'AI'],
-      new Date(2010, 1, 10),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+      [
+        'Carbon nanotube',
+        'Ablation',
+        'Laser Ablation',
+        'Metastasis',
+        'Nanomaterials',
+        'Nanomedicine',
+        'Nanoparticle'
+      ],
+      new Date(2017, 2, 17),
+      'https://upload.wikimedia.org/wikipedia/commons/7/76/Kohlenstoffnanoroehre_Animation.gif'
     ),
     new SimplifiedPaper(
-      'cba',
-      'Very short indeed',
+      'PP2',
+      'Wide Band Microwave Characterization of MWCNTS/Epoxy Composites',
       [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers')
+        new SimplifiedAuthor('MauGio', 'Mauro Giorcelli'),
+        new SimplifiedAuthor('PatSav', 'Patrizia Savi'),
+        new SimplifiedAuthor('AlbTag', 'Alberto Tagliaferro')
       ],
-      ['Deep Learning', 'AI', 'Machine Learning'],
-      new Date(2011, 1, 10),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+      [
+        'Polymer',
+        'Filler',
+        'Epoxy',
+        'Elastic modulus',
+        'Conductive polymer',
+        'Composite material'
+      ],
+      new Date(2015, 1, 10),
+      'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
     ),
     new SimplifiedPaper(
-      '111',
-      'Another paper about Artificial Intelligence',
+      'PP3',
+      'Effects of Nano-sized Additives on the High-Temperature Properties of Bituminous Binders: A Comparative Study',
       [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers'),
-        new SimplifiedAuthor('900', 'Modest Mussorgsky')
+        new SimplifiedAuthor('aaaa', 'Ezio Santagata'),
+        new SimplifiedAuthor('sssss', 'Giuseppe Chiappinelli'),
+        new SimplifiedAuthor('ddsaf', 'Orazio Ballieri'),
+        new SimplifiedAuthor('aadad', 'Lucia Tsantilis')
       ],
-      ['Deep Learning', 'Sound Design'],
-      new Date(2011, 1, 10),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+      [
+        'Carbon Nanotube',
+        'Chemical Vapor Deposition',
+        'Creep',
+        'Elastic modulus',
+        'Thermal conductiviy',
+        'Viscosity',
+        "Young's modulus"
+      ],
+      new Date(2016, 1, 8),
+      'https://news.mit.edu/sites/mit.edu.newsoffice/files/styles/news_article_image_top_slideshow/public/images/2015/MIT-CVD-explained-1.jpg'
     ),
     new SimplifiedPaper(
-      'ABC',
-      'Paper11',
+      'PP4',
+      'Low-Cost Carbon Fillers to Improve Mechanical Properties and Conductivity of Epoxy Composites',
       [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers')
+        new SimplifiedAuthor('0011', 'Aamer Abbas Khan'),
+        new SimplifiedAuthor('adsahjk1', 'Massimo Rovere'),
+        new SimplifiedAuthor('ada22', 'Patrizia Savi'),
+        new SimplifiedAuthor('adsahjk1', 'Carlo Rosso')
       ],
-      ['Deep Learning', 'Media Quality'],
-      new Date(2012, 1, 10),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+      ['Graphene', 'Epoxy', 'Composite Material', 'Carbon Nanotube', 'Carbon Biochar', 'Activated Carbon'],
+      new Date(2017, 11, 25),
+      'https://upload.wikimedia.org/wikipedia/commons/9/9e/Graphen.jpg'
+    ),
+    new SimplifiedPaper(
+      'PP5',
+      'BaTiO3 nanotube arrays by hydrothermal conversion of TiO2 nanotube carpets grown by anodic oxidation',
+      [
+        new SimplifiedAuthor('LucLav', 'Andrea Laberti'),
+        new SimplifiedAuthor('MatPav', 'Elisa Paola Ambrosio'),
+        new SimplifiedAuthor('111', 'Diego Giovanni Manfredi'),
+        new SimplifiedAuthor('222', 'Giancarlo Canavese'),
+        new SimplifiedAuthor('33', 'Mariangela Lombardi'),
+        new SimplifiedAuthor('122', 'Marzia Quaglio'),
+        new SimplifiedAuthor('131', 'Federico Bella'),
+        new SimplifiedAuthor('1414', 'Nadia Garino'),
+        new SimplifiedAuthor('fds', 'Stefano Bianco'),
+        new SimplifiedAuthor('tre', 'Candido Pirri'),
+        new SimplifiedAuthor('ry9w', 'Stefano Stassi'),
+        new SimplifiedAuthor('pdada', 'Angelica Chiodoni')
+      ],
+      [
+        'Carbon nanotube',
+        'Barium Titanate',
+        'Nanoparticle',
+        'Nanowire',
+        'Oxide',
+        'Sol-gel',
+        'Titanium dioxide'
+      ],
+      new Date(2017, 11, 21),
+      'http://www.chemtube3d.com/images/aleximages/batio3.png'
+    ),
+    new SimplifiedPaper(
+      'PP6',
+      'Mesoporous carbons supported non-noble metal Fe-NX electrocatalysts for PEM Fuel Cell oxygen reduction reaction',
+      [
+        new SimplifiedAuthor('123', 'Alessandro Hugo Monteverde Videla'),
+        new SimplifiedAuthor('782', 'Juqin Zeng'),
+        new SimplifiedAuthor('30111', 'Stefania Specchia'),
+        new SimplifiedAuthor('dsja', 'Carlotta Francia')
+      ],
+      [
+        'Carbon nanotube',
+        'Carbon Monoxide',
+        'Carbon',
+        'Activated Carbon',
+        'Cathode',
+        'Nitrogen',
+        'Mesoporous material'
+      ],
+      new Date(2016, 5, 3),
+      'https://upload.wikimedia.org/wikipedia/commons/f/f0/Graphite-and-diamond-with-scale.jpg'
     ),
     new SimplifiedPaper(
       'CBA',
@@ -123,8 +200,8 @@ export class PapersService {
         new SimplifiedAuthor('782', 'Dave Eggers')
       ],
       ['Deep Learning', 'AI', 'Education', 'Teaching', 'Psychology'],
-      new Date(2011, 1, 10),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+      new Date(2015, 1, 10),
+      'https://www.gardenandgreenhouse.net/wp-content/uploads/2014/07/Biochar.jpg'
     ),
     new SimplifiedPaper(
       '222',
@@ -136,11 +213,14 @@ export class PapersService {
       ],
       ['Deep Learning', 'Knowledge Graphs'],
       new Date(2016, 1, 10),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
+      'https://www.azonano.com/images/Article_Images/ImageForArticle_4149(2).jpg'
     )
   ];
 
-  constructor(private http: HttpClient, private authorsService: AuthorsService) {}
+  constructor(
+    private http: HttpClient,
+    private authorsService: AuthorsService
+  ) {}
 
   get blockSize(): number {
     return this._blockSize;

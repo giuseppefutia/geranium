@@ -14,7 +14,12 @@
                 <h2 no-padding style="text-transform: capitalize;">
                   <b>{{ searchKey }}</b>
                 </h2>
-                <a tappable (click)="openNewTab('https://en.wikipedia.org/wiki/Deep_learning')">
+                <a
+                  tappable
+                  (click)="
+                    openNewTab('https://en.wikipedia.org/wiki/Deep_learning')
+                  "
+                >
                   More on this topic
                 </a>
                 <ion-skeleton-text
@@ -67,15 +72,14 @@
         <ion-card style="animation-name: fadeIn; animation-duration: 1s;">
           <ion-skeleton-text
             *ngIf="isLoading"
-            style="width:100%; height: 130px;"
+            style="width:100%; height: 200px;"
             no-padding
             no-margin
           ></ion-skeleton-text>
-          <ion-img
-            *ngIf="!isLoading"
-            [src]="paper.imageUrl"
-            alt="Loading image..."
-          ></ion-img>
+          <div *ngIf="!isLoading" class="card-img">
+            <ion-img [src]="paper.imageUrl" alt="Loading image..."></ion-img>
+          </div>
+
           <ion-card-header>
             <ion-card-title *ngIf="isLoading">
               <ion-skeleton-text

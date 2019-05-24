@@ -69,11 +69,17 @@
             <ion-card-title *ngIf="!isLoading" class="card-title">
               {{ author.name }}
             </ion-card-title>
+            <ion-card-subtitle *ngIf="isLoading">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-card-subtitle>
+            <ion-card-subtitle *ngIf="!isLoading">
+              {{ author.department }}
+            </ion-card-subtitle>
           </ion-card-header>
-
+          
           <ion-skeleton-text
             *ngIf="isLoading"
-            style="width:100%; height: 200px;"
+            style="width:100%; height: 220px;"
             no-padding
             no-margin
           ></ion-skeleton-text>
@@ -82,19 +88,26 @@
           </div>
 
           <ion-card-content>
-            <ion-card-subtitle *ngIf="isLoading">
-              <ion-skeleton-text animated></ion-skeleton-text>
-            </ion-card-subtitle>
-            <ion-card-subtitle *ngIf="!isLoading">
-              {{ author.department }}
-            </ion-card-subtitle>
+            <ion-skeleton-text
+              style="height: 1em;"
+              *ngIf="isLoading"
+            ></ion-skeleton-text>
+            <div *ngIf="!isLoading" padding>
+              <ion-label>Number of papers: </ion-label>
+              <ion-badge>{{ author.numberOfPapers }}</ion-badge>
+            </div>
             <ion-skeleton-text
               style="height: 1em;"
               *ngIf="isLoading"
             ></ion-skeleton-text>
             <div *ngIf="!isLoading">
-              <ion-label>Number of papers: </ion-label>
-              <ion-badge slot="end">{{ author.numberOfPapers }}</ion-badge>
+              <ion-chip
+                *ngFor="let topic of author.topics; let i = index"
+                color="primary"
+              >
+                <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
+                <ion-label color="primary">{{ topic }}</ion-label>
+              </ion-chip>
             </div>
           </ion-card-content>
           <div padding-start padding-bottom>

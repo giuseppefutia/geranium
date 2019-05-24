@@ -19,6 +19,16 @@
   }
 }
 
+@mixin imgResponsiveHeight() {
+  height: 270px;
+  @media screen and (min-width: 768px) {
+    height: 250px;
+  }
+  @media screen and (min-width: 992px) {
+    height: 200px;
+  }
+}
+
 /* mixin for multiline */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
   overflow: hidden;
@@ -50,4 +60,15 @@
 
 .card-abstract {
   @include multiLineEllipsis($lineHeight: 1em, $lineCount: 3, $bgColor: white);
+}
+
+.card-img {
+  overflow: hidden;
+  position: relative;
+  @include imgResponsiveHeight();
+}
+
+.card-img ion-img {
+  position: absolute;
+  width: 100%;
 }

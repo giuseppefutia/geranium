@@ -115,6 +115,7 @@
               <ion-chip
                 *ngFor="let topic of paper.topics; let i = index"
                 color="primary"
+                (click)="onTopicChipClick(topic)"
               >
                 <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
                 <ion-label color="primary">{{ topic }}</ion-label>

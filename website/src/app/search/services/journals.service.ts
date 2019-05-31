@@ -50,8 +50,8 @@ export class JournalsService {
     return [...this.journals];
   }
 
-  getJournalFromId(authorId: string) {
-    return this.journals.find(author => author.id === authorId);
+  getJournalFromId(journalId: string) {
+    return this.journals.find(journal => journal.id === journalId);
   }
 
   fetchJournals(query: string) {

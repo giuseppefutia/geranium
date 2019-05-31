@@ -1,10 +1,9 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
-import { PapersService } from '../../services/papers.service';
 import { ActivatedRoute } from '@angular/router';
 import { Journal } from '../../models/journal.model';
-import { JournalsService } from '../../services/journals.service';
 import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
+import { ResultsService } from '../../services/results.service';
 
 @Component({
   selector: 'app-journals',
@@ -23,8 +22,7 @@ export class JournalsPage implements OnInit, AfterContentInit {
 
   constructor(
     private navCtrl: NavController,
-    private papersService: PapersService,
-    private journalsService: JournalsService,
+    private resultsService: ResultsService,
     private route: ActivatedRoute,
     private modalCtrl: ModalController
   ) {}
@@ -33,13 +31,13 @@ export class JournalsPage implements OnInit, AfterContentInit {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
-        this.papersService.searchKey = this.searchKey;
+        this.resultsService.searchKey = this.searchKey;
       } else {
-        if (this.papersService.searchKey === '') {
+        if (this.resultsService.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.papersService.searchKey;
+          this.searchKey = this.resultsService.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
@@ -80,7 +78,7 @@ export class JournalsPage implements OnInit, AfterContentInit {
     const maxTopicsPerCard = 4;
     const oldAll = this.allJournals.length;
     while (1) {
-      const temp = this.journalsService.getJournalsBlock(
+      const temp = this.resultsService.getJournalsBlock(
         this.searchKey,
         this.currentBlock
       );
@@ -98,7 +96,7 @@ export class JournalsPage implements OnInit, AfterContentInit {
       }
       this.currentBlock++;
 
-      if (temp.length !== this.journalsService.blockSize) {
+      if (temp.length !== this.resultsService.journalsBlockSize) {
         // If the length of the results of the last block
         // is not the size of a block, than results have ended
         // which in turn disables the infinite-scroll

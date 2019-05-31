@@ -6,12 +6,12 @@ import {
   AfterContentInit
 } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
-import { PapersService } from '../../services/papers.service';
 import { SimplifiedPaper } from '../../models/simplified-paper.model';
 import { Chart } from 'chart.js';
 import { SimplifiedAuthor } from '../../models/simplified-author.model';
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 import { ActivatedRoute } from '@angular/router';
+import { ResultsService } from '../../services/results.service';
 
 class YearsData {
   constructor(
@@ -101,7 +101,7 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   constructor(
     private navCtrl: NavController,
-    private papersService: PapersService,
+    private resultsService: ResultsService,
     private route: ActivatedRoute,
     private modalCtrl: ModalController
   ) {}
@@ -110,13 +110,13 @@ export class PapersPage implements OnInit, AfterContentInit {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
-        this.papersService.searchKey = this.searchKey;
+        this.resultsService.searchKey = this.searchKey;
       } else {
-        if (this.papersService.searchKey === '') {
+        if (this.resultsService.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.papersService.searchKey;
+          this.searchKey = this.resultsService.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
@@ -163,7 +163,7 @@ export class PapersPage implements OnInit, AfterContentInit {
     const oldFiltered = this.filteredPapers.length;
     const oldAll = this.allPapers.length;
     while (1) {
-      const temp = this.papersService.getSimplifiedPapersBlock(
+      const temp = this.resultsService.getSimplifiedPapersBlock(
         this.searchKey,
         this.currentBlock
       );
@@ -185,7 +185,7 @@ export class PapersPage implements OnInit, AfterContentInit {
         Number.parseInt(this.allPapersYears[0].year, 10);
 
       this.filterPapers();
-      if (temp.length !== this.papersService.blockSize) {
+      if (temp.length !== this.resultsService.papersBlockSize) {
         // If the length of the results of the last block
         // is not the size of a block, than results have ended
         // which in turn disables the infinite-scroll
@@ -203,6 +203,11 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   openNewTab(url: string) {
     window.open(url, '_blank');
+  }
+
+  onTopicChipClick(topic: string) {
+    this.resultsService.searchKey = topic;
+    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);
   }
 
   // Called by infinite scroll to load more data
@@ -233,7 +238,11 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   // Called when top button is clicked -> returns to search page
   onBackClick() {
-    this.navCtrl.navigateBack(['/', 'search']);
+    if (this.resultsService.isFirstSearch) {
+      this.navCtrl.navigateBack(['/', 'search']);
+    } else {
+      this.navCtrl.back();
+    }
   }
 
   // Converts the array of SimplifiedAuthors in the <paper> argument in an

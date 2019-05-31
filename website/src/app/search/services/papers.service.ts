@@ -68,6 +68,8 @@ export class PapersService {
   // TODO: Change when connecting to server
   // It represents the size of the chunks retrieved from the server (pagination)
   private _blockSize = 6;
+
+  papers: Paper[] = [];
   simplifiedPapers = [
     new SimplifiedPaper(
       'PP1',
@@ -138,7 +140,14 @@ export class PapersService {
         new SimplifiedAuthor('ada22', 'Patrizia Savi'),
         new SimplifiedAuthor('adsahjk1', 'Carlo Rosso')
       ],
-      ['Graphene', 'Epoxy', 'Composite Material', 'Carbon Nanotube', 'Carbon Biochar', 'Activated Carbon'],
+      [
+        'Graphene',
+        'Epoxy',
+        'Composite Material',
+        'Carbon Nanotube',
+        'Carbon Biochar',
+        'Activated Carbon'
+      ],
       new Date(2017, 11, 25),
       'https://upload.wikimedia.org/wikipedia/commons/9/9e/Graphen.jpg'
     ),
@@ -220,7 +229,21 @@ export class PapersService {
   constructor(
     private http: HttpClient,
     private authorsService: AuthorsService
-  ) {}
+  ) {
+    for (const paper of this.simplifiedPapers) {
+      this.papers.push(
+        new Paper(
+          paper.id,
+          paper.title,
+          'This is an example of paper abstract on whatever topic it is',
+          paper.authors,
+          paper.topics,
+          paper.publicationDate,
+          paper.imageUrl
+        )
+      );
+    }
+  }
 
   get blockSize(): number {
     return this._blockSize;
@@ -236,21 +259,7 @@ export class PapersService {
   }
 
   getPaperFromId(id: string): Paper {
-    return new Paper(
-      id,
-      'Another paper about Artificial Intelligence',
-      'This is the abstract: Keep close to Natures heart... and break clear away, \
-    once in a while, and climb a mountain or spend a week in the woods. Wash your \
-    spirit clean.',
-      [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers'),
-        new SimplifiedAuthor('900', 'P. Mussorgsky')
-      ],
-      ['Deep Learning', 'AI'],
-      new Date(2019, 1, 14),
-      'https://cdn-images-1.medium.com/max/2000/1*u9L_UJbV0Qfg1PZQkHna2g.png'
-    );
+    return this.papers.find(p => p.id === id);
   }
 
   fetchPapers(query: string) {

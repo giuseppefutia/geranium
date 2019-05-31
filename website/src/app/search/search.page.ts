@@ -22,6 +22,6 @@ export class SearchPage implements OnInit {
       return;
     }
     this.papersService.searchKey = form.value.searchkey;
-    this.router.navigate(['/', 'results', 'tabs', 'papers']);
+    this.router.navigate(['/', 'results', 'tabs', 'papers', this.papersService.searchKey]);
   }
 }

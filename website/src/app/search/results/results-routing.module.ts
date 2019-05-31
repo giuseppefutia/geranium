@@ -30,6 +30,10 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
+            path: 'author/:authorId',
+            loadChildren: './authors/authors.module#AuthorsPageModule'
+          },
+          {
             path: ':searchKey',
             loadChildren: './authors/authors.module#AuthorsPageModule'
           }

@@ -1,10 +1,9 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
-import { PapersService } from '../../services/papers.service';
 import { Author } from '../../models/author.model';
-import { AuthorsService } from '../../services/authors.service';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
+import { ResultsService } from '../../services/results.service';
 
 @Component({
   selector: 'app-authors',
@@ -23,23 +22,27 @@ export class AuthorsPage implements OnInit, AfterContentInit {
 
   constructor(
     private navCtrl: NavController,
-    private papersService: PapersService,
-    private authorsService: AuthorsService,
+    private resultsService: ResultsService,
     private route: ActivatedRoute,
     private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
+      if (paramMap.has('authorId')) {
+        this.isRedirecting = true;
+        this.onAuthorDetails(this.resultsService.getAuthorFromId(paramMap.get('authorId')));
+        return;
+      }
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
-        this.papersService.searchKey = this.searchKey;
+        this.resultsService.searchKey = this.searchKey;
       } else {
-        if (this.papersService.searchKey === '') {
+        if (this.resultsService.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.papersService.searchKey;
+          this.searchKey = this.resultsService.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
@@ -80,7 +83,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
     const maxTopicsPerCard = 4;
     const oldAll = this.allAuthors.length;
     while (1) {
-      const temp = this.authorsService.getAuthorsBlock(
+      const temp = this.resultsService.getAuthorsBlock(
         this.searchKey,
         this.currentBlock
       );
@@ -98,7 +101,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
       }
       this.currentBlock++;
 
-      if (temp.length !== this.authorsService.blockSize) {
+      if (temp.length !== this.resultsService.authorsBlockSize) {
         // If the length of the results of the last block
         // is not the size of a block, than results have ended
         // which in turn disables the infinite-scroll
@@ -137,6 +140,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
       })
       .then(modalEl => {
         modalEl.present();
+        // TODO : Load authors in page when modal closes if coming from author detail request
       });
   }
 

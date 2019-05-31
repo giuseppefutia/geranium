@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { PapersPage } from './papers.page';
 import { SharedModule } from '../../../shared/shared.module';
-import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 const routes: Routes = [
   {

@@ -85,7 +85,7 @@ PREFIX purl:<http://purl.org/dc/terms/>
 PREFIX dbp:<http://dbpedia.org/resource/>
 select * where {
     ?publication purl:subject dbp:${query.replace(regex, '_')}
-} limit 1000000`;
+} limit 100000`;
     this.http
       .get(
         'https://blazegraph.nexacenter.org/blazegraph/sparql?query=' +

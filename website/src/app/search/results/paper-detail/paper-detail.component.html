@@ -11,55 +11,47 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row>
+    <ion-row padding>
       <ion-col size="4">
         <ion-img [src]="selectedPaper.imageUrl"></ion-img>
       </ion-col>
-      <ion-col>
-          <ion-text color="primary"
-          ><h3 no-margin><b>Authors</b></h3></ion-text
-        >
-        <ion-chip
-          *ngFor="let author of selectedPaper.authors"
-          (click)="onAuthorChipClick(author)"
-        >
-          <ion-icon name="person"></ion-icon>
-          <ion-label>{{ author.name }}</ion-label>
-        </ion-chip>
-      </ion-col>
-    </ion-row>
-    <!-- <ion-row no-padding>
-      <ion-col margin-top margin-start>
+      <ion-col padding>
         <ion-text color="primary"
           ><h3 no-margin><b>Authors</b></h3></ion-text
         >
-      </ion-col>
-    </ion-row>
-    <ion-row no-padding>
-      <ion-col offset="1" size="10">
-        <ion-chip
-          *ngFor="let author of selectedPaper.authors"
-          (click)="onAuthorChipClick(author)"
-        >
-          <ion-icon name="person"></ion-icon>
-          <ion-label>{{ author.name }}</ion-label>
-        </ion-chip>
-      </ion-col>
-    </ion-row>
-    <ion-row no-padding>
-      <ion-col margin-top margin-start>
+        <div margin>
+          <ion-chip
+            *ngFor="let author of selectedPaper.authors"
+            (click)="onAuthorChipClick(author)"
+          >
+            <ion-icon name="person"></ion-icon>
+            <ion-label>{{ author.name }}</ion-label>
+          </ion-chip>
+        </div>
         <ion-text color="primary"
           ><h3 no-margin><b>Publication Date</b></h3></ion-text
         >
+        <div margin>
+          <p no-margin>
+            <i>{{ selectedPaper.publicationDate.toLocaleDateString() }}</i>
+          </p>
+        </div>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Topics</b></h3></ion-text
+        >
+        <div margin>
+          <ion-chip
+            *ngFor="let topic of selectedPaper.topics"
+            (click)="onTopicChipClick(topic)"
+            color="primary"
+          >
+            <ion-icon name="bulb"></ion-icon>
+            <ion-label color="primary">{{ topic }}</ion-label>
+          </ion-chip>
+        </div>
       </ion-col>
     </ion-row>
-    <ion-row no-padding>
-      <ion-col offset="1" size="10">
-        <p no-margin>
-          <i>{{ selectedPaper.publicationDate.toLocaleDateString() }}</i>
-        </p>
-      </ion-col>
-    </ion-row>
+    <!-- 
     <ion-row no-padding>
       <ion-col margin-top margin-start>
         <ion-text color="primary"
@@ -86,10 +78,16 @@
         >
       </ion-col>
     </ion-row> -->
+
     <ion-row no-padding>
       <ion-col offset="1" size="10">
         <ion-card>
           <ion-card-header>
+            <ion-card-title>
+              <ion-text color="primary"
+                ><h3 no-margin><b>Abstract</b></h3></ion-text
+              >
+            </ion-card-title>
             <ion-card-subtitle>
               <h5>{{ selectedPaper.abstract }}</h5>
             </ion-card-subtitle>

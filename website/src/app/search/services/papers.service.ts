@@ -72,12 +72,12 @@ export class PapersService {
   papers: Paper[] = [];
   simplifiedPapers = [
     new SimplifiedPaper(
-      'PP1',
+      'PP1',  // Cambiare slash con trattino
       'Carbon Nanotubes as an Effective Opportunity for Cancer Diagnosis and Treatment',
       [
-        new SimplifiedAuthor('fafa', 'Alessandro Sanginario'),
-        new SimplifiedAuthor('bea', 'Beatrice Miccoli'),
-        new SimplifiedAuthor('danda', 'Danilo Demarchi')
+        new SimplifiedAuthor('123', 'Alessandro Sanginario'),
+        new SimplifiedAuthor('782', 'Beatrice Miccoli'),
+        new SimplifiedAuthor('900', 'Danilo Demarchi')
       ],
       [
         'Carbon nanotube',
@@ -95,9 +95,9 @@ export class PapersService {
       'PP2',
       'Wide Band Microwave Characterization of MWCNTS/Epoxy Composites',
       [
-        new SimplifiedAuthor('MauGio', 'Mauro Giorcelli'),
-        new SimplifiedAuthor('PatSav', 'Patrizia Savi'),
-        new SimplifiedAuthor('AlbTag', 'Alberto Tagliaferro')
+        new SimplifiedAuthor('Afr', 'Mauro Giorcelli'),
+        new SimplifiedAuthor('BRB', 'Patrizia Savi'),
+        new SimplifiedAuthor('900', 'Alberto Tagliaferro')
       ],
       [
         'Polymer',
@@ -114,10 +114,10 @@ export class PapersService {
       'PP3',
       'Effects of Nano-sized Additives on the High-Temperature Properties of Bituminous Binders: A Comparative Study',
       [
-        new SimplifiedAuthor('aaaa', 'Ezio Santagata'),
-        new SimplifiedAuthor('sssss', 'Giuseppe Chiappinelli'),
-        new SimplifiedAuthor('ddsaf', 'Orazio Ballieri'),
-        new SimplifiedAuthor('aadad', 'Lucia Tsantilis')
+        new SimplifiedAuthor('123', 'Ezio Santagata'),
+        new SimplifiedAuthor('Afr', 'Giuseppe Chiappinelli'),
+        new SimplifiedAuthor('BRB', 'Orazio Ballieri'),
+        new SimplifiedAuthor('900', 'Lucia Tsantilis')
       ],
       [
         'Carbon Nanotube',
@@ -135,10 +135,10 @@ export class PapersService {
       'PP4',
       'Low-Cost Carbon Fillers to Improve Mechanical Properties and Conductivity of Epoxy Composites',
       [
-        new SimplifiedAuthor('0011', 'Aamer Abbas Khan'),
-        new SimplifiedAuthor('adsahjk1', 'Massimo Rovere'),
-        new SimplifiedAuthor('ada22', 'Patrizia Savi'),
-        new SimplifiedAuthor('adsahjk1', 'Carlo Rosso')
+        new SimplifiedAuthor('123', 'Aamer Abbas Khan'),
+        new SimplifiedAuthor('123', 'Massimo Rovere'),
+        new SimplifiedAuthor('123', 'Patrizia Savi'),
+        new SimplifiedAuthor('782', 'Carlo Rosso')
       ],
       [
         'Graphene',
@@ -155,18 +155,18 @@ export class PapersService {
       'PP5',
       'BaTiO3 nanotube arrays by hydrothermal conversion of TiO2 nanotube carpets grown by anodic oxidation',
       [
-        new SimplifiedAuthor('LucLav', 'Andrea Laberti'),
-        new SimplifiedAuthor('MatPav', 'Elisa Paola Ambrosio'),
-        new SimplifiedAuthor('111', 'Diego Giovanni Manfredi'),
-        new SimplifiedAuthor('222', 'Giancarlo Canavese'),
-        new SimplifiedAuthor('33', 'Mariangela Lombardi'),
-        new SimplifiedAuthor('122', 'Marzia Quaglio'),
-        new SimplifiedAuthor('131', 'Federico Bella'),
-        new SimplifiedAuthor('1414', 'Nadia Garino'),
-        new SimplifiedAuthor('fds', 'Stefano Bianco'),
-        new SimplifiedAuthor('tre', 'Candido Pirri'),
-        new SimplifiedAuthor('ry9w', 'Stefano Stassi'),
-        new SimplifiedAuthor('pdada', 'Angelica Chiodoni')
+        new SimplifiedAuthor('123', 'Andrea Laberti'),
+        new SimplifiedAuthor('900', 'Elisa Paola Ambrosio'),
+        new SimplifiedAuthor('123', 'Diego Giovanni Manfredi'),
+        new SimplifiedAuthor('900', 'Giancarlo Canavese'),
+        new SimplifiedAuthor('782', 'Mariangela Lombardi'),
+        new SimplifiedAuthor('BRB', 'Marzia Quaglio'),
+        new SimplifiedAuthor('BRB', 'Federico Bella'),
+        new SimplifiedAuthor('BRB', 'Nadia Garino'),
+        new SimplifiedAuthor('123', 'Stefano Bianco'),
+        new SimplifiedAuthor('782', 'Candido Pirri'),
+        new SimplifiedAuthor('123', 'Stefano Stassi'),
+        new SimplifiedAuthor('Afr', 'Angelica Chiodoni')
       ],
       [
         'Carbon nanotube',
@@ -186,8 +186,8 @@ export class PapersService {
       [
         new SimplifiedAuthor('123', 'Alessandro Hugo Monteverde Videla'),
         new SimplifiedAuthor('782', 'Juqin Zeng'),
-        new SimplifiedAuthor('30111', 'Stefania Specchia'),
-        new SimplifiedAuthor('dsja', 'Carlotta Francia')
+        new SimplifiedAuthor('Afr', 'Stefania Specchia'),
+        new SimplifiedAuthor('BRB', 'Carlotta Francia')
       ],
       [
         'Carbon nanotube',
@@ -263,6 +263,9 @@ export class PapersService {
   }
 
   fetchPapers(query: string) {
+    // Guarda sul cellulare per foto di descrizione di come sara` popolato il JSON e su come strutturare richiesta
+    // In linea di massima GET request con campi: > type= che rappresenta il tipo di richiesta a seconda della tab dalla quale e` effettuata
+    //                                            > query= query sparql codificata in URI
     const regex = / /g;
     const request = `PREFIX gpp:<http://geranium-project.org/publications/>
 PREFIX gpk:<http://geranium-project.org/keywords/>

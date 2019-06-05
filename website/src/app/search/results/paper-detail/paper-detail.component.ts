@@ -30,6 +30,7 @@ export class PaperDetailComponent implements OnInit {
 
   onAuthorChipClick(author: SimplifiedAuthor) {
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'authors', 'author', author.id]);
+    this.onClose();
   }
 
   onTopicChipClick(topic: string) {

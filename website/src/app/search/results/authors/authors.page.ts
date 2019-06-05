@@ -140,7 +140,25 @@ export class AuthorsPage implements OnInit, AfterContentInit {
       })
       .then(modalEl => {
         modalEl.present();
-        // TODO : Load authors in page when modal closes if coming from author detail request
+        return modalEl.onDidDismiss();
+      })
+      .then(result => {
+        if (this.isRedirecting) {
+          if (this.resultsService.searchKey === '') {
+            this.navCtrl.navigateBack(['/search']);
+            return;
+          } else {
+            this.searchKey = this.resultsService.searchKey;
+            this.isRedirecting = true;
+            this.navCtrl.navigateForward([
+              '/',
+              'results',
+              'tabs',
+              'authors',
+              this.searchKey
+            ]);
+          }
+        }
       });
   }
 

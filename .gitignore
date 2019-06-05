@@ -5,3 +5,5 @@ process/__pycache__
 data/anni2013-17
 .vscode
 *.json
+*.wsgi
+

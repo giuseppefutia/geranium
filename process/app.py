@@ -33,9 +33,7 @@ def api():
 			if row['coauthor']['value'] not in final[row['id']['value']]['author']:
 				final[row['id']['value']]['author'].append(row['coauthor']['value'])
 		final = json.dumps(list(final.values()))
-		with open("test.json",'w') as test:
-			test.write(final)	
-		return pformat(final)
+		return final
 	return 'Invalid arguments!'
 
 if __name__ == '__main__':

@@ -47,8 +47,8 @@ export class ResultsService {
     }
   }
 
-  getSimplifiedPapersBlock(query: string, block: number): SimplifiedPaper[] {
-    return this.papersService.getSimplifiedPapersBlock(query, block);
+  getSimplifiedPapersBlock(query: string, block: number, old: SimplifiedPaper[]) {
+    return this.papersService.getSimplifiedPapersBlock(query, block, old);
   }
 
   getPaperFromId(id: string): Paper {

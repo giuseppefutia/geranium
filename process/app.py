@@ -38,16 +38,27 @@ def get_publications(data):
 @app.route('/api', methods=['GET'])
 def api():
 	query = ''
+	
 	if flask.request.method == 'GET':
 		query = flask.request.args.get('query')
 		request_type = flask.request.args.get('type')
+	
 	if query:
-		result = requests.get('https://blazegraph.nexacenter.org/blazegraph/sparql?format=json&query=' + query, auth=HTTPBasicAuth(config.db_user,config.db_password), verify=False)
-		data = result.json()['results']['bindings']
+		query = quote(query) # get url encoding
+		result = requests.get('https://blazegraph.nexacenter.org/blazegraph/sparql?format=json&query=' + query, \
+				auth = HTTPBasicAuth(config.db_user,config.db_password), \
+				verify = False)
+		if not result.ok:
+			return "Invalid query!"
+
+		data = result.json()
+		data = data['results']['bindings']
+		
 		if request_type == 'publication':
 			return get_publications(data)
 		elif request_type == 'author':
 			return get_authors(data)
+	
 	return 'Invalid request!'
 
 if __name__ == '__main__':

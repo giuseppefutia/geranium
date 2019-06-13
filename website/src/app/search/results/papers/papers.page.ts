@@ -139,15 +139,37 @@ export class PapersPage implements OnInit, AfterContentInit {
   fetchData() {
     this.isLoading = true;
     this.addDummySlides(10);
-    setTimeout(() => {
+
+    const maxTopicsPerCard = 4;
+    
+    this.resultsService
+    .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
+    .subscribe(newPapers => {
       this.filteredPapers = [];
       this.isLoading = false;
-      this.addToShowedPapers(10);
+      if (newPapers.length === 0) {
+        // If there are no results
+        this.endOfResults = true;
+      }
+
+      for (const newPaper of newPapers) {
+        newPaper.topics = this.filterTopics(newPaper.topics, maxTopicsPerCard);
+        this.allPapers.push(newPaper);
+      }
+      this.currentBlock++;
+
+      this.updatePapersYears(newPapers);
+      this.papersCount = this.allPapers.length;
+      this.papersYears =
+        new Date().getFullYear() -
+        Number.parseInt(this.allPapersYears[0].year, 10);
+
+      this.filterPapers();
 
       setTimeout(() => {
         this.createChart();
       }, 300);
-    }, 2000);
+    });
   }
 
   filterTopics(topics: string[], topicsLimit: number): string[] {
@@ -156,10 +178,10 @@ export class PapersPage implements OnInit, AfterContentInit {
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
-  // Add papers that will actually be shown in the grid
+ /*  // Add papers that will actually be shown in the grid
   addToShowedPapers(atleast: number) {
     const maxUnshownResults = 20;
-    const maxTopicsPerCard = 4;
+    
     const oldFiltered = this.filteredPapers.length;
     const oldAll = this.allPapers.length;
     while (1) {
@@ -199,7 +221,7 @@ export class PapersPage implements OnInit, AfterContentInit {
         break;
       }
     }
-  }
+  } */
 
   openNewTab(url: string) {
     window.open(url, '_blank');
@@ -213,7 +235,7 @@ export class PapersPage implements OnInit, AfterContentInit {
   // Called by infinite scroll to load more data
   onMorePapers(event) {
     setTimeout(() => {
-      this.addToShowedPapers(10);
+      this.fetchData();
       this.updateChart();
       event.target.complete();
 

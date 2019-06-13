@@ -5,6 +5,7 @@ import { SimplifiedAuthor } from '../models/simplified-author.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthorsService } from './authors.service';
 import { Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 export interface ResponsePaper {
   id: string;
@@ -40,8 +41,7 @@ export class PapersService {
 
   getSimplifiedPapersBlock(
     query: string,
-    block: number,
-    old: SimplifiedPaper[]
+    block: number
   ) {
     // Guarda sul cellulare per foto di descrizione di come sara` popolato il JSON e su come strutturare richiesta
     // In linea di massima GET request con campi: > type= che rappresenta il tipo di richiesta a seconda della tab dalla quale e` effettuata
@@ -70,30 +70,39 @@ WHERE
   ?p           purl:abstract ?abstract.
   ?p           purl:dateSubmitted ?date
 }LIMIT ${linesPerQuery} OFFSET ${linesOffset}`;
-    this.http
+    return this.http
       .get<ResponsePaper[]>(
         'http://api.geranium.nexacenter.org/api?type=publication&query=' +
           encodeURI(request)
       )
-      .subscribe(response => {
-        for (const paper of response) {
-          const authors: SimplifiedAuthor[] = [];
-          for (let i = 0; i < paper.authors.length; i++) {
-            authors.push(new SimplifiedAuthor(i.toString(), paper.authors[i]));
+      .pipe(
+        map(response => {
+          console.log(response);
+          const newPapers: SimplifiedPaper[] = [];
+          for (const paper of response) {
+            const authors: SimplifiedAuthor[] = [];
+            for (let i = 0; i < paper.authors.length; i++) {
+              authors.push(
+                new SimplifiedAuthor(i.toString(), paper.authors[i])
+              );
+            }
+            newPapers.push(
+              new SimplifiedPaper(
+                this.cleanID(paper.id),
+                paper.title,
+                authors,
+                paper.topics,
+                new Date(paper.date),
+                'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
+              )
+            );
           }
-          old.push(
-            new SimplifiedPaper(
-              this.cleanID(paper.id),
-              paper.title,
-              authors,
-              paper.topics,
-              new Date(paper.date),
-              'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
-            )
-          );
-        }
-        this._simplifiedPapers.next(old);
-      });
+          return newPapers;
+        }),
+        tap(newPapers => {
+          this._simplifiedPapers.next(newPapers);
+        })
+      );
     /* for (const paper of this.simplifiedPapers) {
       for (const author of paper.authors) {
         author.name = this.authorsService.simplifyAuthorName(author.name);

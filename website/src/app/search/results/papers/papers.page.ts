@@ -30,7 +30,7 @@ class BarData {
   templateUrl: './papers.page.html',
   styleUrls: ['./papers.page.scss']
 })
-export class PapersPage implements OnInit, AfterContentInit {
+export class PapersPage implements OnInit {
   @ViewChild('barCanvas') barCanvas: ElementRef;
 
   primaryColor = 'rgba(44, 101, 201, 0.5)';
@@ -130,7 +130,7 @@ export class PapersPage implements OnInit, AfterContentInit {
     });
   }
 
-  ngAfterContentInit() {
+  ionViewDidEnter() {
     if (!this.isRedirecting) {
       this.fetchData();
     }
@@ -141,35 +141,44 @@ export class PapersPage implements OnInit, AfterContentInit {
     this.addDummySlides(10);
 
     const maxTopicsPerCard = 4;
-    
+
     this.resultsService
-    .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
-    .subscribe(newPapers => {
-      this.filteredPapers = [];
-      this.isLoading = false;
-      if (newPapers.length === 0) {
-        // If there are no results
-        this.endOfResults = true;
-      }
+      .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
+      .subscribe(newPapers => {
+        this.filteredPapers = [];
+        this.isLoading = false;
+        if (newPapers.length === 0) {
+          // If there are no results
+          this.endOfResults = true;
+          console.log('end');
+        } else {
 
-      for (const newPaper of newPapers) {
-        newPaper.topics = this.filterTopics(newPaper.topics, maxTopicsPerCard);
-        this.allPapers.push(newPaper);
-      }
-      this.currentBlock++;
+          for (const newPaper of newPapers) {
+            newPaper.topics = this.filterTopics(
+              newPaper.topics,
+              maxTopicsPerCard
+            );
+            this.allPapers.push(newPaper);
+          }
+          this.currentBlock++;
 
-      this.updatePapersYears(newPapers);
-      this.papersCount = this.allPapers.length;
-      this.papersYears =
-        new Date().getFullYear() -
-        Number.parseInt(this.allPapersYears[0].year, 10);
+          this.updatePapersYears(newPapers);
+          this.papersCount = this.allPapers.length;
+          this.papersYears =
+            new Date().getFullYear() -
+            Number.parseInt(this.allPapersYears[0].year, 10);
 
-      this.filterPapers();
+          this.filterPapers();
 
-      setTimeout(() => {
-        this.createChart();
-      }, 300);
-    });
+          if (this.currentBlock === 1) {
+            setTimeout(() => {
+              this.createChart();
+            }, 300);
+          } else {
+            this.updateChart();
+          }
+        }
+      });
   }
 
   filterTopics(topics: string[], topicsLimit: number): string[] {
@@ -177,51 +186,6 @@ export class PapersPage implements OnInit, AfterContentInit {
       .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
-
- /*  // Add papers that will actually be shown in the grid
-  addToShowedPapers(atleast: number) {
-    const maxUnshownResults = 20;
-    
-    const oldFiltered = this.filteredPapers.length;
-    const oldAll = this.allPapers.length;
-    while (1) {
-      const temp = this.resultsService.getSimplifiedPapersBlock(
-        this.searchKey,
-        this.currentBlock
-      );
-      if (temp.length === 0) {
-        // If there are no results
-        this.endOfResults = true;
-        break;
-      }
-      for (const newPaper of temp) {
-        newPaper.topics = this.filterTopics(newPaper.topics, maxTopicsPerCard);
-        this.allPapers.push(newPaper);
-      }
-      this.currentBlock++;
-
-      this.updatePapersYears(temp);
-      this.papersCount = this.allPapers.length;
-      this.papersYears =
-        new Date().getFullYear() -
-        Number.parseInt(this.allPapersYears[0].year, 10);
-
-      this.filterPapers();
-      if (temp.length !== this.resultsService.papersBlockSize) {
-        // If the length of the results of the last block
-        // is not the size of a block, than results have ended
-        // which in turn disables the infinite-scroll
-        this.endOfResults = true;
-        break;
-      }
-      if (
-        this.filteredPapers.length - oldFiltered >= atleast ||
-        this.allPapers.length - oldAll >= maxUnshownResults
-      ) {
-        break;
-      }
-    }
-  } */
 
   openNewTab(url: string) {
     window.open(url, '_blank');
@@ -234,19 +198,17 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   // Called by infinite scroll to load more data
   onMorePapers(event) {
-    setTimeout(() => {
-      this.fetchData();
-      this.updateChart();
-      event.target.complete();
+    // disable the infinite scroll
+    if (this.endOfResults === true) {
+      event.target.disabled = true;
+    }
 
-      // disable the infinite scroll
-      if (this.endOfResults === true) {
-        event.target.disabled = true;
-      }
-    }, 1500);
+    this.fetchData();
+    this.updateChart();
+    event.target.complete();
   }
 
-  // Open modal when clicked on MORE in a card 
+  // Open modal when clicked on MORE in a card
   onPaperDetails(paper: SimplifiedPaper) {
     this.modalCtrl
       .create({

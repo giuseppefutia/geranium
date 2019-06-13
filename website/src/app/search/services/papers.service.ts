@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Paper } from '../models/paper.model';
-import { SimplifiedPaper } from '../models/simplified-paper.model';
-import { SimplifiedAuthor } from '../models/simplified-author.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthorsService } from './authors.service';
-import { Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { Paper } from "../models/paper.model";
+import { SimplifiedPaper } from "../models/simplified-paper.model";
+import { SimplifiedAuthor } from "../models/simplified-author.model";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AuthorsService } from "./authors.service";
+import { Subject } from "rxjs";
+import { map, tap } from "rxjs/operators";
 
 export interface ResponsePaper {
   id: string;
   title: string;
-  authors: string[];
-  topics: string[];
+  author: string[];
+  topic: string[];
   date: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class PapersService {
   // TODO: Change when connecting to server
@@ -24,11 +24,6 @@ export class PapersService {
   private _blockSize = 6;
 
   private papers: Paper[] = [];
-  private _simplifiedPapers = new Subject<SimplifiedPaper[]>();
-
-  get simplifiedPapers() {
-    return this._simplifiedPapers.asObservable();
-  }
 
   constructor(
     private http: HttpClient,
@@ -39,14 +34,11 @@ export class PapersService {
     return this._blockSize;
   }
 
-  getSimplifiedPapersBlock(
-    query: string,
-    block: number
-  ) {
+  getSimplifiedPapersBlock(query: string, block: number) {
     // Guarda sul cellulare per foto di descrizione di come sara` popolato il JSON e su come strutturare richiesta
     // In linea di massima GET request con campi: > type= che rappresenta il tipo di richiesta a seconda della tab dalla quale e` effettuata
     //                                            > query= query sparql codificata in URI
-    const linesPerQuery = 1000;
+    const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const request = `PREFIX gpp:<http://geranium-project.org/publications/>
 PREFIX gpk:<http://geranium-project.org/keywords/>
@@ -72,7 +64,7 @@ WHERE
 }LIMIT ${linesPerQuery} OFFSET ${linesOffset}`;
     return this.http
       .get<ResponsePaper[]>(
-        'http://api.geranium.nexacenter.org/api?type=publication&query=' +
+        "http://api.geranium.nexacenter.org/api?type=publication&query=" +
           encodeURI(request)
       )
       .pipe(
@@ -81,9 +73,12 @@ WHERE
           const newPapers: SimplifiedPaper[] = [];
           for (const paper of response) {
             const authors: SimplifiedAuthor[] = [];
-            for (let i = 0; i < paper.authors.length; i++) {
+            for (let i = 0; i < paper.author.length; i++) {
               authors.push(
-                new SimplifiedAuthor(i.toString(), paper.authors[i])
+                new SimplifiedAuthor(
+                  i.toString(),
+                  this.authorsService.simplifyAuthorName(paper.author[i])
+                )
               );
             }
             newPapers.push(
@@ -91,27 +86,19 @@ WHERE
                 this.cleanID(paper.id),
                 paper.title,
                 authors,
-                paper.topics,
+                paper.topic,
                 new Date(paper.date),
-                'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
+                "https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn"
               )
             );
           }
           return newPapers;
-        }),
-        tap(newPapers => {
-          this._simplifiedPapers.next(newPapers);
         })
       );
-    /* for (const paper of this.simplifiedPapers) {
-      for (const author of paper.authors) {
-        author.name = this.authorsService.simplifyAuthorName(author.name);
-      }
-    } */
   }
 
   private cleanID(dirty: string) {
-    return dirty.replace('/', '-');
+    return dirty.replace("/", "-");
   }
 
   getPaperFromId(id: string): Paper {

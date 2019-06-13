@@ -65,7 +65,9 @@ export class AuthorsService {
     for (i = 0; i < names.length - 1; i++) {
       builder += names[i].charAt(0).toUpperCase() + '. ';
     }
-    builder += names[i];
+    let first = names[i].toLowerCase();
+    first = first.charAt(0).toUpperCase() + first.slice(1);
+    builder += first;
     return builder;
   }
 

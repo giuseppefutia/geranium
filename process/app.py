@@ -52,6 +52,31 @@ def get_publications(data):
     return jsonify(final)
 
 
+def get_author_details(data):
+    # print(data)
+    final = {}
+    publications_list = list()
+    for row in data:
+        # Basic dict for author details
+        if not row['a_id']['value'] in final:
+            final[row['a_id']['value']] = dict()
+            final[row['a_id']['value']]['id'] = row['a_id']['value']
+            final[row['a_id']['value']]['name'] = row['a_label']['value']
+        final[row['a_id']['value']]['publications'] = publications_list
+        # Publication details to get co_authors and topics
+        publication_id = row['p_id']['value']
+        added_publications = list(
+            filter(lambda x: x.get('id') == publication_id,
+                   final[row['a_id']['value']]['publications']))
+        if len(added_publications) == 0:
+            new_pub = dict()
+            new_pub['id'] = row['p_id']['value']
+            final[row['a_id']['value']]['publications'].append(new_pub)
+    final = list(final.values())
+
+    return jsonify(final)
+
+
 @app.route('/api', methods=['GET'])
 def api():
     query = ''
@@ -76,6 +101,8 @@ def api():
             return get_publications(data)
         elif request_type == 'authors':
             return get_authors(data)
+        elif request_type == 'author':
+            return get_author_details(data)
 
     return 'Invalid request!'
 

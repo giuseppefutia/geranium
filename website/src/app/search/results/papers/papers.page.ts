@@ -2,8 +2,7 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ElementRef,
-  AfterContentInit
+  ElementRef
 } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
 import { SimplifiedPaper } from '../../models/simplified-paper.model';
@@ -33,6 +32,7 @@ class BarData {
 export class PapersPage implements OnInit {
   @ViewChild('barCanvas') barCanvas: ElementRef;
 
+  // Data used for the creation of the bar graph
   primaryColor = 'rgba(44, 101, 201, 0.5)';
   lightColor = 'rgba(44, 101, 201, 0.2)';
   hiddenColor = 'rgba(0, 0, 0, 0.5)';
@@ -43,16 +43,17 @@ export class PapersPage implements OnInit {
   papersYears = 0;
   currentBlock = 0;
 
-  searchKey: string;
+  searchKey: string; // Local copy of the search key
+
   allPapers: SimplifiedPaper[] = [];
-  filteredPapers: SimplifiedPaper[] = [];
+  filteredPapers: SimplifiedPaper[] = []; // Final filtered array of papers accessed by each card
 
-  isLoading = false;
-  isRedirecting = false;
-  endOfResults = false;
+  isLoading = false; // Hide/Show ionSkeletonText
+  isRedirecting = false; // Does not display the content of the page if it is redirecting
+  endOfResults = false; // Blocks the ionInfinite when no more data is available (true)
 
-  private noDateString = 'No Date';
-  private maxTopicsPerCard = 4;
+  private noDateString = 'No Date'; // String to show in graph when no date is available
+  private maxTopicsPerCard = 4; // Number of topic chips in each card
 
   chartData = {
     labels: [], // Must be configured with appropriate data
@@ -109,6 +110,14 @@ export class PapersPage implements OnInit {
     private modalCtrl: ModalController
   ) {}
 
+  /* It checks if the searchKey is present in URI. (see results-routing.module.ts)
+
+     If it isn't but it is present in resultsService then it
+     redirects to the correct page for it to be refresh-safe.
+
+     If it is not available in resultsService it redirects to
+     initial search page.
+  */
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('searchKey')) {
@@ -133,13 +142,14 @@ export class PapersPage implements OnInit {
     });
   }
 
+  // It retrieves data if it is not redirecting
   ionViewDidEnter() {
     if (!this.isRedirecting) {
       this.fetchData();
     }
   }
 
-
+  // Add more data to arrays if needed
   addData() {
     this.resultsService
       .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
@@ -169,6 +179,7 @@ export class PapersPage implements OnInit {
       });
   }
 
+  // Fetch data for the initial loading
   fetchData() {
     this.isLoading = true;
     this.addDummySlides(10);
@@ -198,6 +209,8 @@ export class PapersPage implements OnInit {
             Number.parseInt(this.allPapersYears[0].year, 10);
 
           this.filterPapers();
+
+          // The timeout is needed for the component to be first drawn
           setTimeout(() => {
             this.createChart();
           }, 300);
@@ -205,6 +218,7 @@ export class PapersPage implements OnInit {
       });
   }
 
+  // Eliminates the searchKey topic from the list of topics and limits it to a specific number
   filterTopics(topics: string[], topicsLimit: number): string[] {
     return topics
       .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
@@ -215,6 +229,7 @@ export class PapersPage implements OnInit {
     window.open(url, '_blank');
   }
 
+  // On click on topic chip start a new search
   onTopicChipClick(topic: string) {
     this.resultsService.searchKey = topic;
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);

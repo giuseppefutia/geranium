@@ -1,11 +1,10 @@
-import { Injectable } from "@angular/core";
-import { Paper } from "../models/paper.model";
-import { SimplifiedPaper } from "../models/simplified-paper.model";
-import { SimplifiedAuthor } from "../models/simplified-author.model";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { AuthorsService } from "./authors.service";
-import { Subject } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Paper } from '../models/paper.model';
+import { SimplifiedPaper } from '../models/simplified-paper.model';
+import { SimplifiedAuthor } from '../models/simplified-author.model';
+import { HttpClient } from '@angular/common/http';
+import { AuthorsService } from './authors.service';
+import { map } from 'rxjs/operators';
 
 export interface ResponsePaper {
   id: string;
@@ -16,12 +15,9 @@ export interface ResponsePaper {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class PapersService {
-  // TODO: Change when connecting to server
-  // It represents the size of the chunks retrieved from the server (pagination)
-  private _blockSize = 6;
 
   private papers: Paper[] = [];
 
@@ -30,12 +26,7 @@ export class PapersService {
     private authorsService: AuthorsService
   ) {}
 
-  get blockSize(): number {
-    return this._blockSize;
-  }
-
   getSimplifiedPapersBlock(query: string, block: number) {
-    // Guarda sul cellulare per foto di descrizione di come sara` popolato il JSON e su come strutturare richiesta
     // In linea di massima GET request con campi: > type= che rappresenta il tipo di richiesta a seconda della tab dalla quale e` effettuata
     //                                            > query= query sparql codificata in URI
     const linesPerQuery = 300;
@@ -64,7 +55,7 @@ WHERE
 }LIMIT ${linesPerQuery} OFFSET ${linesOffset}`;
     return this.http
       .get<ResponsePaper[]>(
-        "http://api.geranium.nexacenter.org/api?type=publication&query=" +
+        'http://api.geranium.nexacenter.org/api?type=publication&query=' +
           encodeURI(request)
       )
       .pipe(
@@ -87,7 +78,7 @@ WHERE
                 authors,
                 paper.topic,
                 new Date(paper.date),
-                "https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn"
+                'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
               )
             );
           }
@@ -97,7 +88,7 @@ WHERE
   }
 
   private cleanID(dirty: string) {
-    return dirty.replace("/", "-");
+    return dirty.replace('/', '-');
   }
 
   getPaperFromId(id: string): Paper {

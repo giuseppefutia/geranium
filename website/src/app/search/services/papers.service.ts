@@ -69,7 +69,6 @@ WHERE
       )
       .pipe(
         map(response => {
-          console.log(response);
           const newPapers: SimplifiedPaper[] = [];
           for (const paper of response) {
             const authors: SimplifiedAuthor[] = [];

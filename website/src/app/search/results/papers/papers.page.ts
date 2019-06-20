@@ -51,6 +51,9 @@ export class PapersPage implements OnInit {
   isRedirecting = false;
   endOfResults = false;
 
+  private noDateString = 'No Date';
+  private maxTopicsPerCard = 4;
+
   chartData = {
     labels: [], // Must be configured with appropriate data
     datasets: [
@@ -136,27 +139,19 @@ export class PapersPage implements OnInit {
     }
   }
 
-  fetchData() {
-    this.isLoading = true;
-    this.addDummySlides(10);
 
-    const maxTopicsPerCard = 4;
-
+  addData() {
     this.resultsService
       .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
       .subscribe(newPapers => {
-        this.filteredPapers = [];
-        this.isLoading = false;
         if (newPapers.length === 0) {
           // If there are no results
           this.endOfResults = true;
-          console.log('end');
         } else {
-
           for (const newPaper of newPapers) {
             newPaper.topics = this.filterTopics(
               newPaper.topics,
-              maxTopicsPerCard
+              this.maxTopicsPerCard
             );
             this.allPapers.push(newPaper);
           }
@@ -169,14 +164,43 @@ export class PapersPage implements OnInit {
             Number.parseInt(this.allPapersYears[0].year, 10);
 
           this.filterPapers();
+          this.updateChart();
+        }
+      });
+  }
 
-          if (this.currentBlock === 1) {
-            setTimeout(() => {
-              this.createChart();
-            }, 300);
-          } else {
-            this.updateChart();
+  fetchData() {
+    this.isLoading = true;
+    this.addDummySlides(10);
+
+    this.resultsService
+      .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
+      .subscribe(newPapers => {
+        this.filteredPapers = [];
+        this.isLoading = false;
+        if (newPapers.length === 0) {
+          // If there are no results
+          this.endOfResults = true;
+        } else {
+          for (const newPaper of newPapers) {
+            newPaper.topics = this.filterTopics(
+              newPaper.topics,
+              this.maxTopicsPerCard
+            );
+            this.allPapers.push(newPaper);
           }
+          this.currentBlock++;
+
+          this.updatePapersYears(newPapers);
+          this.papersCount = this.allPapers.length;
+          this.papersYears =
+            new Date().getFullYear() -
+            Number.parseInt(this.allPapersYears[0].year, 10);
+
+          this.filterPapers();
+          setTimeout(() => {
+            this.createChart();
+          }, 300);
         }
       });
   }
@@ -203,7 +227,7 @@ export class PapersPage implements OnInit {
       event.target.disabled = true;
     }
 
-    this.fetchData();
+    this.addData();
     this.updateChart();
     event.target.complete();
   }
@@ -275,31 +299,31 @@ export class PapersPage implements OnInit {
     }
   }
 
+  yearString(d: Date) {
+    return isNaN(d.getFullYear())
+      ? this.noDateString
+      : d.getFullYear().toString();
+  }
+
   // Updates the allPapersYears array containing information about
   // the number of papers for each year sorted by ascending year number with newly received papers
   updatePapersYears(newPapers: SimplifiedPaper[]) {
     let found: boolean;
     for (const newPaper of newPapers) {
+      const yearString = this.yearString(newPaper.publicationDate);
+
       found = false;
       for (const el of this.allPapersYears) {
-        if (newPaper.publicationDate.getFullYear().toString() === el.year) {
+        if (yearString === el.year) {
           el.papers++;
           found = true;
         }
       }
       if (found === false) {
-        this.allPapersYears.push(
-          new YearsData(
-            newPaper.publicationDate.getFullYear().toString(),
-            1,
-            true
-          )
-        );
+        this.allPapersYears.push(new YearsData(yearString, 1, true));
       }
     }
-    this.allPapersYears.sort(
-      (a, b) => Number.parseInt(a.year, 10) - Number.parseInt(b.year, 10)
-    );
+    this.allPapersYears.sort((a, b) => a.year.localeCompare(b.year));
   }
 
   // Called when a bar on the chart is clicked
@@ -327,11 +351,10 @@ export class PapersPage implements OnInit {
   filterPapers() {
     this.filteredPapers = this.allPapers.filter(el => {
       return (
-        this.allPapersYears.find(
-          y =>
-            el.publicationDate.getFullYear().toString() === y.year &&
-            y.shown === true
-        ) !== undefined
+        this.allPapersYears.find(y => {
+          const yearString = this.yearString(el.publicationDate);
+          return yearString === y.year && y.shown === true;
+        }) !== undefined
       );
     });
   }

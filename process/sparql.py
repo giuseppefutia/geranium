@@ -46,19 +46,17 @@ def set_publications_query(topic):
 
 
 def set_author_details_query(author_url):
-    # Tested with author_url = http://geranium-project.org/authors/rp08316
     query = ''' \
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
 
-    SELECT DISTINCT ?a_id ?a_label ?p ?p_id ?t ?t_label ?other_a ?other_a_id
+    SELECT DISTINCT ?a_id ?a_label ?p ?p_id ?p_label ?t ?t_label ?other_a ?other_a_id
                     ?other_a_label ?other_ca ?other_ca_id ?other_ca_label
     WHERE {
         <{a}> purl:identifier ?a_id .
         <{a}> rdfs:label ?a_label .
-        { ?p purl:creator <{a}> . }
-            UNION
-        { ?p purl:contributor <{a}> . }
+        ?p ?property <{a}> .
+        ?p a gpo:Publication .
         ?p purl:identifier ?p_id .
         ?p rdfs:label ?p_label .
         ?p purl:subject ?t .
@@ -71,6 +69,7 @@ def set_author_details_query(author_url):
         ?p purl:contributor ?other_ca .
         ?other_ca purl:identifier ?other_ca_id .
         ?other_ca rdfs:label ?other_ca_label .
+        FILTER (?property = purl:creator || ?property = purl:contributor)
     }
     \
     '''.format(a=author_url)

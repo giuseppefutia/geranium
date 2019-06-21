@@ -11,10 +11,11 @@ import { ResultsService } from '../../services/results.service';
   styleUrls: ['./authors.page.scss']
 })
 export class AuthorsPage implements OnInit, AfterContentInit {
-  currentBlock = 0;
-
+  
   searchKey: string;
+  currentBlock = 0;
   allAuthors: Author[] = [];
+  maxTopicsPerCard = 4;
 
   isLoading = false;
   isRedirecting = false;
@@ -27,7 +28,11 @@ export class AuthorsPage implements OnInit, AfterContentInit {
     private modalCtrl: ModalController
   ) {}
 
+  /**
+   * Initialization of the component
+   */
   ngOnInit() {
+
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('authorId')) {
         this.isRedirecting = true;
@@ -56,62 +61,86 @@ export class AuthorsPage implements OnInit, AfterContentInit {
     });
   }
 
+  /**
+   * After component is initialized, fetch data from server
+   */
   ngAfterContentInit() {
+
     if (!this.isRedirecting) {
       this.fetchData();
     }
   }
 
+  /**
+   * Get data from backend and add them to the collection
+   */
   fetchData() {
+
     this.isLoading = true;
     this.addDummySlides(10);
-    setTimeout(() => {
-      this.isLoading = false;
-      this.allAuthors = [];
-      this.addToShowedAuthors(10);
-    }, 2000);
+
+    this.resultsService
+      .getAuthorsBlock(this.searchKey, this.currentBlock)
+      .subscribe(newAuthors => {
+      
+        this.allAuthors = [];
+        this.isLoading = false;
+        
+        if(newAuthors.length === 0) {
+          this.endOfResults = true;
+        } else {
+          for(const newAuthor of newAuthors){
+            newAuthor.topics = this.filterTopics(
+              newAuthor.topics,
+              this.maxTopicsPerCard
+            );
+            this.allAuthors.push(newAuthor);
+          }
+          this.currentBlock++;
+        }
+
+      })
   }
 
+  /**
+   * Filter the topics of interest of each Author
+   * @param topics array of the topic of interest
+   * @param topicsLimit number of topic to be showed
+   */
   filterTopics(topics: string[], topicsLimit: number): string[] {
-    return topics
-      .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
-      .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
+   
+    return topics.filter(
+        topic => topic.toLowerCase() !== this.searchKey.toLowerCase()
+      )
+      .slice(
+        0, topicsLimit > topics.length ? topics.length : topicsLimit
+      );
   }
 
-  // Add papers that will actually be shown in the grid
-  addToShowedAuthors(atleast: number) {
-    const maxTopicsPerCard = 4;
-    const oldAll = this.allAuthors.length;
-    while (1) {
-      const temp = this.resultsService.getAuthorsBlock(
-        this.searchKey,
-        this.currentBlock
-      );
-      if (temp.length === 0) {
-        // If there are no results
-        this.endOfResults = true;
-        break;
-      }
-      for (const newAuthor of temp) {
-        newAuthor.topics = this.filterTopics(
-          newAuthor.topics,
-          maxTopicsPerCard
-        );
-        this.allAuthors.push(newAuthor);
-      }
-      this.currentBlock++;
+  /**
+   * Get more authors to be showed, scrolling
+   * @param atleast 
+   */
+  fetchMoreData() {
 
-      if (temp.length !== this.resultsService.authorsBlockSize) {
-        // If the length of the results of the last block
-        // is not the size of a block, than results have ended
-        // which in turn disables the infinite-scroll
-        this.endOfResults = true;
-        break;
-      }
-      if (this.allAuthors.length - oldAll >= atleast) {
-        break;
-      }
-    }
+    this.resultsService
+      .getAuthorsBlock(this.searchKey, this.currentBlock)
+      .subscribe(newAuthors => {
+
+        if(newAuthors.length === 0) {
+          this.endOfResults = true; //no more results
+        } else {
+          for(const newAuthor of newAuthors){
+            newAuthor.topics = this.filterTopics(
+              newAuthor.topics,
+              this.maxTopicsPerCard
+            );
+            this.allAuthors.push(newAuthor);
+          }
+          this.currentBlock++;
+        }
+
+      })
   }
 
   openNewTab(url: string) {
@@ -120,8 +149,9 @@ export class AuthorsPage implements OnInit, AfterContentInit {
 
   // Called by infinite scroll to load more data
   onMoreAuthors(event) {
+
     setTimeout(() => {
-      this.addToShowedAuthors(10);
+      this.fetchMoreData();
       event.target.complete();
 
       // disable the infinite scroll
@@ -133,6 +163,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
 
   // Open modal when clicked on MORE in a card
   onAuthorDetails(author: Author) {
+    
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,

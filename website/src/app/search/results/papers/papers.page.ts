@@ -149,7 +149,7 @@ export class PapersPage implements OnInit {
     }
   }
 
-  // Add more data to arrays if needed
+  // Fetch more data (scrolling)
   addData() {
     this.resultsService
       .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)

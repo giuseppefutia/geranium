@@ -6,6 +6,7 @@ import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { Paper } from '../models/paper.model';
 import { Author } from '../models/author.model';
 import { Journal } from '../models/journal.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +23,6 @@ export class ResultsService {
     private journalsService: JournalsService
   ) {}
 
-  get authorsBlockSize(): number {
-    return this.authorsService.blockSize;
-  }
   get journalsBlockSize(): number {
     return this.journalsService.blockSize;
   }
@@ -52,7 +50,8 @@ export class ResultsService {
     return this.papersService.getPaperFromId(id);
   }
 
-  getAuthorsBlock(query: string, block: number): Author[] {
+  // call service to request the author data
+  getAuthorsBlock(query: string, block: number) : Observable<Author[]> {
     return this.authorsService.getAuthorsBlock(query, block);
   }
 

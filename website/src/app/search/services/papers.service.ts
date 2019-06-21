@@ -19,8 +19,6 @@ export interface ResponsePaper {
 })
 export class PapersService {
 
-  private papers: Paper[] = [];
-
   constructor(
     private http: HttpClient,
     private authorsService: AuthorsService
@@ -37,7 +35,7 @@ export class PapersService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url = 'http://api.geranium.nexacenter.org/api?'
-                + encodeURI(`type=publications&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`);
+              + encodeURI(`type=publications&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`);
 
     console.log("GET: " + url);
 
@@ -70,7 +68,7 @@ export class PapersService {
               )
             );
           }
-          
+
           return newPapers;
         })
       );

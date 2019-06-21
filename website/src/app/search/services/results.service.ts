@@ -22,9 +22,6 @@ export class ResultsService {
     private journalsService: JournalsService
   ) {}
 
-  get papersBlockSize(): number {
-    return this.papersService.blockSize;
-  }
   get authorsBlockSize(): number {
     return this.authorsService.blockSize;
   }

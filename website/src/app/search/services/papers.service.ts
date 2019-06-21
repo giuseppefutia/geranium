@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Paper } from '../models/paper.model';
 import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../models/simplified-author.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { AuthorsService } from './authors.service';
 import { map } from 'rxjs/operators';
 
@@ -20,53 +20,35 @@ export interface ResponsePaper {
 export class PapersService {
 
   private papers: Paper[] = [];
-  private _blockSize = 6;
 
   constructor(
     private http: HttpClient,
     private authorsService: AuthorsService
-  ) {}
+  ) { }
 
-  get blockSize(): number {
-    return this._blockSize;
-  }
-
+  /**
+   * Send HTTP GET request for all the publications inherent a specific topic, passed as parameter.
+   * 
+   * @param query the topic to be used for the search
+   * @param block the current pagination block
+   */
   getSimplifiedPapersBlock(query: string, block: number) {
-    // In linea di massima GET request con campi: > type= che rappresenta il tipo di richiesta a seconda della tab dalla quale e` effettuata
-    //                                            > query= query sparql codificata in URI
+
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
-    const request = `PREFIX gpp:<http://geranium-project.org/publications/>
-PREFIX gpk:<http://geranium-project.org/keywords/>
-PREFIX purl:<http://purl.org/dc/terms/>
-PREFIX dbp:<http://dbpedia.org/resource/>
-PREFIX gpo:<http://geranium-project.org/ontology/>
-SELECT DISTINCT ?title ?author ?coauthor ?topic ?date ?abstract ?id
-WHERE
-{ ?p           purl:subject ?sub.
-  ?sub         rdfs:label "${query}".
-  ?p           purl:identifier ?id.
-  ?p           rdfs:label ?publication.
-  ?p           purl:creator ?a.
-  ?a           rdfs:label ?author.
-  ?p           purl:contributor ?ca.
-  ?ca          rdfs:label ?coauthor.
-  ?p              purl:subject ?t.
-  ?p              rdfs:label ?title.
-  ?t           rdf:type gpo:TMFResource.
-  ?t           rdfs:label ?topic.
-  ?p           purl:abstract ?abstract.
-  ?p           purl:dateSubmitted ?date
-}LIMIT ${linesPerQuery} OFFSET ${linesOffset}`;
+    const url = 'http://api.geranium.nexacenter.org/api?'
+                + encodeURI(`type=publications&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`);
+
+    console.log("GET: " + url);
+
     return this.http
-      .get<ResponsePaper[]>(
-        'http://api.geranium.nexacenter.org/api?type=publication&query=' +
-          encodeURI(request)
-      )
+      .get<ResponsePaper[]>(url)
       .pipe(
         map(response => {
           const newPapers: SimplifiedPaper[] = [];
+          
           for (const paper of response) {
+            // build authors of the paper
             const authors: SimplifiedAuthor[] = [];
             for (let i = 0; i < paper.author.length; i++) {
               authors.push(
@@ -76,6 +58,7 @@ WHERE
                 )
               );
             }
+            //build paper
             newPapers.push(
               new SimplifiedPaper(
                 this.cleanID(paper.id),
@@ -87,6 +70,7 @@ WHERE
               )
             );
           }
+          
           return newPapers;
         })
       );

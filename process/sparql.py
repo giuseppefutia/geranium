@@ -17,8 +17,8 @@ def set_authors_query(topic):
     return query
 
 
-def set_publications_query(topic):
-    query = ''' \
+def set_publications_query(topic, lines, offset):
+    query = """ \
     PREFIX gpp:<http://geranium-project.org/publications/>
     PREFIX gpk:<http://geranium-project.org/keywords/>
     PREFIX purl:<http://purl.org/dc/terms/>
@@ -26,8 +26,7 @@ def set_publications_query(topic):
     PREFIX gpo:<http://geranium-project.org/ontology/>
 
     SELECT DISTINCT ?title ?author ?coauthor ?topic ?date ?abstract ?id
-    WHERE {
-        ?p purl:subject {t} .
+    WHERE {{
         ?p purl:identifier ?id .
         ?p rdfs:label ?publication .
         ?p purl:creator ?a .
@@ -35,13 +34,14 @@ def set_publications_query(topic):
         ?p purl:contributor ?ca .
         ?ca rdfs:label ?coauthor .
         ?p purl:subject ?t .
+        ?t rdfs:label "{t}" .
         ?p rdfs:label ?title .
         ?t rdf:type gpo:TMFResource .
         ?t rdfs:label ?topic .
         ?p purl:abstract ?abstract .
         ?p purl:dateSubmitted ?date .
-    }\
-    '''.format(t=topic)
+    }} LIMIT {l} OFFSET {o} \
+    """.format(t=topic, l=lines, o=offset)
     return query
 
 

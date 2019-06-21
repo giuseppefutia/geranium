@@ -6,6 +6,7 @@ from pprint import pformat
 from requests.auth import HTTPBasicAuth
 from flask import Flask, jsonify
 from urllib.parse import unquote, quote
+from sparql import *
 
 import config
 
@@ -119,11 +120,17 @@ def api():
     query = ''
 
     if flask.request.method == 'GET':
-        query = flask.request.args.get('query')
         request_type = flask.request.args.get('type')
+        # Manage publications request
+        if request_type == 'publications':
+            topic = flask.request.args.get('topic')
+            lines = flask.request.args.get('lines')
+            offset = flask.request.args.get('offset')
+            print(lines)
+            query = set_publications_query(topic, lines, offset)
 
-    if query:
         query = quote(query)  # get url encoding
+
         result = requests.get('https://blazegraph.nexacenter.org/blazegraph/sparql?format=json&query=' + query,
                               auth=HTTPBasicAuth(
                                   config.db_user, config.db_password),

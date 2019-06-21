@@ -20,11 +20,16 @@ export interface ResponsePaper {
 export class PapersService {
 
   private papers: Paper[] = [];
+  private _blockSize = 6;
 
   constructor(
     private http: HttpClient,
     private authorsService: AuthorsService
   ) {}
+
+  get blockSize(): number {
+    return this._blockSize;
+  }
 
   getSimplifiedPapersBlock(query: string, block: number) {
     // In linea di massima GET request con campi: > type= che rappresenta il tipo di richiesta a seconda della tab dalla quale e` effettuata

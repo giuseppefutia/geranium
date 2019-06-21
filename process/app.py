@@ -53,25 +53,62 @@ def get_publications(data):
 
 
 def get_author_details(data):
-    # print(data)
     final = {}
-    publications_list = list()
+    new_list = list()
     for row in data:
-        # Basic dict for author details
-        if not row['a_id']['value'] in final:
-            final[row['a_id']['value']] = dict()
-            final[row['a_id']['value']]['id'] = row['a_id']['value']
-            final[row['a_id']['value']]['name'] = row['a_label']['value']
-        final[row['a_id']['value']]['publications'] = publications_list
-        # Publication details to get co_authors and topics
+        # Author details
+        author = row['a_id']['value']
+        if not author in final:
+            final[author] = dict()
+            final[author]['id'] = row['a_id']['value']
+            final[author]['name'] = row['a_label']['value']
+        # Publications details
+        final[row['a_id']['value']]['publications'] = new_list
+        publications = final[row['a_id']['value']]['publications']
         publication_id = row['p_id']['value']
         added_publications = list(
-            filter(lambda x: x.get('id') == publication_id,
-                   final[row['a_id']['value']]['publications']))
+            filter(lambda x: x.get('id') == publication_id, publications))
         if len(added_publications) == 0:
             new_pub = dict()
             new_pub['id'] = row['p_id']['value']
-            final[row['a_id']['value']]['publications'].append(new_pub)
+            new_pub['title'] = row['p_label']['value']
+            new_pub['url'] = row['p']['value']
+            # Add author to the publication
+            new_pub['author'] = dict()
+            new_pub['author']['id'] = row['other_a_id']['value']
+            new_pub['author']['name'] = row['other_a_label']['value']
+            new_pub['author']['url'] = row['other_a']['value']
+            # Prepare list of co-authors and topics
+            new_pub['co_authors'] = list()
+            new_pub['topics'] = list()
+            publications.append(new_pub)
+    # New loop to include topics and co-authors
+    for row in data:
+        publications = final[row['a_id']['value']]['publications']
+        publication_id = row['p_id']['value']
+        publication = next(
+            (item for item in publications if item['id'] == publication_id), None)
+        if publication is not None:
+            # Add topics
+            topic_id = row['t']['value']
+            added_topics = list(
+                filter(lambda x: x.get('url') == topic_id, publication['topics']))
+            if len(added_topics) == 0:
+                new_topic = dict()
+                new_topic['url'] = row['t']['value']
+                new_topic['label'] = row['t_label']['value']
+                publication['topics'].append(new_topic)
+            # Add co-authors
+            co_author_id = row['other_ca_id']['value']
+            added_co_authors = list(
+                filter(lambda x: x.get('id') == co_author_id, publication['co_authors']))
+            if len(added_co_authors) == 0:
+                new_co_author = dict()
+                new_co_author['id'] = row['other_ca_id']['value']
+                new_co_author['name'] = row['other_ca_label']['value']
+                new_co_author['url'] = row['other_ca']['value']
+                publication['co_authors'].append(new_co_author)
+
     final = list(final.values())
 
     return jsonify(final)

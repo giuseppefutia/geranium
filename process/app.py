@@ -17,17 +17,19 @@ def get_authors(data):
     final = {}
     for row in data:
         # Base dict for authors
-        if not row['a_id']['value'] in final:
-            final[row['a_id']['value']] = dict()
-            final[row['a_id']['value']]['url'] = row['a']['value']
-            final[row['a_id']['value']]['id'] = row['a_id']['value']
-            final[row['a_id']['value']]['name'] = row['a_label']['value']
+        author = row['a_id']['value']
+        if not author in final:
+            final[author] = dict()
+            final[author]['url'] = row['a']['value']
+            final[author]['id'] = row['a_id']['value']
+            final[author]['name'] = row['a_label']['value']
         # Base dict for co_authors
-        if not row['ca_id']['value'] in final:
-            final[row['ca_id']['value']] = dict()
-            final[row['ca_id']['value']]['url'] = row['ca']['value']
-            final[row['ca_id']['value']]['id'] = row['ca_id']['value']
-            final[row['ca_id']['value']]['name'] = row['ca_label']['value']
+        co_author = row['ca_id']['value']
+        if not co_author in final:
+            final[co_author] = dict()
+            final[co_author]['url'] = row['ca']['value']
+            final[co_author]['id'] = co_author
+            final[co_author]['name'] = row['ca_label']['value']
     final = list(final.values())
     return jsonify(final)
 
@@ -49,7 +51,6 @@ def get_publications(data):
             final[row['id']['value']]['author'].append(
                 row['coauthor']['value'])
     final = list(final.values())
-
     return jsonify(final)
 
 
@@ -85,7 +86,7 @@ def get_author_details(data):
             publications.append(new_pub)
     # New loop to include topics and co-authors
     for row in data:
-        publications = final[row['a_id']['value']]['publications']
+        publications = final[author]['publications']
         publication_id = row['p_id']['value']
         publication = next(
             (item for item in publications if item['id'] == publication_id), None)
@@ -109,9 +110,7 @@ def get_author_details(data):
                 new_co_author['name'] = row['other_ca_label']['value']
                 new_co_author['url'] = row['other_ca']['value']
                 publication['co_authors'].append(new_co_author)
-
     final = list(final.values())
-
     return jsonify(final)
 
 

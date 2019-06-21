@@ -1,19 +1,20 @@
-def set_authors_query(topic):
-    query = ''' \
+def set_authors_query(topic, lines, offset):
+    query = """ \
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX dbp:<http://dbpedia.org/resource/>
 
     SELECT DISTINCT ?a ?a_id ?a_label ?ca ?ca_id ?ca_label
-    WHERE {
-        ?p purl:subject {t} .
+    WHERE {{
+        ?p purl:subject ?t .
+        ?t rdfs:label "{t}" .
         ?p purl:creator ?a .
         ?a rdfs:label ?a_label .
         ?a purl:identifier ?a_id .
         ?p purl:contributor ?ca .
         ?ca rdfs:label ?ca_label .
         ?ca purl:identifier ?ca_id .
-    } \
-    '''.format(t=topic)
+    }} LIMIT {l} OFFSET {o} \
+    """.format(t=topic, l=lines, o=offset)
     return query
 
 

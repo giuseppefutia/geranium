@@ -125,8 +125,13 @@ def api():
             topic = flask.request.args.get('topic')
             lines = flask.request.args.get('lines')
             offset = flask.request.args.get('offset')
-            print(lines)
             query = set_publications_query(topic, lines, offset)
+        # Manage authors request
+        elif request_type == 'authors':
+            topic = flask.request.args.get('topic')
+            lines = flask.request.args.get('lines')
+            offset = flask.request.args.get('offset')
+            query = set_authors_query(topic, lines, offset)
 
         query = quote(query)  # get url encoding
 

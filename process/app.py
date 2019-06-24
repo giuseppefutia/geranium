@@ -13,6 +13,48 @@ import config
 app = Flask(__name__)
 
 
+def get_publications(data):
+    final = {}
+    for row in data:
+        publication = row['p_id']['value']
+        if not publication in final:
+            publication_fields = {'id': 'p_id',
+                                  'title': 'p_label',
+                                  'url': 'p',
+                                  'submitted_date': 'p_date'}
+            author_fields = {'id': 'a_id',
+                             'name': 'a_label',
+                             'url': 'a'}
+            final[publication] = set_publication_data(row,
+                                                      publication_fields,
+                                                      author_fields)
+            final[publication]['abstract'] = row['p_abstract']['value']
+
+    # Add topics and co-authors
+    for row in data:
+        publication_id = row['p_id']['value']
+        publication = next(
+            (i for i in list(final.values()) if i['id'] == publication_id), None)
+        if publication is not None:
+            # Add topics of the publications
+            topic_fields = {'url': 'other_t',
+                            'label': 'other_t_label'}
+            topic = set_topic(row, publication['topics'], topic_fields)
+            if (topic is not None):
+                publication['topics'].append(topic)
+            # Add co-authors of the publications
+            co_auth_fields = {'id': 'ca_id',
+                              'name': 'ca_label',
+                              'url': 'ca'}
+            co_author = set_co_author(
+                row, publication['co_authors'], co_auth_fields)
+            if(co_author is not None):
+                publication['co_authors'].append(co_author)
+
+    final = list(final.values())
+    return jsonify(final)
+
+
 def get_authors(data):
     final = {}
 
@@ -99,73 +141,72 @@ def get_author_details(data):
         # Author details
         author = row['a_id']['value']
         if not author in final:
-            final[author] = dict()
-            final[author]['id'] = row['a_id']['value']
-            final[author]['name'] = row['a_label']['value']
+            author_fields = {'url': 'a', 'id': 'a_id', 'name': 'a_label'}
+            final[author] = set_author_data(row, author_fields)
         # Publications details
-        final[row['a_id']['value']]['publications'] = new_list
-        publications = final[row['a_id']['value']]['publications']
+        final[author]['publications'] = new_list
+        publications = final[author]['publications']
         publication_id = row['p_id']['value']
-        added_publications = list(
-            filter(lambda x: x.get('id') == publication_id, publications))
-        if len(added_publications) == 0:
-            new_pub = dict()
-            new_pub['id'] = row['p_id']['value']
-            new_pub['title'] = row['p_label']['value']
-            new_pub['url'] = row['p']['value']
-            # Add author to the publication
-            new_pub['author'] = dict()
-            new_pub['author']['id'] = row['other_a_id']['value']
-            new_pub['author']['name'] = row['other_a_label']['value']
-            new_pub['author']['url'] = row['other_a']['value']
-            # Prepare list of co-authors and topics
-            new_pub['co_authors'] = list()
-            new_pub['topics'] = list()
-            publications.append(new_pub)
-    # New loop to include topics and co-authors
+        author_fields = {'id': 'other_a_id',
+                         'name': 'other_a_label',
+                         'url': 'other_a'}
+        publication_fields = {'id': 'p_id',
+                              'title': 'p_label',
+                              'url': 'p',
+                              'submitted_date': 'p_date'}
+        publication = set_new_publication(row,
+                                          publications,
+                                          author_fields,
+                                          publication_fields)
+        if (publication is not None):
+            publications.append(publication)
+
+    # Add topics and co-authors
     for row in data:
+        author = row['a_id']['value']
         publications = final[author]['publications']
         publication_id = row['p_id']['value']
         publication = next(
-            (item for item in publications if item['id'] == publication_id), None)
+            (i for i in publications if i['id'] == publication_id), None)
         if publication is not None:
             # Add topics
-            topic_id = row['t']['value']
-            added_topics = list(
-                filter(lambda x: x.get('url') == topic_id, publication['topics']))
-            if len(added_topics) == 0:
-                new_topic = dict()
-                new_topic['url'] = row['t']['value']
-                new_topic['label'] = row['t_label']['value']
-                publication['topics'].append(new_topic)
+            topic_id = row['other_t']['value']
+            topic_fields = {'url': 'other_t',
+                            'label': 'other_t_label'}
+            topic = set_topic(row, publication['topics'], topic_fields)
+            if topic is not None:
+                publication['topics'].append(topic)
             # Add co-authors
-            co_author_id = row['other_ca_id']['value']
-            added_co_authors = list(
-                filter(lambda x: x.get('id') == co_author_id, publication['co_authors']))
-            if len(added_co_authors) == 0:
-                new_co_author = dict()
-                new_co_author['id'] = row['other_ca_id']['value']
-                new_co_author['name'] = row['other_ca_label']['value']
-                new_co_author['url'] = row['other_ca']['value']
-                publication['co_authors'].append(new_co_author)
+            co_auth_fields = {'id': 'other_ca_id',
+                              'name': 'other_ca_label',
+                              'url': 'other_ca'}
+            co_author = set_co_author(row,
+                                      publication['co_authors'],
+                                      co_auth_fields)
+            if co_author is not None:
+                publication['co_authors'].append(co_author)
+
     final = list(final.values())
     return jsonify(final)
 
 
 def set_author_data(row, author_fields):
-    author = dict()
+    author_data = dict()
     for field, value in author_fields.items():
-        author[field] = row[value]['value']
-    return author
+        author_data[field] = row[value]['value']
+    return author_data
 
 
 def set_publication_data(row, pub_fields, auth_fields):
-    pub_dict = dict()
+    publication_data = dict()
     for field, value in pub_fields.items():
-        pub_dict[field] = row[value]['value']
+        publication_data[field] = row[value]['value']
     # Include information on the author within the publication
-    pub_dict['author'] = set_author_data(row, auth_fields)
-    return pub_dict
+    publication_data['author'] = set_author_data(row, auth_fields)
+    # Prepare list of co-authors and topics
+    publication_data['co_authors'] = list()
+    publication_data['topics'] = list()
+    return publication_data
 
 
 def set_topic(row, topics, topic_fields):
@@ -195,9 +236,6 @@ def set_new_publication(row, publications, author_fields, publication_fields):
     if len(n) == 0:
         # Add data on publications and authors
         pub = set_publication_data(row, publication_fields, author_fields)
-        # Prepare list of co-authors and topics
-        pub['co_authors'] = list()
-        pub['topics'] = list()
     return pub
 
 

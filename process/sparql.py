@@ -2,17 +2,31 @@ def set_authors_query(topic, lines, offset):
     query = """ \
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX dbp:<http://dbpedia.org/resource/>
+    PREFIX gpo:<http://geranium-project.org/ontology/>
 
-    SELECT DISTINCT ?a ?a_id ?a_label ?ca ?ca_id ?ca_label
+    SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?all_t ?all_t_label
+                    ?other_a ?other_a_id ?other_a_label
+                    ?other_ca ?other_ca_id ?other_ca_label
     WHERE {{
+        ?p a gpo:Publication .
         ?p purl:subject ?t .
+        ?t rdf:type gpo:TMFResource .
+        ?p purl:subject ?all_t .
+        ?all_t rdf:type gpo:TMFResource .
+        ?all_t rdfs:label ?all_t_label .
+        ?p purl:identifier ?p_id .
+        ?p rdfs:label ?p_label .
         ?t rdfs:label "{t}" .
-        ?p purl:creator ?a .
+        ?p ?property ?a .
+        ?a a gpo:Author .
         ?a rdfs:label ?a_label .
         ?a purl:identifier ?a_id .
-        ?p purl:contributor ?ca .
-        ?ca rdfs:label ?ca_label .
-        ?ca purl:identifier ?ca_id .
+        ?p purl:creator ?other_a .
+        ?other_a purl:identifier ?other_a_id .
+        ?other_a rdfs:label ?other_a_label .
+        ?p purl:contributor ?other_ca .
+        ?other_ca purl:identifier ?other_ca_id .
+        ?other_ca rdfs:label ?other_ca_label .
     }} LIMIT {l} OFFSET {o} \
     """.format(t=topic, l=lines, o=offset)
     return query

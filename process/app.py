@@ -15,21 +15,58 @@ app = Flask(__name__)
 
 def get_authors(data):
     final = {}
+
+    # Add authors
     for row in data:
-        # Base dict for authors
         author = row['a_id']['value']
         if not author in final:
-            final[author] = dict()
-            final[author]['url'] = row['a']['value']
-            final[author]['id'] = row['a_id']['value']
-            final[author]['name'] = row['a_label']['value']
-        # Base dict for co_authors
-        co_author = row['ca_id']['value']
-        if not co_author in final:
-            final[co_author] = dict()
-            final[co_author]['url'] = row['ca']['value']
-            final[co_author]['id'] = co_author
-            final[co_author]['name'] = row['ca_label']['value']
+            # Keys are used to fill authors dict, values are SPARQL variables that contain data
+            author_fields = {'url': 'a', 'id': 'a_id', 'name': 'a_label'}
+            final[author] = set_author_data(row, author_fields)
+            final[author]['publications_on_topic'] = list()
+
+    # Add publications
+    for row in data:
+        author = row['a_id']['value']
+
+        # Add publications on the topic
+        publications = final[author]['publications_on_topic']
+        author_fields = {'id': 'other_a_id',
+                         'name': 'other_a_label',
+                         'url': 'other_a'}
+        publication_fields = {'id': 'p_id',
+                              'title': 'p_label',
+                              'url': 'p'}
+        publication = set_new_publication(row,
+                                          publications,
+                                          author_fields,
+                                          publication_fields)
+        if (publication is not None):
+            publications.append(publication)
+
+    # Add topics and co-authors
+    for row in data:
+        author = row['a_id']['value']
+        # Add topics of the publications on the topic
+        publications = final[author]['publications_on_topic']
+        publication_id = row['p_id']['value']
+        publication = next(
+            (i for i in publications if i['id'] == publication_id), None)
+        if publication is not None:
+            topic_fields = {'url': 'all_t',
+                            'label': 'all_t_label'}
+            topic = set_topic(
+                row, publication['topics'], topic_fields)
+            if (topic is not None):
+                publication['topics'].append(topic)
+        # Add co-authors of the publications on the topic
+            co_auth_fields = {'id': 'other_ca_id',
+                              'name': 'other_ca_label', 'url': 'other_ca'}
+            co_author = set_co_author(
+                row, publication['co_authors'], co_auth_fields)
+            if(co_author is not None):
+                publication['co_authors'].append(co_author)
+
     final = list(final.values())
     return jsonify(final)
 
@@ -112,6 +149,55 @@ def get_author_details(data):
                 publication['co_authors'].append(new_co_author)
     final = list(final.values())
     return jsonify(final)
+
+
+def set_author_data(row, author_fields):
+    author = dict()
+    for field, value in author_fields.items():
+        author[field] = row[value]['value']
+    return author
+
+
+def set_publication_data(row, pub_fields, auth_fields):
+    pub_dict = dict()
+    for field, value in pub_fields.items():
+        pub_dict[field] = row[value]['value']
+    # Include information on the author within the publication
+    pub_dict['author'] = set_author_data(row, auth_fields)
+    return pub_dict
+
+
+def set_topic(row, topics, topic_fields):
+    topic = None
+    topic_id = row[topic_fields['url']]['value']
+    n = list(filter(lambda x: x.get('url') == topic_id, topics))
+    if len(n) == 0:
+        topic = dict()
+        for field, value in topic_fields.items():
+            topic[field] = row[value]['value']
+    return topic
+
+
+def set_co_author(row, co_authors, co_author_fields):
+    co_author = None
+    co_author_id = row[co_author_fields['id']]['value']
+    n = list(filter(lambda x: x.get('id') == co_author_id, co_authors))
+    if len(n) == 0:
+        co_author = set_author_data(row, co_author_fields)
+    return co_author
+
+
+def set_new_publication(row, publications, author_fields, publication_fields):
+    pub = None
+    publication_id = row[publication_fields['id']]['value']
+    n = list(filter(lambda x: x.get('id') == publication_id, publications))
+    if len(n) == 0:
+        # Add data on publications and authors
+        pub = set_publication_data(row, publication_fields, author_fields)
+        # Prepare list of co-authors and topics
+        pub['co_authors'] = list()
+        pub['topics'] = list()
+    return pub
 
 
 @app.route('/api', methods=['GET'])

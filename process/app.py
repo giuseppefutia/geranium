@@ -218,6 +218,13 @@ def api():
             lines = flask.request.args.get('lines')
             offset = flask.request.args.get('offset')
             query = set_authors_query(topic, lines, offset)
+        # Manage author details request
+        elif request_type == 'author':
+            topic = flask.request.args.get('topic')
+            lines = flask.request.args.get('lines')
+            offset = flask.request.args.get('offset')
+            url = flask.request.args.get('url')
+            query = set_author_details_query(topic, lines, offset, url)
 
         query = quote(query)  # get url encoding
 

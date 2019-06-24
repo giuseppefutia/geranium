@@ -60,24 +60,29 @@ def set_publications_query(topic, lines, offset):
     return query
 
 
-def set_author_details_query(author_url):
-    query = ''' \
+def set_author_details_query(topic, lines, offset, author_url):
+    query = """ \
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
 
-    SELECT DISTINCT ?a_id ?a_label ?p ?p_id ?p_label ?t ?t_label ?other_a ?other_a_id
-                    ?other_a_label ?other_ca ?other_ca_id ?other_ca_label
-    WHERE {
+    SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?p_date
+                    ?other_t ?other_t_label
+                    ?other_a ?other_a_id ?other_a_label
+                    ?other_ca ?other_ca_id ?other_ca_label
+    WHERE {{
         <{a}> purl:identifier ?a_id .
         <{a}> rdfs:label ?a_label .
+        ?a rdfs:label ?a_label .
         ?p ?property <{a}> .
         ?p a gpo:Publication .
         ?p purl:identifier ?p_id .
         ?p rdfs:label ?p_label .
         ?p purl:subject ?t .
         ?t rdf:type gpo:TMFResource .
-        ?t rdfs:label ?t_label .
-        ?p purl:dateSubmitted ?date .
+        ?t rdfs:label "{t}" .
+        ?p purl:subject ?other_t .
+        ?other_t rdfs:label ?other_t_label .
+        ?p purl:dateSubmitted ?p_date .
         ?p purl:creator ?other_a .
         ?other_a purl:identifier ?other_a_id .
         ?other_a rdfs:label ?other_a_label .
@@ -85,7 +90,7 @@ def set_author_details_query(author_url):
         ?other_ca purl:identifier ?other_ca_id .
         ?other_ca rdfs:label ?other_ca_label .
         FILTER (?property = purl:creator || ?property = purl:contributor)
-    }
+    }} LIMIT {l} OFFSET {o}
     \
-    '''.format(a=author_url)
+    """.format(t=topic, l=lines, o=offset, a=author_url)
     return query

@@ -29,14 +29,15 @@ def get_authors(data):
     for row in data:
         author = row['a_id']['value']
 
-        # Add publications on the topic
+        # Add publications
         publications = final[author]['publications_on_topic']
         author_fields = {'id': 'other_a_id',
                          'name': 'other_a_label',
                          'url': 'other_a'}
         publication_fields = {'id': 'p_id',
                               'title': 'p_label',
-                              'url': 'p'}
+                              'url': 'p',
+                              'submitted_date': 'p_date'}
         publication = set_new_publication(row,
                                           publications,
                                           author_fields,
@@ -47,21 +48,21 @@ def get_authors(data):
     # Add topics and co-authors
     for row in data:
         author = row['a_id']['value']
-        # Add topics of the publications on the topic
         publications = final[author]['publications_on_topic']
         publication_id = row['p_id']['value']
         publication = next(
             (i for i in publications if i['id'] == publication_id), None)
         if publication is not None:
+            # Add topics of the publications
             topic_fields = {'url': 'all_t',
                             'label': 'all_t_label'}
-            topic = set_topic(
-                row, publication['topics'], topic_fields)
+            topic = set_topic(row, publication['topics'], topic_fields)
             if (topic is not None):
                 publication['topics'].append(topic)
-        # Add co-authors of the publications on the topic
+            # Add co-authors of the publications
             co_auth_fields = {'id': 'other_ca_id',
-                              'name': 'other_ca_label', 'url': 'other_ca'}
+                              'name': 'other_ca_label',
+                              'url': 'other_ca'}
             co_author = set_co_author(
                 row, publication['co_authors'], co_auth_fields)
             if(co_author is not None):

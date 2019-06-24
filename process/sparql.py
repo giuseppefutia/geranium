@@ -4,7 +4,8 @@ def set_authors_query(topic, lines, offset):
     PREFIX dbp:<http://dbpedia.org/resource/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
 
-    SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?all_t ?all_t_label
+    SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?p_date
+                    ?all_t ?all_t_label
                     ?other_a ?other_a_id ?other_a_label
                     ?other_ca ?other_ca_id ?other_ca_label
     WHERE {{
@@ -22,6 +23,7 @@ def set_authors_query(topic, lines, offset):
         ?a rdfs:label ?a_label .
         ?a purl:identifier ?a_id .
         ?p purl:creator ?other_a .
+        ?p purl:dateSubmitted ?p_date .
         ?other_a purl:identifier ?other_a_id .
         ?other_a rdfs:label ?other_a_label .
         ?p purl:contributor ?other_ca .

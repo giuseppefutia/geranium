@@ -19,6 +19,8 @@ export interface ResponsePaper {
 })
 export class PapersService {
 
+  private papers = []
+
   constructor(
     private http: HttpClient,
     private authorsService: AuthorsService
@@ -68,7 +70,8 @@ export class PapersService {
               )
             );
           }
-
+          
+          this.papers = newPapers;
           return newPapers;
         })
       );

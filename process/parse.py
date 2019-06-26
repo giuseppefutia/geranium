@@ -6,13 +6,9 @@ def get_publications(data):
     for row in data:
         publication = row['p_id']['value']
         if not publication in final:
-            publication_fields = {'id': 'p_id',
-                                  'title': 'p_label',
-                                  'url': 'p',
-                                  'submitted_date': 'p_date'}
-            author_fields = {'id': 'a_id',
-                             'name': 'a_label',
-                             'url': 'a'}
+            publication_fields = {'id': 'p_id', 'title': 'p_label',
+                                  'url': 'p', 'submitted_date': 'p_date'}
+            author_fields = {'id': 'a_id', 'name': 'a_label', 'url': 'a'}
             final[publication] = set_publication_data(row,
                                                       publication_fields,
                                                       author_fields)
@@ -25,15 +21,12 @@ def get_publications(data):
             (i for i in list(final.values()) if i['id'] == publication_id), None)
         if publication is not None:
             # Add topics of the publications
-            topic_fields = {'url': 'other_t',
-                            'label': 'other_t_label'}
+            topic_fields = {'url': 'other_t', 'label': 'other_t_label'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if (topic is not None):
                 publication['topics'].append(topic)
             # Add co-authors of the publications
-            co_auth_fields = {'id': 'ca_id',
-                              'name': 'ca_label',
-                              'url': 'ca'}
+            co_auth_fields = {'id': 'ca_id', 'name': 'ca_label', 'url': 'ca'}
             co_author = set_co_author(
                 row, publication['co_authors'], co_auth_fields)
             if(co_author is not None):
@@ -62,12 +55,9 @@ def get_authors(data):
         # Add publications
         publications = final[author]['publications_on_topic']
         author_fields = {'id': 'other_a_id',
-                         'name': 'other_a_label',
-                         'url': 'other_a'}
-        publication_fields = {'id': 'p_id',
-                              'title': 'p_label',
-                              'url': 'p',
-                              'submitted_date': 'p_date'}
+                         'name': 'other_a_label', 'url': 'other_a'}
+        publication_fields = {'id': 'p_id', 'title': 'p_label',
+                              'url': 'p', 'submitted_date': 'p_date'}
         publication = set_new_publication(row,
                                           publications,
                                           author_fields,
@@ -84,8 +74,7 @@ def get_authors(data):
             (i for i in publications if i['id'] == publication_id), None)
         if publication is not None:
             # Add topics of the publications
-            topic_fields = {'url': 'all_t',
-                            'label': 'all_t_label'}
+            topic_fields = {'url': 'all_t', 'label': 'all_t_label'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if (topic is not None):
                 publication['topics'].append(topic)
@@ -115,13 +104,10 @@ def get_author_details(data):
         final[author]['publications'] = new_list
         publications = final[author]['publications']
         publication_id = row['p_id']['value']
-        author_fields = {'id': 'other_a_id',
-                         'name': 'other_a_label',
+        author_fields = {'id': 'other_a_id', 'name': 'other_a_label',
                          'url': 'other_a'}
-        publication_fields = {'id': 'p_id',
-                              'title': 'p_label',
-                              'url': 'p',
-                              'submitted_date': 'p_date'}
+        publication_fields = {'id': 'p_id', 'title': 'p_label',
+                              'url': 'p', 'submitted_date': 'p_date'}
         publication = set_new_publication(row,
                                           publications,
                                           author_fields,
@@ -139,14 +125,12 @@ def get_author_details(data):
         if publication is not None:
             # Add topics
             topic_id = row['other_t']['value']
-            topic_fields = {'url': 'other_t',
-                            'label': 'other_t_label'}
+            topic_fields = {'url': 'other_t', 'label': 'other_t_label'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if topic is not None:
                 publication['topics'].append(topic)
             # Add co-authors
-            co_auth_fields = {'id': 'other_ca_id',
-                              'name': 'other_ca_label',
+            co_auth_fields = {'id': 'other_ca_id', 'name': 'other_ca_label',
                               'url': 'other_ca'}
             co_author = set_co_author(row,
                                       publication['co_authors'],

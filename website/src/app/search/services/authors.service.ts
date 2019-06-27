@@ -17,32 +17,19 @@ export class AuthorsService {
 
   constructor(private http: HttpClient) {}
 
-  simplifyAuthorName(name: string): string {
-    let builder = '';
-    let i: number;
-    const names = name.split(' ');
-    for (i = 0; i < names.length - 1; i++) {
-      builder += names[i].charAt(0).toUpperCase() + '. ';
-    }
-    let first = names[i].toLowerCase();
-    first = first.charAt(0).toUpperCase() + first.slice(1);
-    builder += first;
-    return builder;
-  }
-
   /**
    * Send HTTP GET request for all the authors that have publications inherent the topic passed as argument
-   * 
+   *
    * @param query the topic to be used as query
-   * @param block 
+   * @param block
    */
   getAuthorsBlock(query: string, block: number): Observable<Author[]> {
-    
+
     const linesPerQuery = 10;
     const linesOffset = linesPerQuery * block;
     const url = 'http://api.geranium.nexacenter.org/api?'
               + encodeURI(`type=authors&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`);
-    
+
     console.log("GET: " + url);
 
     return this.http
@@ -54,10 +41,10 @@ export class AuthorsService {
 
           for(const author of response) {
             newAuthors.push(new Author(
-              author.id, 
-              author.name, 
-              "fake department", 
-              ["fake topic"], 
+              author.id,
+              author.name,
+              "fake department",
+              ["fake topic"],
               "https://avatars3.githubusercontent.com/u/12415265?s=40&v=4",
               4));
           }

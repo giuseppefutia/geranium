@@ -13,8 +13,9 @@ import { Topic } from '../models/topic.model';
 export interface ResponsePaper {
   id: string;
   title: string;
-  author: string[]; // XXX Need clarification
-  topics: string[];
+  author: SimplifiedAuthor; // XXX Need clarification
+  co_authors: SimplifiedAuthor [];
+  topics: Topic[];
   submitted_date: string;
 }
 
@@ -53,23 +54,24 @@ export class PapersService {
           const newPapers: SimplifiedPaper[] = [];
 
           for (const paper of response) {
-
-            // build authors
+            // build authors: for now authors and co-authors are processed together
             const authors: SimplifiedAuthor[] = [];
-            for (let i = 0; i < paper.author.length; i++) {
-              authors.push(
-                new SimplifiedAuthor(
-                  i.toString(),
-                  this.authorsService.simplifyAuthorName(paper.author[i])
-                )
-              );
+            const author = new SimplifiedAuthor(paper.author.id,
+                                                paper.author.name,
+                                                paper.author.url)
+
+            for (const co_author of paper.co_authors) {
+                authors.push(new SimplifiedAuthor(co_author.id,
+                                                  co_author.name,
+                                                  co_author.url));
+
             }
 
             // build topics
             const topics: Topic[] = [];
             for (let i = 0; i < paper.topics.length; i++) {
               const topic = paper.topics[i];
-              topics.push(new Topic(topic['url'], topic['label']))
+              topics.push(new Topic(topic.url, topic.label))
             }
 
             // build paper

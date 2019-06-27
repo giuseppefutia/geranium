@@ -78,9 +78,9 @@ export class PapersService {
       'PP1',  // Cambiare slash con trattino
       'Carbon Nanotubes as an Effective Opportunity for Cancer Diagnosis and Treatment',
       [
-        new SimplifiedAuthor('123', 'Alessandro Sanginario'),
-        new SimplifiedAuthor('782', 'Beatrice Miccoli'),
-        new SimplifiedAuthor('900', 'Danilo Demarchi')
+        new SimplifiedAuthor('123', 'Alessandro Sanginario', ''),
+        new SimplifiedAuthor('782', 'Beatrice Miccoli', ''),
+        new SimplifiedAuthor('900', 'Danilo Demarchi', '')
       ],
       [
         new Topic('test/url', 'Carbon nanotube'),
@@ -98,9 +98,9 @@ export class PapersService {
       'PP2',
       'Wide Band Microwave Characterization of MWCNTS/Epoxy Composites',
       [
-        new SimplifiedAuthor('Afr', 'Mauro Giorcelli'),
-        new SimplifiedAuthor('BRB', 'Patrizia Savi'),
-        new SimplifiedAuthor('900', 'Alberto Tagliaferro')
+        new SimplifiedAuthor('Afr', 'Mauro Giorcelli', ''),
+        new SimplifiedAuthor('BRB', 'Patrizia Savi', ''),
+        new SimplifiedAuthor('900', 'Alberto Tagliaferro', '')
       ],
       [
           new Topic('test/url', 'Carbon nanotube'),
@@ -118,10 +118,10 @@ export class PapersService {
       'PP3',
       'Effects of Nano-sized Additives on the High-Temperature Properties of Bituminous Binders: A Comparative Study',
       [
-        new SimplifiedAuthor('123', 'Ezio Santagata'),
-        new SimplifiedAuthor('Afr', 'Giuseppe Chiappinelli'),
-        new SimplifiedAuthor('BRB', 'Orazio Ballieri'),
-        new SimplifiedAuthor('900', 'Lucia Tsantilis')
+        new SimplifiedAuthor('123', 'Ezio Santagata', ''),
+        new SimplifiedAuthor('Afr', 'Giuseppe Chiappinelli', ''),
+        new SimplifiedAuthor('BRB', 'Orazio Ballieri', ''),
+        new SimplifiedAuthor('900', 'Lucia Tsantilis', '')
       ],
       [
           new Topic('test/url', 'Carbon nanotube'),
@@ -139,10 +139,10 @@ export class PapersService {
       'PP4',
       'Low-Cost Carbon Fillers to Improve Mechanical Properties and Conductivity of Epoxy Composites',
       [
-        new SimplifiedAuthor('123', 'Aamer Abbas Khan'),
-        new SimplifiedAuthor('123', 'Massimo Rovere'),
-        new SimplifiedAuthor('123', 'Patrizia Savi'),
-        new SimplifiedAuthor('782', 'Carlo Rosso')
+        new SimplifiedAuthor('123', 'Aamer Abbas Khan', ''),
+        new SimplifiedAuthor('123', 'Massimo Rovere', ''),
+        new SimplifiedAuthor('123', 'Patrizia Savi', ''),
+        new SimplifiedAuthor('782', 'Carlo Rosso', '')
       ],
       [
           new Topic('test/url', 'Carbon nanotube'),
@@ -160,18 +160,18 @@ export class PapersService {
       'PP5',
       'BaTiO3 nanotube arrays by hydrothermal conversion of TiO2 nanotube carpets grown by anodic oxidation',
       [
-        new SimplifiedAuthor('123', 'Andrea Laberti'),
-        new SimplifiedAuthor('900', 'Elisa Paola Ambrosio'),
-        new SimplifiedAuthor('123', 'Diego Giovanni Manfredi'),
-        new SimplifiedAuthor('900', 'Giancarlo Canavese'),
-        new SimplifiedAuthor('782', 'Mariangela Lombardi'),
-        new SimplifiedAuthor('BRB', 'Marzia Quaglio'),
-        new SimplifiedAuthor('BRB', 'Federico Bella'),
-        new SimplifiedAuthor('BRB', 'Nadia Garino'),
-        new SimplifiedAuthor('123', 'Stefano Bianco'),
-        new SimplifiedAuthor('782', 'Candido Pirri'),
-        new SimplifiedAuthor('123', 'Stefano Stassi'),
-        new SimplifiedAuthor('Afr', 'Angelica Chiodoni')
+        new SimplifiedAuthor('123', 'Andrea Laberti', ''),
+        new SimplifiedAuthor('900', 'Elisa Paola Ambrosio', ''),
+        new SimplifiedAuthor('123', 'Diego Giovanni Manfredi', ''),
+        new SimplifiedAuthor('900', 'Giancarlo Canavese', ''),
+        new SimplifiedAuthor('782', 'Mariangela Lombardi', ''),
+        new SimplifiedAuthor('BRB', 'Marzia Quaglio', ''),
+        new SimplifiedAuthor('BRB', 'Federico Bella', ''),
+        new SimplifiedAuthor('BRB', 'Nadia Garino', ''),
+        new SimplifiedAuthor('123', 'Stefano Bianco', ''),
+        new SimplifiedAuthor('782', 'Candido Pirri', ''),
+        new SimplifiedAuthor('123', 'Stefano Stassi', ''),
+        new SimplifiedAuthor('Afr', 'Angelica Chiodoni', '')
       ],
       [
         new Topic('test/url', 'Carbon nanotube'),
@@ -189,10 +189,10 @@ export class PapersService {
       'PP6',
       'Mesoporous carbons supported non-noble metal Fe-NX electrocatalysts for PEM Fuel Cell oxygen reduction reaction',
       [
-        new SimplifiedAuthor('123', 'Alessandro Hugo Monteverde Videla'),
-        new SimplifiedAuthor('782', 'Juqin Zeng'),
-        new SimplifiedAuthor('Afr', 'Stefania Specchia'),
-        new SimplifiedAuthor('BRB', 'Carlotta Francia')
+        new SimplifiedAuthor('123', 'Alessandro Hugo Monteverde Videla', ''),
+        new SimplifiedAuthor('782', 'Juqin Zeng', ''),
+        new SimplifiedAuthor('Afr', 'Stefania Specchia', ''),
+        new SimplifiedAuthor('BRB', 'Carlotta Francia', '')
       ],
       [
         new Topic('test/url', 'Carbon nanotube'),
@@ -210,8 +210,8 @@ export class PapersService {
       'CBA',
       'Paper22',
       [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers')
+        new SimplifiedAuthor('123', 'Joanne Rowling', ''),
+        new SimplifiedAuthor('782', 'Dave Eggers', '')
       ],
       [new Topic('test/url', 'Carbon nanotube'),
       new Topic('test/url', 'Carbon nanotube'),
@@ -227,9 +227,9 @@ export class PapersService {
       '222',
       'Paper33',
       [
-        new SimplifiedAuthor('123', 'Joanne Rowling'),
-        new SimplifiedAuthor('782', 'Dave Eggers'),
-        new SimplifiedAuthor('900', 'Modest Mussorgsky')
+        new SimplifiedAuthor('123', 'Joanne Rowling', ''),
+        new SimplifiedAuthor('782', 'Dave Eggers', ''),
+        new SimplifiedAuthor('900', 'Modest Mussorgsky', '')
       ],
       [new Topic('test/url', 'Carbon nanotube'),
       new Topic('test/url', 'Carbon nanotube'),
@@ -267,11 +267,6 @@ export class PapersService {
   }
 
   getSimplifiedPapersBlock(query: string, block: number): SimplifiedPaper[] {
-    for (const paper of this.simplifiedPapers) {
-      for (const author of paper.authors) {
-        author.name = this.authorsService.simplifyAuthorName(author.name);
-      }
-    }
     this.fetchPapers("Carbon nanotube");
     return [...this.simplifiedPapers];
   }

@@ -276,9 +276,22 @@ export class PapersPage implements OnInit {
   authorsToStringArray(paper: SimplifiedPaper): string[] {
     const temp = new Array<string>();
     for (const author of paper.authors) {
-      temp.push(author.name);
+      temp.push(this.simplifyAuthorName(author.name));
     }
     return temp;
+  }
+
+  simplifyAuthorName(name: string): string {
+    let builder = '';
+    let i: number;
+    const names = name.split(' ');
+    for (i = 0; i < names.length - 1; i++) {
+      builder += names[i].charAt(0).toUpperCase() + '. ';
+    }
+    let first = names[i].toLowerCase();
+    first = first.charAt(0).toUpperCase() + first.slice(1);
+    builder += first;
+    return builder;
   }
 
   // Adjusts the configuration of the chart in the top view and shows it
@@ -385,7 +398,7 @@ export class PapersPage implements OnInit {
         new SimplifiedPaper(
           '',
           '',
-          [new SimplifiedAuthor('', '')],
+          [new SimplifiedAuthor('', '', '')],
           [new Topic('', '')],
           new Date(''),
           ''

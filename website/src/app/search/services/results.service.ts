@@ -55,10 +55,6 @@ export class ResultsService {
     return this.authorsService.getAuthorsBlock(query, block);
   }
 
-  simplifyAuthorName(name: string): string {
-    return this.authorsService.simplifyAuthorName(name);
-  }
-
   getAuthorFromId(authorId: string) {
     return this.authorsService.getAuthorFromId(authorId);
   }

@@ -23,6 +23,4 @@ export class ExpandedAuthor extends Author {
     ) {
         super(id, name, department, topics, imageUrl, numberOfPapers);
     }
-
-
 }

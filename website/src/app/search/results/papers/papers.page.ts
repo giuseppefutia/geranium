@@ -233,9 +233,9 @@ export class PapersPage implements OnInit {
   }
 
   // On click on topic chip start a new search
-  onTopicChipClick(topic: string) {
-    this.resultsService.searchKey = topic;
-    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);
+  onTopicChipClick(topic: Topic) {
+    this.resultsService.searchKey = topic.label;
+    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', this.resultsService.searchKey]);
   }
 
   // Called by infinite scroll to load more data

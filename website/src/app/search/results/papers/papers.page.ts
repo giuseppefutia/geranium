@@ -5,12 +5,15 @@ import {
   ElementRef
 } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
-import { SimplifiedPaper } from '../../models/simplified-paper.model';
 import { Chart } from 'chart.js';
-import { SimplifiedAuthor } from '../../models/simplified-author.model';
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
+
+// Import models
+import { SimplifiedPaper } from '../../models/simplified-paper.model';
+import { SimplifiedAuthor } from '../../models/simplified-author.model';
+import { Topic } from '../../models/topic.model';
 
 class YearsData {
   constructor(
@@ -219,9 +222,9 @@ export class PapersPage implements OnInit {
   }
 
   // Eliminates the searchKey topic from the list of topics and limits it to a specific number
-  filterTopics(topics: string[], topicsLimit: number): string[] {
+  filterTopics(topics: Topic[], topicsLimit: number): Topic[] {
     return topics
-      .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
+      .filter(topic => topic.label.toLowerCase() !== this.searchKey.toLowerCase())
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
@@ -383,7 +386,7 @@ export class PapersPage implements OnInit {
           '',
           '',
           [new SimplifiedAuthor('', '')],
-          [''],
+          [new Topic('', '')],
           new Date(''),
           ''
         )

@@ -1,4 +1,5 @@
 import { SimplifiedAuthor } from './simplified-author.model';
+import { Topic } from './topic.model';
 
 export class Paper {
   constructor(
@@ -6,7 +7,7 @@ export class Paper {
     public title: string,
     public abstract: string,
     public authors: SimplifiedAuthor[],
-    public topics: string[],
+    public topics: Topic[],
     public publicationDate: Date,
     public imageUrl: string
   ) {}

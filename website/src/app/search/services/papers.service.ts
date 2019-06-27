@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Paper } from '../models/paper.model';
-import { SimplifiedPaper } from '../models/simplified-paper.model';
-import { SimplifiedAuthor } from '../models/simplified-author.model';
 import { HttpClient} from '@angular/common/http';
 import { AuthorsService } from './authors.service';
 import { map } from 'rxjs/operators';
+
+// Import models
+import { Paper } from '../models/paper.model';
+import { SimplifiedPaper } from '../models/simplified-paper.model';
+import { SimplifiedAuthor } from '../models/simplified-author.model';
+import { Topic } from '../models/topic.model';
 
 export interface ResponsePaper {
   id: string;
   title: string;
   author: string[];
-  topic: string[];
+  topics: string[];
   date: string;
 }
 
@@ -28,7 +31,7 @@ export class PapersService {
 
   /**
    * Send HTTP GET request for all the publications inherent a specific topic, passed as parameter.
-   * 
+   *
    * @param query the topic to be used for the search
    * @param block the current pagination block
    */
@@ -46,8 +49,9 @@ export class PapersService {
       .pipe(
         map(response => {
           const newPapers: SimplifiedPaper[] = [];
-          
+
           for (const paper of response) {
+
             // build authors of the paper
             const authors: SimplifiedAuthor[] = [];
             for (let i = 0; i < paper.author.length; i++) {
@@ -58,19 +62,27 @@ export class PapersService {
                 )
               );
             }
-            //build paper
+
+            // build topics
+            const topics: Topic[] = [];
+            for (let i = 0; i < paper.topics.length; i++) {
+              const topic = paper.topics[i];
+              topics.push(new Topic(topic['url'], topic['label']))
+            }
+
+            // build paper
             newPapers.push(
               new SimplifiedPaper(
                 this.cleanID(paper.id),
                 paper.title,
                 authors,
-                paper.topic,
+                topics,
                 new Date(paper.date),
                 'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
               )
             );
           }
-          
+
           this.papers = newPapers;
           return newPapers;
         })

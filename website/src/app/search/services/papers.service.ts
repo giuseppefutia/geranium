@@ -9,17 +9,19 @@ import { SimplifiedPaper } from '../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../models/simplified-author.model';
 import { Topic } from '../models/topic.model';
 
+// Response interface
 export interface ResponsePaper {
   id: string;
   title: string;
-  author: string[];
+  author: string[]; // XXX Need clarification
   topics: string[];
-  date: string;
+  submitted_date: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class PapersService {
 
   private papers = []
@@ -52,7 +54,7 @@ export class PapersService {
 
           for (const paper of response) {
 
-            // build authors of the paper
+            // build authors
             const authors: SimplifiedAuthor[] = [];
             for (let i = 0; i < paper.author.length; i++) {
               authors.push(
@@ -77,7 +79,7 @@ export class PapersService {
                 paper.title,
                 authors,
                 topics,
-                new Date(paper.date),
+                new Date(paper.submitted_date),
                 'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
               )
             );

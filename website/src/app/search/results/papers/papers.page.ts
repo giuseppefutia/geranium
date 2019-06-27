@@ -328,7 +328,7 @@ export class PapersPage implements OnInit {
   updatePapersYears(newPapers: SimplifiedPaper[]) {
     let found: boolean;
     for (const newPaper of newPapers) {
-      const yearString = this.yearString(newPaper.publicationDate);
+      const yearString = this.yearString(newPaper.submitted_date);
 
       found = false;
       for (const el of this.allPapersYears) {
@@ -370,7 +370,7 @@ export class PapersPage implements OnInit {
     this.filteredPapers = this.allPapers.filter(el => {
       return (
         this.allPapersYears.find(y => {
-          const yearString = this.yearString(el.publicationDate);
+          const yearString = this.yearString(el.submitted_date);
           return yearString === y.year && y.shown === true;
         }) !== undefined
       );

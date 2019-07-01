@@ -11,12 +11,12 @@ import { Topic } from '../models/topic.model';
 
 // Response interface
 export interface ResponsePaper {
-  id: string;
-  title: string;
-  author: SimplifiedAuthor; // XXX Need clarification
-  co_authors: SimplifiedAuthor [];
-  topics: Topic[];
-  submitted_date: string;
+  id: string,
+  title: string,
+  author: SimplifiedAuthor,
+  co_authors: SimplifiedAuthor [],
+  topics: Topic[],
+  submitted_date: string
 }
 
 @Injectable({

@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
 import { Chart } from 'chart.js';
-import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 
@@ -14,6 +13,10 @@ import { ResultsService } from '../../services/results.service';
 import { SimplifiedPaper } from '../../models/simplified-paper.model';
 import { SimplifiedAuthor } from '../../models/simplified-author.model';
 import { Topic } from '../../models/topic.model';
+
+// Import components
+import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 class YearsData {
   constructor(
@@ -166,6 +169,7 @@ export class PapersPage implements OnInit {
               newPaper.topics,
               this.maxTopicsPerCard
             );
+            newPaper.authors = this.processAuthorNames(newPaper.authors)
             this.allPapers.push(newPaper);
           }
           this.currentBlock++;
@@ -201,6 +205,7 @@ export class PapersPage implements OnInit {
               newPaper.topics,
               this.maxTopicsPerCard
             );
+            newPaper.authors = this.processAuthorNames(newPaper.authors)
             this.allPapers.push(newPaper);
           }
           this.currentBlock++;
@@ -228,6 +233,25 @@ export class PapersPage implements OnInit {
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
+  // Process author names
+  processAuthorNames(authors: SimplifiedAuthor[]): SimplifiedAuthor[] {
+      return authors
+          .filter(author => author.name = this.simplifyAuthorName(author.name))
+  }
+
+  simplifyAuthorName(name: string): string {
+    let builder = '';
+    let i: number;
+    const names = name.split(' ');
+    for (i = 0; i < names.length - 1; i++) {
+      builder += names[i].charAt(0).toUpperCase() + '. ';
+    }
+    let first = names[i].toLowerCase();
+    first = first.charAt(0).toUpperCase() + first.slice(1);
+    builder += first;
+    return builder;
+  }
+
   openNewTab(url: string) {
     window.open(url, '_blank');
   }
@@ -236,6 +260,11 @@ export class PapersPage implements OnInit {
   onTopicChipClick(topic: Topic) {
     this.resultsService.searchKey = topic.label;
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', this.resultsService.searchKey]);
+  }
+
+  // Open modal to get authors information -- XXX duplicated function in paper details
+  onAuthorClick(author: SimplifiedAuthor) {
+    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'authors', 'author', author.url]);
   }
 
   // Called by infinite scroll to load more data
@@ -269,29 +298,6 @@ export class PapersPage implements OnInit {
     } else {
       this.navCtrl.back();
     }
-  }
-
-  // Converts the array of SimplifiedAuthors in the <paper> argument in an
-  // array of strings (authors' names) used in HTML
-  authorsToStringArray(paper: SimplifiedPaper): string[] {
-    const temp = new Array<string>();
-    for (const author of paper.authors) {
-      temp.push(this.simplifyAuthorName(author.name));
-    }
-    return temp;
-  }
-
-  simplifyAuthorName(name: string): string {
-    let builder = '';
-    let i: number;
-    const names = name.split(' ');
-    for (i = 0; i < names.length - 1; i++) {
-      builder += names[i].charAt(0).toUpperCase() + '. ';
-    }
-    let first = names[i].toLowerCase();
-    first = first.charAt(0).toUpperCase() + first.slice(1);
-    builder += first;
-    return builder;
   }
 
   // Adjusts the configuration of the chart in the top view and shows it

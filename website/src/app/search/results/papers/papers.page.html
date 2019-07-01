@@ -101,9 +101,14 @@
             <ion-card-subtitle *ngIf="isLoading">
               <ion-skeleton-text animated></ion-skeleton-text>
             </ion-card-subtitle>
-            <ion-card-subtitle *ngIf="!isLoading">{{
-              authorsToStringArray(paper).join(', ')
-            }}</ion-card-subtitle>
+            <ion-card-subtitle *ngIf="!isLoading">
+              <ion-chip
+                *ngFor="let author of paper.authors; let i = index"
+                (click)="onAuthorClick(author)">
+                <ion-icon name="person"></ion-icon>
+                <ion-label color="primary">{{ author.name }}</ion-label>
+              </ion-chip>
+            </ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
@@ -115,8 +120,7 @@
               <ion-chip
                 *ngFor="let topic of paper.topics; let i = index"
                 color="primary"
-                (click)="onTopicChipClick(topic)"
-              >
+                (click)="onTopicChipClick(topic)">
                 <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
                 <ion-label color="primary">{{ topic.label }}</ion-label>
               </ion-chip>

@@ -1,5 +1,21 @@
 # Geranium
 
+## Install
+
+### Python back-end
+
+Install Python back-end using conda environment
+
+```bash
+$ conda create -n geranium python=3.6
+$ conda activate geranium
+$ conda install requests
+$ conda install -c conda-forge rdflib
+$ conda install -c anaconda flask
+$ pip install config
+$ pip install langdetect
+```
+
 ## API
 
 ### Get publications on a specific topic

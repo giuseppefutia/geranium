@@ -22,7 +22,9 @@
                   <ion-input
                     [(ngModel)]="searchKey"
                     (ionChange)="search()"
-                    debounce="500"
+                    (ionFocus)="addFocus()"
+                    (ionBlur)="removeFocus()"
+                    debounce="300"
                     [disabled]="!canSearch"
                     required
                   ></ion-input>
@@ -38,7 +40,7 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <div style="height: 50px"></div> <!-- Spacing to show more results -->
+              <div [class]="expand"></div> <!-- Spacing to show more results -->
             </ion-col>
           </ion-row>
         </ion-grid>

@@ -5,12 +5,44 @@
         position:absolute;
         width: inherit;
         overflow-y: scroll;
-        max-height: 300%;
+        max-height: 400%;
         z-index: 999;
 
         ion-item:hover {
             cursor: pointer;
-            background: #f1f1f1;
+            --background: #f1f1f1;
         }
     }
+}
+
+@keyframes expanded {
+    0% {
+        height: 0px;
+    }
+
+    100% {
+        height: 100px;
+    }
+}
+
+.expanded {
+    animation-name: expanded;
+    animation-duration: 0.5s;
+    height: 100px;
+}
+
+@keyframes retracted {
+    0% {
+        height: 100px;
+    }
+
+    100% {
+        height: 0px;
+    }
+}
+
+.retracted {
+    animation-name: retracted;
+    animation-duration: 0.5s;
+    height: 0px;
 }

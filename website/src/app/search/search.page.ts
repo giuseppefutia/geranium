@@ -9,9 +9,11 @@ import { ResultsService } from './services/results.service';
 })
 export class SearchPage implements OnInit {
   public searchKey = '';
+  private prevKey = '';
   public results: string[] = [];
   private allTopics: string[];
   public canSearch = false;
+  public expand = 'retracted';
 
   constructor(private router: Router, private resultsService: ResultsService) {}
 
@@ -26,13 +28,16 @@ export class SearchPage implements OnInit {
   }
 
   search() {
-    if (this.searchKey.length >= 4) {
-      const r = new RegExp(this.searchKey, 'gi');
-      this.results = this.allTopics
-        .filter(s => s.search(r) !== -1)
-        .sort((a, b) => a.length - b.length);
-    } else {
-      this.results = [];
+    if (this.prevKey !== this.searchKey) {
+      this.prevKey = this.searchKey;
+      if (this.searchKey.length >= 4) {
+        const r = new RegExp(this.searchKey, 'gi');
+        this.results = this.allTopics
+          .filter(s => s.search(r) !== -1)
+          .sort((a, b) => a.length - b.length);
+      } else {
+        this.results = [];
+      }
     }
   }
 
@@ -47,11 +52,18 @@ export class SearchPage implements OnInit {
     ]);
   }
 
-  // onSubmit(form: NgForm) {
-  //   if (!form.valid) {
-  //     return;
-  //   }
-  //   this.resultsService.searchKey = form.value.searchkey;
-  //   this.router.navigate(['/', 'results', 'tabs', 'papers', this.resultsService.searchKey]);
-  // }
+  addFocus() {
+    this.expand = 'expanded';
+    if (this.searchKey !== '') {
+      this.search();
+    }
+  }
+
+  removeFocus() {
+    setTimeout(() => {
+      if (this.searchKey === '') {
+        this.expand = 'retracted';
+      }
+    }, 320);
+  }
 }

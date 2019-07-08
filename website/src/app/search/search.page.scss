@@ -1,0 +1,16 @@
+.autocomplete {
+    width: 100%;
+
+    ion-list {
+        position:absolute;
+        width: inherit;
+        overflow-y: scroll;
+        max-height: 300%;
+        z-index: 999;
+
+        ion-item:hover {
+            cursor: pointer;
+            background: #f1f1f1;
+        }
+    }
+}

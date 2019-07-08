@@ -14,24 +14,33 @@
               <ion-img src="assets/img/mainlogo.png"></ion-img>
             </ion-col>
           </ion-row>
-          <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-            <ion-row>
-              <ion-col>
+          <ion-row>
+            <ion-col>
+              <div class="autocomplete">
                 <ion-item>
                   <ion-label position="floating">Search here</ion-label>
-                  <ion-input ngModel required name="searchkey"></ion-input>
+                  <ion-input
+                    [(ngModel)]="searchKey"
+                    (ionChange)="search()"
+                    debounce="500"
+                    [disabled]="!canSearch"
+                    required
+                  ></ion-input>
                 </ion-item>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size-sm="8" offset-sm="2">
-                <ion-button expand="block" type="submit" color="primary"
-                  ><ion-icon name="search" slot="start"></ion-icon
-                  >Search</ion-button
-                >
-              </ion-col>
-            </ion-row>
-          </form>
+                <ion-list>
+                  <ion-item *ngFor="let res of results" (click)="navigate(res)">
+                    <ion-icon name="bulb" margin></ion-icon>
+                    {{ res }}
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div style="height: 50px"></div> <!-- Spacing to show more results -->
+            </ion-col>
+          </ion-row>
         </ion-grid>
       </ion-col>
     </ion-row>

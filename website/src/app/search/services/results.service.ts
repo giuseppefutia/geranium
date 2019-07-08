@@ -7,20 +7,22 @@ import { Paper } from '../models/paper.model';
 import { Author } from '../models/author.model';
 import { Journal } from '../models/journal.model';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResultsService {
   private prevKey = '';
-  private searchKey_ = '';
+  private _searchKey = '';
   private searchCount = 0;
   private _firstSearch = true;
 
   constructor(
     private papersService: PapersService,
     private authorsService: AuthorsService,
-    private journalsService: JournalsService
+    private journalsService: JournalsService,
+    private http: HttpClient
   ) {}
 
   get journalsBlockSize(): number {
@@ -30,16 +32,22 @@ export class ResultsService {
     return this._firstSearch;
   }
   get searchKey(): string {
-    return this.searchKey_;
+    return this._searchKey;
   }
   set searchKey(key: string) {
     if (key !== this.prevKey) {
-      this.searchKey_ = key;
+      this._searchKey = key;
       this.searchCount++;
       if (this.searchCount > 1) {
         this._firstSearch = false;
       }
     }
+  }
+
+  getAllTopics() {
+    const url = 'http://api.geranium.nexacenter.org/api?'
+              + encodeURI(`type=topics&lines=100000&offset=0`);
+    return this.http.get<string[]>(url);
   }
 
   getSimplifiedPapersBlock(query: string, block: number) {

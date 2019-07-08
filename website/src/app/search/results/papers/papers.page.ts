@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ElementRef
+  ElementRef,
+  AfterViewInit,
+  AfterContentInit
 } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
 import { Chart } from 'chart.js';
@@ -16,7 +18,6 @@ import { Topic } from '../../models/topic.model';
 
 // Import components
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 class YearsData {
   constructor(
@@ -35,7 +36,7 @@ class BarData {
   templateUrl: './papers.page.html',
   styleUrls: ['./papers.page.scss']
 })
-export class PapersPage implements OnInit {
+export class PapersPage implements OnInit, AfterContentInit {
   @ViewChild('barCanvas') barCanvas: ElementRef;
 
   // Data used for the creation of the bar graph
@@ -149,7 +150,7 @@ export class PapersPage implements OnInit {
   }
 
   // It retrieves data if it is not redirecting
-  ionViewDidEnter() {
+  ngAfterContentInit() {
     if (!this.isRedirecting) {
       this.fetchData();
     }
@@ -169,7 +170,7 @@ export class PapersPage implements OnInit {
               newPaper.topics,
               this.maxTopicsPerCard
             );
-            newPaper.authors = this.processAuthorNames(newPaper.authors)
+            newPaper.authors = this.processAuthorNames(newPaper.authors);
             this.allPapers.push(newPaper);
           }
           this.currentBlock++;
@@ -205,7 +206,7 @@ export class PapersPage implements OnInit {
               newPaper.topics,
               this.maxTopicsPerCard
             );
-            newPaper.authors = this.processAuthorNames(newPaper.authors)
+            newPaper.authors = this.processAuthorNames(newPaper.authors);
             this.allPapers.push(newPaper);
           }
           this.currentBlock++;
@@ -236,7 +237,7 @@ export class PapersPage implements OnInit {
   // Process author names
   processAuthorNames(authors: SimplifiedAuthor[]): SimplifiedAuthor[] {
       return authors
-          .filter(author => author.name = this.simplifyAuthorName(author.name))
+          .filter(author => author.name = this.simplifyAuthorName(author.name));
   }
 
   simplifyAuthorName(name: string): string {
@@ -281,6 +282,7 @@ export class PapersPage implements OnInit {
 
   // Open modal when clicked on MORE in a card
   onPaperDetails(paper: SimplifiedPaper) {
+    console.log(paper.id);
     this.modalCtrl
       .create({
         component: PaperDetailComponent,
@@ -347,7 +349,7 @@ export class PapersPage implements OnInit {
   updatePapersYears(newPapers: SimplifiedPaper[]) {
     let found: boolean;
     for (const newPaper of newPapers) {
-      const yearString = this.yearString(newPaper.submitted_date);
+      const yearString = this.yearString(newPaper.submittedDate);
 
       found = false;
       for (const el of this.allPapersYears) {
@@ -389,7 +391,7 @@ export class PapersPage implements OnInit {
     this.filteredPapers = this.allPapers.filter(el => {
       return (
         this.allPapersYears.find(y => {
-          const yearString = this.yearString(el.submitted_date);
+          const yearString = this.yearString(el.submittedDate);
           return yearString === y.year && y.shown === true;
         }) !== undefined
       );

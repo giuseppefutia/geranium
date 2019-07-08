@@ -7,7 +7,7 @@ export class SimplifiedPaper {
     public title: string,
     public authors: SimplifiedAuthor[],
     public topics: Topic[],
-    public submitted_date: Date,
+    public submittedDate: Date,
     public imageUrl: string
   ) {}
 }

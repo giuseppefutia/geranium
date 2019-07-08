@@ -255,7 +255,7 @@ export class PapersService {
           'This is an example of paper abstract on whatever topic it is',
           paper.authors,
           paper.topics,
-          paper.submitted_date,
+          paper.submittedDate,
           paper.imageUrl
         )
       );

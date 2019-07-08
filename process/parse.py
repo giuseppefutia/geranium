@@ -142,6 +142,15 @@ def get_author_details(data):
     return jsonify(final)
 
 
+def get_topics(data):
+    final = {}
+    for row in data:
+        label = row['t_label']['value']
+        final[label] = label
+    final = list(final.values())
+    return jsonify(final)
+
+
 def set_author_data(row, author_fields):
     author_data = dict()
     for field, value in author_fields.items():

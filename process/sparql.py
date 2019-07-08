@@ -99,3 +99,18 @@ def set_author_details_query(topic, lines, offset, author_url):
     \
     """.format(t=topic, l=lines, o=offset, a=author_url)
     return query
+
+
+def set_topics_query(lines, offset):
+    query = """ \
+    PREFIX gpo:<http://geranium-project.org/ontology/>
+
+    SELECT DISTINCT ?t_label
+
+    WHERE {{
+        ?t rdf:type gpo:TMFResource .
+        ?t rdfs:label ?t_label .
+    }} LIMIT {l} OFFSET {o}
+    \
+    """.format(l=lines, o=offset)
+    return query

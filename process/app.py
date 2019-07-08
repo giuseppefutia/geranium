@@ -39,6 +39,11 @@ def api():
             offset = flask.request.args.get('offset')
             url = flask.request.args.get('url')
             query = set_author_details_query(topic, lines, offset, url)
+        # Manage all topics request
+        elif request_type == 'topics':
+            lines = flask.request.args.get('lines')
+            offset = flask.request.args.get('offset')
+            query = set_topics_query(lines, offset)
 
         query = quote(query)  # get url encoding
 
@@ -47,7 +52,7 @@ def api():
                                   config.db_user, config.db_password),
                               verify=False)
         if not result.ok:
-            return "Invalid query!"
+            return 'Invalid query!'
 
         data = result.json()
         data = data['results']['bindings']
@@ -58,6 +63,8 @@ def api():
             return get_authors(data)
         elif request_type == 'author':
             return get_author_details(data)
+        elif request_type == 'topics':
+            return get_topics(data)
 
     return 'Invalid request!'
 

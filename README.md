@@ -35,3 +35,12 @@ http://localhost:5000/api?type=authors&topic=Carbon%20nanotube&lines=10000&offse
 
 #### Example:
 http://localhost:5000/api?type=author&topic=Carbon%20nanotube&lines=10000&offset=0&url=http://geranium-project.org/authors/rp07931
+
+### Get all topics
+
+#### Parameters:
+* limit: "Number of lines"
+* offset: "Offset within the response"
+
+#### Example:
+http://localhost:5000/api?type=topics&lines=100000&offset=0

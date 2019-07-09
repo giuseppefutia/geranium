@@ -23,13 +23,13 @@ def get_publications(data):
             # Add topics of the publications
             topic_fields = {'url': 'other_t', 'label': 'other_t_label'}
             topic = set_topic(row, publication['topics'], topic_fields)
-            if (topic is not None):
+            if topic is not None:
                 publication['topics'].append(topic)
             # Add co-authors of the publications
             co_auth_fields = {'id': 'ca_id', 'name': 'ca_label', 'url': 'ca'}
             co_author = set_co_author(
                 row, publication['co_authors'], co_auth_fields)
-            if(co_author is not None):
+            if co_author is not None:
                 publication['co_authors'].append(co_author)
 
     final = list(final.values())
@@ -76,7 +76,7 @@ def get_authors(data):
             # Add topics of the publications
             topic_fields = {'url': 'all_t', 'label': 'all_t_label'}
             topic = set_topic(row, publication['topics'], topic_fields)
-            if (topic is not None):
+            if topic is not None:
                 publication['topics'].append(topic)
             # Add co-authors of the publications
             co_auth_fields = {'id': 'other_ca_id',
@@ -144,7 +144,7 @@ def get_author_details(data):
                                           publications,
                                           author_fields,
                                           publication_fields)
-        if (publication is not None):
+        if publication is not None:
             publications.append(publication)
 
     # Add topics and co-authors

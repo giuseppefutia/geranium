@@ -1,0 +1,1328 @@
+{
+    "records": [{
+            "type": "items",
+            "expand": [
+                "bitstreams",
+                "history",
+                "all"
+            ],
+            "name": "",
+            "handle": "11583/2505482",
+            "metadata": {
+                "dc.ugov.dtins": [{
+                    "value": "2012-12-24 08:50:26",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.codiceupload": [{
+                    "value": "20200",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.available": [{
+                    "value": "2015-06-30T19:10:36Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.driver": [{
+                    "value": "info:eu-repo/semantics/article",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.cderruniv": [{
+                    "value": "SCHED",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.sitodocentefulltext": [{
+                    "value": "mpTSP.pdf::1260a034d219a8661f169a512311f027::1\n2014-The Multi-apth Traveling Salesman Problem with stochastic travel costs_EJTL.pdf::dc27c810e6cadb0a26e0df42eb2b49cf::2",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.miur.identifier": [{
+                    "value": "7236460",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.fulltext": [{
+                    "value": "partially_open",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.isi": [{
+                    "value": "WOS:000411121600002",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.impactfactor": [{
+                    "value": "si",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.referee": [{
+                    "value": "Esperti anonimi",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.idtipoministero": [{
+                    "value": "262",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.created": [{
+                    "value": "2012-12-24 08:50:26",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.nometipoministero": [{
+                    "value": "Articolo su rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.firstpage": [{
+                    "value": "3",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.cderrmiur": [{
+                    "value": "OK",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.idanagproprietario": [{
+                    "value": "380",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.fulltextoriginal": [{
+                    "value": "open",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.subject.keywords": [{
+                    "value": "TSP; Multiple paths; Stochastic travel costs; Deterministic approximation",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.allpeopleoriginal": [{
+                    "value": "Tadei R.; Perboli G.; Perfetti F.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.definitive": [{
+                    "value": "2014-08-04 18:51:10",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.lastpage": [{
+                    "value": "23",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flwssyncmiur": [{
+                    "value": "si",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.numberofauthors": [{
+                    "value": "3",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.issue": [{
+                    "value": "1",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.datacineca": [{
+                    "value": "2018-06-19T15:21:56Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.publisher.name": [{
+                    "value": "Springer Berlin Heidelberg",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.livsicurezza": [{
+                    "value": "0",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validadatasdop": [{
+                    "value": "2018-06-19T15:21:56Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.numberofpages": [{
+                    "value": "21",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.issued": [{
+                    "value": "2017",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.validation": [{
+                    "value": "2015-05-15 12:15:10",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flvalidato": [{
+                    "value": "si",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.miur": [{
+                    "value": "262",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.abstract": [{
+                    "value": "Given a set of nodes, where each pair of nodes is connected by several paths and each path shows a stochastic travel cost with unknown probability distribution, the multi-path Traveling Salesman Problem with stochastic travel costs aims at finding an expected minimum Hamiltonian tour connecting all nodes. Under a mild assumption on the unknown probability distribution, a deterministic approximation of the stochastic problem is given. The comparison of such approximation with a Monte Carlo simulation shows both the accuracy and the efficiency of the deterministic approximation, with a mean percentage gap around 2% and a reduction of the computational times of two orders of magnitude.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.url": [{
+                    "value": "https://link.springer.com/article/10.1007/s13676-014-0056-2",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flwssyncuniv": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.uri": [{
+                    "value": "http://hdl.handle.net/11583/2505482",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.medium": [{
+                    "value": "STAMPA",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.datasdop": [{
+                    "value": "2018-06-19T15:21:55Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.statocineca": [{
+                    "value": "SUCCESSO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.allpeople": [{
+                    "value": "Tadei, Roberto; Perboli, Guido; Perfetti, Francesca",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.title": [{
+                    "value": "The multi-path Traveling Salesman Problem with stochastic travel costs",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.accessioned": [{
+                    "value": "2015-06-30T19:10:36Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.dtwselabmiur": [{
+                    "value": "2014-08-18 15:55:57",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.dtmod": [{
+                    "value": "2015-05-15 12:15:10",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.authority.people": [{
+                        "value": "TADEI, Roberto",
+                        "authority": "rp07846",
+                        "place": 1
+                    },
+                    {
+                        "value": "PERBOLI, Guido",
+                        "authority": "rp05467",
+                        "place": 2
+                    },
+                    {
+                        "value": "PERFETTI, FRANCESCA",
+                        "authority": "rp05196",
+                        "place": 3
+                    }
+                ],
+                "dc.language.iso": [{
+                    "value": "eng",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.scopus": [{
+                    "value": "2-s2.0-84964258878",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flaux1": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validastatocineca": [{
+                    "value": "SUCCESSO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.volume": [{
+                    "value": "6",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type": [{
+                    "value": "1.1 Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.submission": [{
+                    "value": "2017-08-09T12:06:37Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.citation": [{
+                    "value": "The multi-path Traveling Salesman Problem with stochastic travel costs / Tadei, Roberto; Perboli, Guido; Perfetti, Francesca. - In: EURO JOURNAL ON TRANSPORTATION AND LOGISTICS. - ISSN 2192-4384. - STAMPA. - 6:1(2017), pp. 3-23.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validamessaggiocineca": [{
+                    "value": "Tipologia assegnata: 262. Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.full": [{
+                    "value": "1 Contributo su Rivista::1.1 Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.identifier": [{
+                    "value": "2505482",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.sitodocentein": [{
+                        "value": "7143",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "6225",
+                        "authority": null,
+                        "place": 2
+                    },
+                    {
+                        "value": "4247",
+                        "authority": null,
+                        "place": 3
+                    }
+                ],
+                "dc.identifier.doi": [{
+                    "value": "10.1007/s13676-014-0056-2",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.authority.ancejournal": [{
+                    "value": "EURO JOURNAL ON TRANSPORTATION AND LOGISTICS",
+                    "authority": "journal71425",
+                    "place": 1
+                }],
+                "dc.cilea.messaggiocineca": [{
+                    "value": "Tipologia assegnata: 262. Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validacodiceupload": [{
+                    "value": "20200",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.provenance": [{
+                        "value": "Submitted by TADEI, Roberto (tadei@polito.it) on 2015-06-30T19:10:35Z\nNo. of bitstreams: 2\nmpTSP.pdf: 542182 bytes, checksum: 1260a034d219a8661f169a512311f027 (MD5)\n2014-The Multi-apth Traveling Salesman Problem with stochastic travel costs_EJTL.pdf: 662306 bytes, checksum: dc27c810e6cadb0a26e0df42eb2b49cf (MD5)",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "Made available in DSpace on 2015-06-30T19:10:36Z (GMT). No. of bitstreams: 2\nmpTSP.pdf: 542182 bytes, checksum: 1260a034d219a8661f169a512311f027 (MD5)\n2014-The Multi-apth Traveling Salesman Problem with stochastic travel costs_EJTL.pdf: 662306 bytes, checksum: dc27c810e6cadb0a26e0df42eb2b49cf (MD5)\n  Previous issue date: 2014",
+                        "authority": null,
+                        "place": 2
+                    },
+                    {
+                        "value": "Submitted by TADEI, Roberto (roberto.tadei@polito.it) on 2017-08-09T10:06:38Z (GMT)\nNo. of bitstreams: 2\nmpTSP.pdf: 542182 bytes, checksum: 1260a034d219a8661f169a512311f027 (MD5)\n2014-The Multi-apth Traveling Salesman Problem with stochastic travel costs_EJTL.pdf: 662306 bytes, checksum: dc27c810e6cadb0a26e0df42eb2b49cf (MD5)",
+                        "authority": null,
+                        "place": 3
+                    },
+                    {
+                        "value": "Made available in DSpace on 2017-08-09T10:06:38Z (GMT). No. of bitstreams: 2\nmpTSP.pdf: 542182 bytes, checksum: 1260a034d219a8661f169a512311f027 (MD5)\n2014-The Multi-apth Traveling Salesman Problem with stochastic travel costs_EJTL.pdf: 662306 bytes, checksum: dc27c810e6cadb0a26e0df42eb2b49cf (MD5)\n  Previous issue date: 2017",
+                        "authority": null,
+                        "place": 4
+                    }
+                ]
+            },
+            "internalAuthors": [{
+                    "author": "TADEI, Roberto",
+                    "authority": "rp07846",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "PERBOLI, Guido",
+                    "authority": "rp05467",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "PERFETTI, FRANCESCA",
+                    "authority": "rp05196",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                }
+            ],
+            "itemId": 79791,
+            "lastModified": 1529421657804,
+            "collection": {
+                "name": "1.1 Articolo in rivista",
+                "handle": "11583/2614384",
+                "id": 1,
+                "type": 3
+            },
+            "submitterID": 1622,
+            "submitterNetID": "7143",
+            "identifierToDisseminate": 79791,
+            "workFlowValidationStatus": 0,
+            "simpleItemStatus": 2,
+            "workFlowValidationRule": 1,
+            "collectionHandle": "11583/2614384",
+            "inputFormId": 6149,
+            "submitter": {
+                "id": 1622,
+                "firstName": "Roberto",
+                "lastName": "TADEI",
+                "email": "roberto.tadei@polito.it",
+                "netid": "7143"
+            },
+            "inWorkspace": false,
+            "withdrawn": false,
+            "earlyDraft": true,
+            "snapshot": false,
+            "inWorkFlow": false,
+            "archived": true,
+            "reopened": false,
+            "lastModifiedISO": "2018-06-19T17:20:57.804+02:00",
+            "lookupValues": {
+                "summary": "2017",
+                "spage": "3",
+                "identifierIsi": "WOS:000411121600002",
+                "contextidab": "|32933|",
+                "contextdept": "|578|",
+                "messaggioupload": "Tipologia assegnata: 262. Articolo in rivista",
+                "issue": "1",
+                "sitodocentenoninviare": null,
+                "fulltextsd": "1OK",
+                "sissn": null,
+                "title": "The multi-path Traveling Salesman Problem with stochastic travel costs",
+                "contextssd": "|470|27180|",
+                "jissn": "2192-4384",
+                "dataopsd": "2018-06-19T15:21:55Z",
+                "contextfaculty": "|534|547|",
+                "isbn": null,
+                "identifierPubmed": null,
+                "stitle": null,
+                "jtitle": "EURO JOURNAL ON TRANSPORTATION AND LOGISTICS",
+                "year": "2017",
+                "fsitodocente": null,
+                "fsitodocentedef": "true",
+                "citation": "The multi-path Traveling Salesman Problem with stochastic travel costs / Tadei, Roberto; Perboli, Guido; Perfetti, Francesca. - In: EURO JOURNAL ON TRANSPORTATION AND LOGISTICS. - ISSN 2192-4384. - STAMPA. - 6:1(2017), pp. 3-23.",
+                "codiceupload": "20200",
+                "contributors": "Tadei, Roberto; Perboli, Guido; Perfetti, Francesca",
+                "tipologiasitodocente": "262",
+                "sitodocentesync": "true",
+                "subdate": "2017-08-09T12:06:37Z",
+                "sitodocentein": "7143, 6225, 4247",
+                "identifierScopus": "2-s2.0-84964258878",
+                "autoclaim": null,
+                "statoupload": "SUCCESSO",
+                "contextuser": "|4247|6225|7143|",
+                "fulltextvalidation": "|NULL|VISIBLE|",
+                "volume": "6",
+                "book": null,
+                "epage": "23",
+                "fsitodocentelocked": "false",
+                "itemvalidation": "|miur_success|",
+                "doi": "10.1007/s13676-014-0056-2",
+                "ancestatus": null
+            },
+            "owner": {
+                "id": -1,
+                "firstName": null,
+                "lastName": null,
+                "email": null,
+                "netid": null
+            },
+            "self": "/rest/api/v1/items/79791"
+        },
+        {
+            "type": "items",
+            "expand": [
+                "bitstreams",
+                "history",
+                "all"
+            ],
+            "name": "",
+            "handle": "11583/2543115",
+            "metadata": {
+                "dc.ugov.dtins": [{
+                    "value": "2014-05-03 09:19:45",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.codiceupload": [{
+                    "value": "20200",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.available": [{
+                    "value": "2015-06-30T19:48:30Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.driver": [{
+                    "value": "info:eu-repo/semantics/article",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.cderruniv": [{
+                    "value": "SCHED",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.sitodocentefulltext": [{
+                    "value": "2017_EEMJ_Blengini et al.pdf::a8aa3e170847ece9546578b8f34382fd::1",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.miur.identifier": [{
+                    "value": "7135254",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.fulltext": [{
+                    "value": "reserved",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.impactfactor": [{
+                    "value": "si",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.referee": [{
+                    "value": "Esperti anonimi",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.idtipoministero": [{
+                    "value": "262",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.created": [{
+                    "value": "2014-05-03 09:19:45",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.nometipoministero": [{
+                    "value": "Articolo su rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.firstpage": [{
+                    "value": "493",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.cderrmiur": [{
+                    "value": "OK",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.idanagproprietario": [{
+                    "value": "3263",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.fulltextoriginal": [{
+                    "value": "mixed",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.subject.keywords": [{
+                    "value": "sustainability; resources; CDW; recycling; life Cycle Thinking",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.allpeopleoriginal": [{
+                    "value": "BLENGINI G.A.; GARBARINO E.; BEVILACQUA P.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.definitive": [{
+                    "value": "2014-05-04 08:25:52",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.lastpage": [{
+                    "value": "502",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flwssyncmiur": [{
+                    "value": "si",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.numberofauthors": [{
+                    "value": "3",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.issue": [{
+                    "value": "2",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.datacineca": [{
+                    "value": "2018-09-03T22:47:28Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.publisher.name": [{
+                    "value": "Gheorghe Asachi Technical University of Iasi, Romania",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.livsicurezza": [{
+                    "value": "0",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.international": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validadatasdop": [{
+                    "value": "2018-09-03T22:47:28Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.numberofpages": [{
+                    "value": "10",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flvalidato": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.issued": [{
+                    "value": "2017",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.validation": [{
+                    "value": "2014-05-04 08:25:53",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.miur": [{
+                    "value": "262",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.abstract": [{
+                    "value": "Sustainability and integration are becoming keywords in many European Union policies, including ones that are directly or indirectly related to mineral resources and waste management. Moreover, life cycle thinking (LCT) is core to many of these policies. The European Union has recently issued two Communications on “A resource efficient Europe” and “Roadmap to a Resource Efficient Europe”, the stated goal of which is to reconsider the whole life cycle of resource use so as to make the European Union a “circular economy”, one based on recycling and the use of waste as a resource. \r\nConstruction and Demolition Waste (C&DW) is a possible source of unconventional aggregates, which are recognised as essential and valuable resources for the economic and social development of humankind. The objective of this paper is to give an overview on some key issues relevant to the integration between mineral resources and C&DW management, in urban areas, towards a more resource-efficient Europe. The paper starts from a definition of Sustainable Supply Mix (SSM) of aggregates, i.e. a selected blend of natural aggregates, quarry by-products and recycled waste that minimizes total negative impacts and maximizes overall benefits to society. Then it turns on available technologies for C&DW recycling and technical quality requirement of recycled aggregates. Finally, it focuses on assessment tools and metrics that are currently used to understand and enhance eco-efficiency.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flwssyncuniv": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.uri": [{
+                    "value": "http://hdl.handle.net/11583/2543115",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.medium": [{
+                    "value": "STAMPA",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.datasdop": [{
+                    "value": "2018-09-03T22:47:27Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.statocineca": [{
+                    "value": "SUCCESSO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.allpeople": [{
+                    "value": "BLENGINI G.A.; GARBARINO E.; BEVILACQUA P.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.title": [{
+                    "value": "Sustainability and integration between mineral resources and C&DW management: overview of key issues towards a Resource-Efficient Europe",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.accessioned": [{
+                    "value": "2015-06-30T19:48:30Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.dtwselabmiur": [{
+                    "value": "2014-05-04 08:27:51",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.dtmod": [{
+                    "value": "2014-05-04 08:27:51",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.authority.people": [{
+                        "value": "BLENGINI, GIOVANNI ANDREA",
+                        "authority": "rp05671",
+                        "place": 1
+                    },
+                    {
+                        "value": "GARBARINO, ELENA",
+                        "authority": "rp06666",
+                        "place": 2
+                    },
+                    {
+                        "value": "BEVILACQUA P.",
+                        "authority": null,
+                        "place": 3
+                    }
+                ],
+                "dc.language.iso": [{
+                    "value": "eng",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.scopus": [{
+                    "value": "2-s2.0-85019950366",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validastatocineca": [{
+                    "value": "SUCCESSO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.volume": [{
+                    "value": "16",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type": [{
+                    "value": "1.1 Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.submission": [{
+                    "value": "2017-08-01T11:44:36Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.citation": [{
+                    "value": "Sustainability and integration between mineral resources and C&DW management: overview of key issues towards a Resource-Efficient Europe / BLENGINI G.A.; GARBARINO E.; BEVILACQUA P.. - In: ENVIRONMENTAL ENGINEERING AND MANAGEMENT JOURNAL. - ISSN 1582-9596. - STAMPA. - 16:2(2017), pp. 493-502.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validamessaggiocineca": [{
+                    "value": "Tipologia assegnata: 262. Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.full": [{
+                    "value": "1 Contributo su Rivista::1.1 Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.identifier": [{
+                    "value": "2543115",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.sitodocentein": [{
+                        "value": "6598",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "7484",
+                        "authority": null,
+                        "place": 2
+                    }
+                ],
+                "dc.authority.ancejournal": [{
+                    "value": "ENVIRONMENTAL ENGINEERING AND MANAGEMENT JOURNAL",
+                    "authority": "journal51036",
+                    "place": 1
+                }],
+                "dc.cilea.messaggiocineca": [{
+                    "value": "Tipologia assegnata: 262. Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validacodiceupload": [{
+                    "value": "20200",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.provenance": [{
+                        "value": "Submitted by BLENGINI, GIOVANNI ANDREA (gianandrea.blengini@polito.it) on 2015-06-30T19:48:30Z\nNo. of bitstreams: 0",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "Made available in DSpace on 2015-06-30T19:48:30Z (GMT). No. of bitstreams: 0\n  Previous issue date: 9999",
+                        "authority": null,
+                        "place": 2
+                    },
+                    {
+                        "value": "Submitted by BLENGINI, GIOVANNI ANDREA (gianandrea.blengini@polito.it) on 2017-08-01T09:44:36Z (GMT)\nNo. of bitstreams: 1\n2017_EEMJ_Blengini et al.pdf: 310860 bytes, checksum: a8aa3e170847ece9546578b8f34382fd (MD5)",
+                        "authority": null,
+                        "place": 3
+                    },
+                    {
+                        "value": "Made available in DSpace on 2017-08-01T09:44:36Z (GMT). No. of bitstreams: 1\n2017_EEMJ_Blengini et al.pdf: 310860 bytes, checksum: a8aa3e170847ece9546578b8f34382fd (MD5)\n  Previous issue date: 2017",
+                        "authority": null,
+                        "place": 4
+                    }
+                ]
+            },
+            "internalAuthors": [{
+                    "author": "BLENGINI, GIOVANNI ANDREA",
+                    "authority": "rp05671",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "GARBARINO, ELENA",
+                    "authority": "rp06666",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "BEVILACQUA P.",
+                    "authority": null,
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                }
+            ],
+            "itemId": 84981,
+            "inWorkspace": false,
+            "withdrawn": false,
+            "inWorkFlow": false,
+            "snapshot": false,
+            "earlyDraft": true,
+            "archived": true,
+            "submitterNetID": "6598",
+            "identifierToDisseminate": 84981,
+            "workFlowValidationStatus": 0,
+            "simpleItemStatus": 2,
+            "workFlowValidationRule": -1,
+            "collectionHandle": "11583/2614384",
+            "inputFormId": 6149,
+            "collection": {
+                "name": "1.1 Articolo in rivista",
+                "handle": "11583/2614384",
+                "id": 1,
+                "type": 3
+            },
+            "submitterID": 5379,
+            "submitter": {
+                "id": 5379,
+                "firstName": "GIOVANNI ANDREA",
+                "lastName": "BLENGINI",
+                "email": "gianandrea.blengini@polito.it",
+                "netid": "6598"
+            },
+            "reopened": false,
+            "lastModifiedISO": "2018-09-03T10:28:27.375+02:00",
+            "lookupValues": {
+                "summary": "2017",
+                "spage": "493",
+                "identifierIsi": null,
+                "contextidab": "|32933|",
+                "contextdept": "|565|586|",
+                "messaggioupload": "Tipologia assegnata: 262. Articolo in rivista",
+                "issue": "2",
+                "sitodocentenoninviare": null,
+                "fulltextsd": "1OK",
+                "sissn": null,
+                "title": "Sustainability and integration between mineral resources and C&DW management: overview of key issues towards a Resource-Efficient Europe",
+                "contextssd": "|477|27180|",
+                "jissn": "1582-9596",
+                "dataopsd": "2018-09-03T22:47:27Z",
+                "contextfaculty": "|534|",
+                "isbn": null,
+                "identifierPubmed": null,
+                "stitle": null,
+                "jtitle": "ENVIRONMENTAL ENGINEERING AND MANAGEMENT JOURNAL",
+                "year": "2017",
+                "fsitodocente": null,
+                "fsitodocentedef": "true",
+                "citation": "Sustainability and integration between mineral resources and C&DW management: overview of key issues towards a Resource-Efficient Europe / BLENGINI G.A.; GARBARINO E.; BEVILACQUA P.. - In: ENVIRONMENTAL ENGINEERING AND MANAGEMENT JOURNAL. - ISSN 1582-9596. - STAMPA. - 16:2(2017), pp. 493-502.",
+                "codiceupload": "20200",
+                "contributors": "BLENGINI G.A.; GARBARINO E.; BEVILACQUA P.",
+                "tipologiasitodocente": "262",
+                "sitodocentesync": "true",
+                "subdate": "2017-08-01T11:44:36Z",
+                "sitodocentein": "6598, 7484",
+                "identifierScopus": "2-s2.0-85019950366",
+                "autoclaim": null,
+                "statoupload": "SUCCESSO",
+                "contextuser": "|6598|7484|",
+                "fulltextvalidation": "|NULL|",
+                "volume": "16",
+                "book": null,
+                "epage": "502",
+                "fsitodocentelocked": "false",
+                "itemvalidation": "|miur_success|",
+                "doi": null,
+                "ancestatus": null
+            },
+            "lastModified": 1535963307375,
+            "owner": {
+                "id": -1,
+                "firstName": null,
+                "lastName": null,
+                "email": null,
+                "netid": null
+            },
+            "self": "/rest/api/v1/items/84981"
+        }, {
+            "type": "items",
+            "expand": [
+                "bitstreams",
+                "history",
+                "all"
+            ],
+            "name": "",
+            "handle": "11583/2679230",
+            "metadata": {
+                "dc.description.abstract": [{
+                    "value": "Durante la fase di progettazione di un'opera cantieristica, oltre a considerare gli aspetti di realizzabilità e di selta delle migliori tecniche realizzative, è necessario stimare gli spazi necessari per l'esecuzione delle diverse operazioni ed identificare i principi per la gestione degli stessi. Tale attività ha come obiettivo l'ottimizzazione della logistica dal punto di vista organizzativo ed economico e l'individuazione e gestione delle possibili interferenze spaziali tra le lavorazioni che si andranno ad eseguire nella fase realizzativa. Tali azioni sono anche alla base del Coordinamento e della gestione dei rischi interferenziali, attività legislativamente obbligatorie (vedi D.lgs. 81/08, Allegato XV - Contenuti Minimi dei Piani di Sicurezza nei cantieri temporanei e mobili). L'applicazione del metodo dei Volumi Funzionali risulta particolarmente adatto a tali fini: il metodo permette infatti di pianificare nel tempo e nello spazio le operazioni previste nel programma dei lavori e di identificare le contemporaneità di richiesta del medesimo volume da parte di attività o entità tra loro incompatibili, così da garantire la continuità di utilizzazione della risorsa senza interferenze. Il presente lavoro mostra l'applicazione del metodo dei Volumi Funzionali alla zona di piazzale del cantiere per la realizzazione del cunicolo esplorativo de \"La Maddalena\" in località di Chiomonte (TO), funzionale al processo di approfondimento della conoscenza delle caratteristiche geologiche del Massiccio d'Ambin, in vista della realizzazione del futuro tunnel di base del nuovo collegamento ferroviario Torino-Lione. Il metodo è staro implementato con l'utilizzo di modellazione 3D: tale strumento ha sostanzialmente favorito la diretta visualizzazione predittiva dei vari scenari sin dalla fase progettuale, ai fini della previsione dei Volumi Funzionali occorrenti per lo svolgimento delle varie attività e della identificazione dei rischi interferenziali eventualmente connessi, e si è rilevato molto utile in una realtà caratterizzata da numerose e continue compresenze spaziali ed in continuo mutamento come quella cantieristica.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.codiceupload": [{
+                    "value": "20200",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.url": [{
+                    "value": "http://www.ojs.unito.it/index.php/pinc/issue/view/223",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.available": [{
+                    "value": "2017-09-06T18:07:01Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.driver": [{
+                    "value": "info:eu-repo/semantics/article",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.sitodocentefulltext": [{
+                    "value": "volumi funz_con copertina.pdf::142bbcd7792d3499bccf8cd7db8357dc::1",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.miur.identifier": [{
+                    "value": "12536328",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.fulltext": [{
+                    "value": "none",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.uri": [{
+                    "value": "http://hdl.handle.net/11583/2679230",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.medium": [{
+                    "value": "ELETTRONICO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.datasdop": [{
+                    "value": "2018-10-02T13:04:52Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.statocineca": [{
+                    "value": "SUCCESSO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.allpeople": [{
+                    "value": "Faranda, Alessandro; Labagnara, Davide; Maida, LUISA MARIA TERESA; Patrucco, Mario; Sorlini, Achille",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.title": [{
+                    "value": "Modellazione 3D a supporto del metodo dei Volumi Funzionali per la ottimizzazione di efficienza e sicurezza in un cantiere per scavo di galleria",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.impactfactor": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.accessioned": [{
+                    "value": "2017-09-06T18:07:01Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.referee": [{
+                    "value": "Comitato scientifico",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.firstpage": [{
+                    "value": "43",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.authority.people": [{
+                        "value": "Faranda, Alessandro",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "LABAGNARA, DAVIDE",
+                        "authority": "rp08895",
+                        "place": 2
+                    },
+                    {
+                        "value": "MAIDA, LUISA MARIA TERESA",
+                        "authority": "rp11028",
+                        "place": 3
+                    },
+                    {
+                        "value": "PATRUCCO, Mario",
+                        "authority": "rp09685",
+                        "place": 4
+                    },
+                    {
+                        "value": "Sorlini, Achille",
+                        "authority": null,
+                        "place": 5
+                    }
+                ],
+                "dc.language.iso": [{
+                    "value": "ita",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.fulltextoriginal": [{
+                    "value": "embargoed_20200905",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.ugov.flaux1": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.subject.keywords": [{
+                    "value": "Volumi Funzionali, Gestione dei Rischi interferenziali, OS&H in cantieri in sotterraneo, modellazione 3D",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.allpeopleoriginal": [{
+                    "value": "Faranda, Alessandro; Labagnara, Davide; Maida, Luisa; Patrucco, Mario; Sorlini, Achille;",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validastatocineca": [{
+                    "value": "SUCCESSO",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.volume": [{
+                    "value": "1",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.lastpage": [{
+                    "value": "47",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.submission": [{
+                    "value": "2017-09-06T18:07:01Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.citation": [{
+                    "value": "Modellazione 3D a supporto del metodo dei Volumi Funzionali per la ottimizzazione di efficienza e sicurezza in un cantiere per scavo di galleria / Faranda, Alessandro; Labagnara, Davide; Maida, LUISA MARIA TERESA; Patrucco, Mario; Sorlini, Achille. - In: PREVENZIONI IN CORSO. - ISSN 2532-392X. - ELETTRONICO. - 1(2017), pp. 43-47.",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validamessaggiocineca": [{
+                    "value": "Tipologia assegnata: 262. Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.numberofauthors": [{
+                    "value": "5",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.datacineca": [{
+                    "value": "2018-10-02T13:04:53Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.full": [{
+                    "value": "1 Contributo su Rivista::1.1 Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.publisher.name": [{
+                    "value": "ASL TO3",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.sitodocentein": [{
+                        "value": "9252",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "12139",
+                        "authority": null,
+                        "place": 2
+                    },
+                    {
+                        "value": "10808",
+                        "authority": null,
+                        "place": 3
+                    }
+                ],
+                "dc.description.international": [{
+                    "value": "no",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.identifier.doi": [{
+                    "value": "10.13135/2532-392X/1.2017",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.date.firstsubmission": [{
+                    "value": "2017-09-06T18:07:01Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.authority.ancejournal": [{
+                    "value": "PREVENZIONI IN CORSO",
+                    "authority": "journal71625",
+                    "place": 1
+                }],
+                "dc.iris.validadatasdop": [{
+                    "value": "2018-10-02T13:04:53Z",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.cilea.messaggiocineca": [{
+                    "value": "Tipologia assegnata: 262. Articolo in rivista",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.relation.numberofpages": [{
+                    "value": "5",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.iris.validacodiceupload": [{
+                    "value": "20200",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.description.provenance": [{
+                        "value": "Submitted by PATRUCCO, Mario (mario.patrucco@polito.it) on 2017-09-06T16:07:01Z (GMT)\nNo. of bitstreams: 1\nvolumi funz_con copertina.pdf: 699184 bytes, checksum: 142bbcd7792d3499bccf8cd7db8357dc (MD5)",
+                        "authority": null,
+                        "place": 1
+                    },
+                    {
+                        "value": "Made available in DSpace on 2017-09-06T16:07:01Z (GMT). No. of bitstreams: 1\nvolumi funz_con copertina.pdf: 699184 bytes, checksum: 142bbcd7792d3499bccf8cd7db8357dc (MD5)\n  Previous issue date: 2017",
+                        "authority": null,
+                        "place": 2
+                    }
+                ],
+                "dc.date.issued": [{
+                    "value": "2017",
+                    "authority": null,
+                    "place": 1
+                }],
+                "dc.type.miur": [{
+                    "value": "262",
+                    "authority": null,
+                    "place": 1
+                }]
+            },
+            "internalAuthors": [{
+                    "author": "Faranda, Alessandro",
+                    "authority": null,
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "LABAGNARA, DAVIDE",
+                    "authority": "rp08895",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "MAIDA, LUISA MARIA TERESA",
+                    "authority": "rp11028",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "PATRUCCO, Mario",
+                    "authority": "rp09685",
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                },
+                {
+                    "author": "Sorlini, Achille",
+                    "authority": null,
+                    "share": -1,
+                    "order": -1,
+                    "confidence": 600
+                }
+            ],
+            "itemId": 158652,
+            "lastModified": 1538485488809,
+            "collection": {
+                "name": "1.1 Articolo in rivista",
+                "handle": "11583/2614384",
+                "id": 1,
+                "type": 3
+            },
+            "submitterID": 2500,
+            "submitterNetID": "10808",
+            "identifierToDisseminate": 158652,
+            "workFlowValidationStatus": 0,
+            "simpleItemStatus": 2,
+            "workFlowValidationRule": -1,
+            "collectionHandle": "11583/2614384",
+            "inputFormId": 8169,
+            "submitter": {
+                "id": 2500,
+                "firstName": "Mario",
+                "lastName": "PATRUCCO",
+                "email": "mario.patrucco@polito.it",
+                "netid": "10808"
+            },
+            "inWorkspace": false,
+            "withdrawn": false,
+            "earlyDraft": true,
+            "snapshot": false,
+            "inWorkFlow": false,
+            "archived": true,
+            "reopened": false,
+            "lastModifiedISO": "2018-10-02T15:04:48.809+02:00",
+            "lookupValues": {
+                "summary": "2017",
+                "spage": "43",
+                "identifierIsi": null,
+                "contextidab": "|32933|",
+                "contextdept": "|586|",
+                "messaggioupload": "Tipologia assegnata: 262. Articolo in rivista",
+                "issue": null,
+                "sitodocentenoninviare": null,
+                "fulltextsd": "1OK",
+                "sissn": null,
+                "title": "Modellazione 3D a supporto del metodo dei Volumi Funzionali per la ottimizzazione di efficienza e sicurezza in un cantiere per scavo di galleria",
+                "contextssd": "|478|27180|",
+                "jissn": "2532-392X",
+                "dataopsd": "2018-10-02T13:04:52Z",
+                "contextfaculty": "|534|",
+                "isbn": null,
+                "identifierPubmed": null,
+                "stitle": null,
+                "jtitle": "PREVENZIONI IN CORSO",
+                "year": "2017",
+                "fsitodocente": null,
+                "fsitodocentedef": "true",
+                "citation": "Modellazione 3D a supporto del metodo dei Volumi Funzionali per la ottimizzazione di efficienza e sicurezza in un cantiere per scavo di galleria / Faranda, Alessandro; Labagnara, Davide; Maida, LUISA MARIA TERESA; Patrucco, Mario; Sorlini, Achille. - In: PREVENZIONI IN CORSO. - ISSN 2532-392X. - ELETTRONICO. - 1(2017), pp. 43-47.",
+                "codiceupload": "20200",
+                "contributors": "Faranda, Alessandro; Labagnara, Davide; Maida, LUISA MARIA TERESA; Patrucco, Mario; Sorlini, Achille",
+                "tipologiasitodocente": "262",
+                "sitodocentesync": "true",
+                "subdate": "2017-09-06T18:07:01Z",
+                "sitodocentein": "9252, 12139, 10808",
+                "identifierScopus": null,
+                "autoclaim": null,
+                "statoupload": "SUCCESSO",
+                "contextuser": "|9252|10808|12139|",
+                "fulltextvalidation": "|HIDE|",
+                "volume": "1",
+                "book": null,
+                "epage": "47",
+                "fsitodocentelocked": "false",
+                "itemvalidation": "|miur_success|",
+                "doi": "10.13135/2532-392X/1.2017",
+                "ancestatus": null
+            },
+            "owner": {
+                "id": -1,
+                "firstName": null,
+                "lastName": null,
+                "email": null,
+                "netid": null
+            },
+            "self": "/rest/api/v1/items/158652"
+        }
+    ]
+}

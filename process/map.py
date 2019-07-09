@@ -91,7 +91,8 @@ def add_author(author):
 
 
 # read json file
-with open('anni2013-17', 'r') as file:
+# TODO: input file as parameter
+with open('../data/input/sample.json', 'r') as file:
     content = file.read()
 
 # create records list, every element in records is a dictionary
@@ -247,5 +248,5 @@ print('\n')
 
 # serialize graph
 serialized = graph.serialize(format='xml')
-with open('serialized.rdf', 'wb') as file:
+with open('../data/kg/serialized.xml', 'wb') as file:
     file.write(serialized)

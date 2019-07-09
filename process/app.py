@@ -32,6 +32,12 @@ def api():
             lines = flask.request.args.get('lines')
             offset = flask.request.args.get('offset')
             query = set_authors_query(topic, lines, offset)
+        # Manage publication details request_type
+        elif request_type == 'publication':
+            lines = flask.request.args.get('lines')
+            offset = flask.request.args.get('offset')
+            url = flask.request.args.get('url')
+            query = set_publication_details_query(lines, offset, url)
         # Manage author details request
         elif request_type == 'author':
             topic = flask.request.args.get('topic')
@@ -61,6 +67,8 @@ def api():
             return get_publications(data)
         elif request_type == 'authors':
             return get_authors(data)
+        elif request_type == 'publication':
+            return get_publication_details(data)
         elif request_type == 'author':
             return get_author_details(data)
         elif request_type == 'topics':

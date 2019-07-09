@@ -101,6 +101,36 @@ def set_author_details_query(topic, lines, offset, author_url):
     return query
 
 
+def set_publication_details_query(lines, offset, publication_url):
+    query = """ \
+    PREFIX purl:<http://purl.org/dc/terms/>
+    PREFIX gpo:<http://geranium-project.org/ontology/>
+
+    SELECT DISTINCT ?p ?p_id ?p_label ?p_date ?t ?t_label ?a ?a_id ?a_label
+                    ?ca ?ca_id ?ca_label
+
+    WHERE {{
+        <{p}> purl:identifier ?p_id .
+        ?p purl:identifier ?p_id .
+        <{p}> rdfs:label ?p_label .
+        <{p}> purl:dateSubmitted ?p_date .
+        <{p}> purl:subject ?t .
+        ?t rdf:type gpo:TMFResource .
+        ?t rdfs:label ?t_label .
+        <{p}> purl:creator ?a .
+        ?a purl:identifier ?a_id .
+        ?a rdfs:label ?a_label .
+        OPTIONAL {{
+            <{p}> purl:contributor ?ca .
+            ?ca purl:identifier ?ca_id .
+            ?ca rdfs:label ?ca_label .
+        }}
+    }} LIMIT {l} OFFSET {o}
+    \
+    """.format(l=lines, o=offset, p=publication_url)
+    return query
+
+
 def set_topics_query(lines, offset):
     query = """ \
     PREFIX gpo:<http://geranium-project.org/ontology/>

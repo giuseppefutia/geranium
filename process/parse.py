@@ -84,9 +84,41 @@ def get_authors(data):
                               'url': 'other_ca'}
             co_author = set_co_author(
                 row, publication['co_authors'], co_auth_fields)
-            if(co_author is not None):
+            if co_author is not None:
                 publication['co_authors'].append(co_author)
 
+    final = list(final.values())
+    return jsonify(final)
+
+
+def get_publication_details(data):
+    final = {}
+    for row in data:
+        publication = row['p_id']['value']
+        author_fields = {'url': 'a', 'id': 'a_id', 'name': 'a_label'}
+        publication_fields = {'id': 'p_id', 'title': 'p_label',
+                              'url': 'p', 'submitted_date': 'p_date'}
+        final[publication] = set_publication_data(row,
+                                                  publication_fields,
+                                                  author_fields)
+    # Add topics and co-authors
+    for row in data:
+        publication_id = row['p_id']['value']
+        publication = next((i for i in list(final.values())
+                            if i['id'] == publication_id), None)
+        if publication is not None:
+            topic_fields = {'url': 't', 'label': 't_label'}
+            topic = set_topic(row, publication['topics'], topic_fields)
+            if topic is not None:
+                publication['topics'].append(topic)
+            co_auth_fields = {'id': 'ca_id',
+                              'name': 'ca_label',
+                              'url': 'ca'}
+            co_author = set_co_author(row,
+                                      publication['co_authors'],
+                                      co_auth_fields)
+            if co_author is not None:
+                publication['co_authors'].append(co_author)
     final = list(final.values())
     return jsonify(final)
 

@@ -144,3 +144,13 @@ def set_topics_query(lines, offset):
     \
     """.format(l=lines, o=offset)
     return query
+
+
+def set_dbpedia_thumbnail_query(topicUri: str) -> str:
+    query = """\
+        prefix dbpedia-owl: <http://dbpedia.org/ontology/>
+        select ?thumbnail where {{ 
+        <{t}> dbpedia-owl:thumbnail ?thumbnail .
+        \
+        }}""".format(t=topicUri)
+    return query

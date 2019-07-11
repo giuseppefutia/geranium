@@ -69,7 +69,7 @@ export class PapersService {
           const topics: Topic[] = [];
           for (let i = 0; i < paper.topics.length; i++) {
             const topic = paper.topics[i];
-            topics.push(new Topic(topic.url, topic.label));
+            topics.push(new Topic(topic.url, topic.label, topic.img));
           }
 
           // build paper

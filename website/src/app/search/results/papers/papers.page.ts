@@ -130,6 +130,7 @@ export class PapersPage implements OnInit, AfterContentInit {
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
         this.resultsService.searchKey = this.searchKey;
+        this.fetchData();
       } else {
         if (this.resultsService.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
@@ -144,17 +145,17 @@ export class PapersPage implements OnInit, AfterContentInit {
             'papers',
             this.searchKey
           ]);
+          this.fetchData();
         }
       }
     });
   }
 
   // It retrieves data if it is not redirecting
-  ngAfterContentInit() {
-    if (!this.isRedirecting) {
-      this.fetchData();
-    }
-  }
+  // ngAfterContentInit() {
+  //   if (!this.isRedirecting)
+  //      this.fetchData();
+  // }
 
   // Fetch more data (scrolling)
   addData() {
@@ -190,8 +191,7 @@ export class PapersPage implements OnInit, AfterContentInit {
   // Fetch data for the initial loading
   fetchData() {
     this.isLoading = true;
-    this.addDummySlides(10);
-
+    this.addDummySlides(10);    
     this.resultsService
       .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
       .subscribe(newPapers => {

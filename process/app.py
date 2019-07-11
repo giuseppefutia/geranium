@@ -17,7 +17,7 @@ app = Flask(__name__)
 @app.route('/api', methods=['GET'])
 def api():
     query = ''
-
+    print('Hello world!', file=sys.stderr)
     if flask.request.method == 'GET':
         request_type = flask.request.args.get('type')
         # Manage publications request

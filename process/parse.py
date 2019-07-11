@@ -21,7 +21,7 @@ def get_publications(data):
             (i for i in list(final.values()) if i['id'] == publication_id), None)
         if publication is not None:
             # Add topics of the publications
-            topic_fields = {'url': 'other_t', 'label': 'other_t_label'}
+            topic_fields = {'url': 'other_t', 'label': 'other_t_label', 'img': 'other_t_img'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if topic is not None:
                 publication['topics'].append(topic)

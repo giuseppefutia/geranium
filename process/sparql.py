@@ -3,10 +3,11 @@ def set_publications_query(topic, lines, offset):
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX dbp:<http://dbpedia.org/resource/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
     SELECT DISTINCT ?p ?p_id ?p_label ?p_abstract ?p_date
                     ?a ?a_id ?a_label ?ca ?ca_id ?ca_label
-                    ?other_t ?other_t_label
+                    ?other_t ?other_t_label ?other_t_img
     WHERE {{
         ?p purl:identifier ?p_id .
         ?p rdfs:label ?p_label .
@@ -24,6 +25,7 @@ def set_publications_query(topic, lines, offset):
         ?p purl:subject ?other_t .
         ?other_t rdf:type gpo:TMFResource .
         ?other_t rdfs:label ?other_t_label .
+        ?other_t foaf:img ?other_t_img .
     }} LIMIT {l} OFFSET {o} \
     """.format(t=topic, l=lines, o=offset)
     return query

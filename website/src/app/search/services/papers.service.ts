@@ -50,7 +50,10 @@ export class PapersService {
         const newPapers: SimplifiedPaper[] = [];
         console.log(response);
 
+        var topicImgChoosen: number = 0;
         for (const paper of response) {
+
+          console.log(topicImgChoosen);
           // build authors: for now authors and co-authors are processed together
           const authors: SimplifiedAuthor[] = [];
           const author = new SimplifiedAuthor(
@@ -72,6 +75,12 @@ export class PapersService {
             topics.push(new Topic(topic.url, topic.label, topic.img));
           }
 
+          // calculate topic index for selecting the image
+          if(topicImgChoosen+1 >= topics.length)
+            topicImgChoosen = 0;
+          else 
+            topicImgChoosen++;
+      
           // build paper
           newPapers.push(
             new SimplifiedPaper(
@@ -80,7 +89,7 @@ export class PapersService {
               authors,
               topics,
               new Date(paper.submitted_date),
-              'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
+              topics[topicImgChoosen].img
             )
           );
 
@@ -92,7 +101,7 @@ export class PapersService {
               authors,
               topics,
               new Date(paper.submitted_date),
-              'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
+              topics[topicImgChoosen].img
             )
           );
         }

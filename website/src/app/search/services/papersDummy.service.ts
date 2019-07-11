@@ -83,13 +83,13 @@ export class PapersService {
         new SimplifiedAuthor('900', 'Danilo Demarchi', '')
       ],
       [
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube')
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', '')
       ],
       new Date(2017, 2, 17),
       'https://upload.wikimedia.org/wikipedia/commons/7/76/Kohlenstoffnanoroehre_Animation.gif'
@@ -103,14 +103,14 @@ export class PapersService {
         new SimplifiedAuthor('900', 'Alberto Tagliaferro', '')
       ],
       [
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube')
-      ],
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', '')
+        ],
       new Date(2015, 1, 10),
       'https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ni8xMTEvb3JpZ2luYWwvcG9seXBlcHRpZGUuanBn'
     ),
@@ -124,13 +124,13 @@ export class PapersService {
         new SimplifiedAuthor('900', 'Lucia Tsantilis', '')
       ],
       [
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube')
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', '')
       ],
       new Date(2016, 1, 8),
       'https://news.mit.edu/sites/mit.edu.newsoffice/files/styles/news_article_image_top_slideshow/public/images/2015/MIT-CVD-explained-1.jpg'
@@ -145,13 +145,13 @@ export class PapersService {
         new SimplifiedAuthor('782', 'Carlo Rosso', '')
       ],
       [
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube'),
-          new Topic('test/url', 'Carbon nanotube')
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', '')
       ],
       new Date(2017, 11, 25),
       'https://upload.wikimedia.org/wikipedia/commons/9/9e/Graphen.jpg'
@@ -174,13 +174,13 @@ export class PapersService {
         new SimplifiedAuthor('Afr', 'Angelica Chiodoni', '')
       ],
       [
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', '')
       ],
       new Date(2017, 11, 21),
       'http://www.chemtube3d.com/images/aleximages/batio3.png'
@@ -195,51 +195,16 @@ export class PapersService {
         new SimplifiedAuthor('BRB', 'Carlotta Francia', '')
       ],
       [
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
-        new Topic('test/url', 'Carbon nanotube'),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', ''),
+        new Topic('test/url', 'Carbon nanotube', '')
       ],
       new Date(2016, 5, 3),
       'https://upload.wikimedia.org/wikipedia/commons/f/f0/Graphite-and-diamond-with-scale.jpg'
-    ),
-    new SimplifiedPaper(
-      'CBA',
-      'Paper22',
-      [
-        new SimplifiedAuthor('123', 'Joanne Rowling', ''),
-        new SimplifiedAuthor('782', 'Dave Eggers', '')
-      ],
-      [new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube')],
-      new Date(2015, 1, 10),
-      'https://www.gardenandgreenhouse.net/wp-content/uploads/2014/07/Biochar.jpg'
-    ),
-    new SimplifiedPaper(
-      '222',
-      'Paper33',
-      [
-        new SimplifiedAuthor('123', 'Joanne Rowling', ''),
-        new SimplifiedAuthor('782', 'Dave Eggers', ''),
-        new SimplifiedAuthor('900', 'Modest Mussorgsky', '')
-      ],
-      [new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube'),
-      new Topic('test/url', 'Carbon nanotube')],
-      new Date(2016, 1, 10),
-      'https://www.azonano.com/images/Article_Images/ImageForArticle_4149(2).jpg'
     )
   ];
 

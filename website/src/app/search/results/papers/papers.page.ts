@@ -130,7 +130,6 @@ export class PapersPage implements OnInit, AfterContentInit {
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
         this.resultsService.searchKey = this.searchKey;
-        this.fetchData();
       } else {
         if (this.resultsService.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
@@ -145,17 +144,17 @@ export class PapersPage implements OnInit, AfterContentInit {
             'papers',
             this.searchKey
           ]);
-          this.fetchData();
         }
       }
     });
   }
 
   // It retrieves data if it is not redirecting
-  // ngAfterContentInit() {
-  //   if (!this.isRedirecting)
-  //      this.fetchData();
-  // }
+  ngAfterContentInit() {
+    if (!this.isRedirecting) {
+       this.fetchData();
+    }
+  }
 
   // Fetch more data (scrolling)
   addData() {
@@ -191,7 +190,7 @@ export class PapersPage implements OnInit, AfterContentInit {
   // Fetch data for the initial loading
   fetchData() {
     this.isLoading = true;
-    this.addDummySlides(10);    
+    this.addDummySlides(10);
     this.resultsService
       .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
       .subscribe(newPapers => {
@@ -230,14 +229,17 @@ export class PapersPage implements OnInit, AfterContentInit {
   // Eliminates the searchKey topic from the list of topics and limits it to a specific number
   filterTopics(topics: Topic[], topicsLimit: number): Topic[] {
     return topics
-      .filter(topic => topic.label.toLowerCase() !== this.searchKey.toLowerCase())
+      .filter(
+        topic => topic.label.toLowerCase() !== this.searchKey.toLowerCase()
+      )
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
   // Process author names
   processAuthorNames(authors: SimplifiedAuthor[]): SimplifiedAuthor[] {
-      return authors
-          .filter(author => author.name = this.simplifyAuthorName(author.name));
+    return authors.filter(
+      author => (author.name = this.simplifyAuthorName(author.name))
+    );
   }
 
   simplifyAuthorName(name: string): string {
@@ -260,12 +262,25 @@ export class PapersPage implements OnInit, AfterContentInit {
   // On click on topic chip start a new search
   onTopicChipClick(topic: Topic) {
     this.resultsService.searchKey = topic.label;
-    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', this.resultsService.searchKey]);
+    this.navCtrl.navigateForward([
+      '/',
+      'results',
+      'tabs',
+      'papers',
+      this.resultsService.searchKey
+    ]);
   }
 
   // Open modal to get authors information -- XXX duplicated function in paper details
   onAuthorClick(author: SimplifiedAuthor) {
-    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'authors', 'author', author.url]);
+    this.navCtrl.navigateForward([
+      '/',
+      'results',
+      'tabs',
+      'authors',
+      'author',
+      author.url
+    ]);
   }
 
   // Called by infinite scroll to load more data
@@ -407,7 +422,7 @@ export class PapersPage implements OnInit, AfterContentInit {
           '',
           '',
           [new SimplifiedAuthor('', '', '')],
-          [new Topic('', '')],
+          [new Topic('', '', '')],
           new Date(''),
           ''
         )

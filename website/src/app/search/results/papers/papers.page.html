@@ -79,7 +79,6 @@
           <div *ngIf="!isLoading" class="card-img">
             <ion-img [src]="paper.imageUrl" alt="Loading image..."></ion-img>
           </div>
-
           <ion-card-header>
             <ion-card-title *ngIf="isLoading">
               <ion-skeleton-text
@@ -105,26 +104,28 @@
               <ion-chip
                 *ngFor="let author of paper.authors; let i = index"
                 (click)="onAuthorClick(author)">
-                <ion-icon name="person"></ion-icon>
+                <ion-icon name="person" *ngIf="i === 0"></ion-icon>
                 <ion-label color="primary">{{ author.name }}</ion-label>
               </ion-chip>
             </ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-skeleton-text
-              style="height: 1em;"
-              *ngIf="isLoading"
-            ></ion-skeleton-text>
-            <div *ngIf="!isLoading">
-              <ion-chip
-                *ngFor="let topic of paper.topics; let i = index"
-                color="primary"
-                (click)="onTopicChipClick(topic)">
-                <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
-                <ion-label color="primary">{{ topic.label }}</ion-label>
-              </ion-chip>
-            </div>
+            <ion-item-divider no-padding no-margin padding-bottom>
+                <ion-skeleton-text
+                style="height: 1em;"
+                *ngIf="isLoading"
+              ></ion-skeleton-text>
+              <div *ngIf="!isLoading">
+                <ion-chip
+                  *ngFor="let topic of paper.topics; let i = index"
+                  color="primary"
+                  (click)="onTopicChipClick(topic)">
+                  <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
+                  <ion-label color="primary">{{ topic.label }}</ion-label>
+                </ion-chip>
+              </div>
+            </ion-item-divider>
           </ion-card-content>
           <div padding-start padding-bottom>
             <ion-button

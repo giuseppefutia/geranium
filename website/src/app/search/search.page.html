@@ -5,12 +5,45 @@
 </ion-header> -->
 
 <ion-content>
-  <ion-grid style="height: 100%">
+  <div
+    class="ion-hide-md-up"
+    style="width: 100%; height: 100%;"
+    padding
+    justify-content-center
+    align-items-center
+  >
+    <ion-img
+      src="assets/img/mainlogo.png"
+      style="width:50%; margin:auto; padding-top: 10%;"
+    ></ion-img>
+    <div class="autocomplete-mobile">
+      <ion-item>
+        <ion-label position="floating">Search here</ion-label>
+        <ion-input
+          [(ngModel)]="searchKey"
+          (ionChange)="search()"
+          (ionFocus)="addFocus()"
+          (ionBlur)="removeFocus()"
+          debounce="300"
+          [disabled]="!canSearch"
+          required
+        ></ion-input>
+      </ion-item>
+    </div>
+    <ion-list style="height: 75%; overflow-y:scroll;">
+      <ion-item *ngFor="let res of results" (click)="navigate(res)">
+        <ion-icon name="bulb" margin></ion-icon>
+        {{ res }}
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-grid style="height: 100%" class="ion-hide-sm-down">
     <ion-row justify-content-center align-items-center style="height: 100%">
       <ion-col size-sm="10" size-md="8" size-lg="6">
         <ion-grid>
           <ion-row>
-            <ion-col size-sm="10" offset-sm="1">
+            <ion-col size="8" offset="2">
               <ion-img src="assets/img/mainlogo.png"></ion-img>
             </ion-col>
           </ion-row>
@@ -40,11 +73,15 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <div [class]="expand"></div> <!-- Spacing to show more results -->
+              <div [class]="expand"></div>
+              <!-- Spacing to show more suggestions -->
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-col>
     </ion-row>
   </ion-grid>
+  <p no-padding no-margin class="about-label">
+    Hello
+  </p>
 </ion-content>

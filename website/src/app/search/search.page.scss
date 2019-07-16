@@ -5,7 +5,7 @@
         position:absolute;
         width: inherit;
         overflow-y: scroll;
-        max-height: 400%;
+        max-height: 450%;
         z-index: 999;
 
         ion-item:hover {
@@ -15,25 +15,32 @@
     }
 }
 
+.about-label{
+    position: absolute;
+    top: 95%;
+    right: 0%;
+    padding-right: 10px;
+}
+
 @keyframes expanded {
     0% {
         height: 0px;
     }
 
     100% {
-        height: 100px;
+        height: 150px;
     }
 }
 
 .expanded {
     animation-name: expanded;
     animation-duration: 0.5s;
-    height: 100px;
+    height: 150px;
 }
 
 @keyframes retracted {
     0% {
-        height: 100px;
+        height: 150px;
     }
 
     100% {

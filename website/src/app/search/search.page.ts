@@ -15,6 +15,8 @@ export class SearchPage implements OnInit {
   public canSearch = false;
   public expand = 'retracted';
 
+  private minLettersSuggestions = 4;
+
   constructor(private router: Router, private resultsService: ResultsService) {}
 
   ngOnInit() {}
@@ -30,11 +32,20 @@ export class SearchPage implements OnInit {
   search() {
     if (this.prevKey !== this.searchKey) {
       this.prevKey = this.searchKey;
-      if (this.searchKey.length >= 4) {
+      if (this.searchKey.length >= this.minLettersSuggestions) {
         const r = new RegExp(this.searchKey, 'gi');
         this.results = this.allTopics
           .filter(s => s.search(r) !== -1)
           .sort((a, b) => a.length - b.length);
+      } else if (
+        this.searchKey.length >= 1 &&
+        this.searchKey.length < this.minLettersSuggestions
+      ) {
+        this.results = [
+          'Inserisci almeno ' +
+            this.minLettersSuggestions +
+            ' lettere per suggerimenti'
+        ];
       } else {
         this.results = [];
       }

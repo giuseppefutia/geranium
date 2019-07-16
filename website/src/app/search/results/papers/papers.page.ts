@@ -61,6 +61,7 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   private noDateString = 'No Date'; // String to show in graph when no date is available
   private maxTopicsPerCard = 4; // Number of topic chips in each card
+  private maxAuthorsPerCard = 4; // Number of authors chips in each card
 
   chartData = {
     labels: [], // Must be configured with appropriate data
@@ -152,7 +153,7 @@ export class PapersPage implements OnInit, AfterContentInit {
   // It retrieves data if it is not redirecting
   ngAfterContentInit() {
     if (!this.isRedirecting) {
-       this.fetchData();
+      this.fetchData();
     }
   }
 
@@ -170,7 +171,10 @@ export class PapersPage implements OnInit, AfterContentInit {
               newPaper.topics,
               this.maxTopicsPerCard
             );
-            newPaper.authors = this.processAuthorNames(newPaper.authors);
+            newPaper.authors = this.processAuthorNames(
+              newPaper.authors,
+              this.maxAuthorsPerCard
+            );
             this.allPapers.push(newPaper);
           }
           this.currentBlock++;
@@ -205,7 +209,10 @@ export class PapersPage implements OnInit, AfterContentInit {
               newPaper.topics,
               this.maxTopicsPerCard
             );
-            newPaper.authors = this.processAuthorNames(newPaper.authors);
+            newPaper.authors = this.processAuthorNames(
+              newPaper.authors,
+              this.maxAuthorsPerCard
+            );
             this.allPapers.push(newPaper);
           }
           this.currentBlock++;
@@ -236,10 +243,13 @@ export class PapersPage implements OnInit, AfterContentInit {
   }
 
   // Process author names
-  processAuthorNames(authors: SimplifiedAuthor[]): SimplifiedAuthor[] {
-    return authors.filter(
-      author => (author.name = this.simplifyAuthorName(author.name))
-    );
+  processAuthorNames(
+    authors: SimplifiedAuthor[],
+    authorsLimit: number
+  ): SimplifiedAuthor[] {
+    return authors
+      .filter(author => (author.name = this.simplifyAuthorName(author.name)))
+      .slice(0, authorsLimit > authors.length ? authors.length : authorsLimit);
   }
 
   simplifyAuthorName(name: string): string {

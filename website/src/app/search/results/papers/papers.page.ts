@@ -150,11 +150,16 @@ export class PapersPage implements OnInit, AfterContentInit {
     });
   }
 
-  // It retrieves data if it is not redirecting
+  //It retrieves data if it is not redirecting
   ngAfterContentInit() {
+<<<<<<< HEAD
     if (!this.isRedirecting) {
       this.fetchData();
     }
+=======
+    // if (!this.isRedirecting)
+    //    this.fetchData();
+>>>>>>> 51d8b1cc996f140382f6abec9f9c49165f6d1666
   }
 
   // Fetch more data (scrolling)

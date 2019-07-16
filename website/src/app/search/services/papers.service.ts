@@ -50,7 +50,7 @@ export class PapersService {
         const newPapers: SimplifiedPaper[] = [];
         console.log(response);
 
-        var topicImgChoosen: number = 0;
+        let topicImgChoosen: number = 0;
         for (const paper of response) {
 
           console.log(topicImgChoosen);
@@ -70,17 +70,17 @@ export class PapersService {
 
           // build topics
           const topics: Topic[] = [];
-          for (let i = 0; i < paper.topics.length; i++) {
-            const topic = paper.topics[i];
+          for (const topic of paper.topics) {
             topics.push(new Topic(topic.url, topic.label, topic.img));
           }
 
           // calculate topic index for selecting the image
-          if(topicImgChoosen+1 >= topics.length)
+          if (topicImgChoosen + 1 >= topics.length) {
             topicImgChoosen = 0;
-          else 
+          } else {
             topicImgChoosen++;
-      
+          }
+
           // build paper
           newPapers.push(
             new SimplifiedPaper(

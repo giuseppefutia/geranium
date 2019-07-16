@@ -16,9 +16,8 @@
                 </h2>
                 <a
                   tappable
-                  (click)="
-                    openNewTab('https://en.wikipedia.org/wiki/Deep_learning')
-                  "
+                  [class]="isLoading ? 'disabled' : ''"
+                  (click)="openTopicUrl()"
                 >
                   More on this topic
                 </a>

@@ -63,6 +63,8 @@ export class PapersPage implements OnInit, AfterContentInit {
   private maxTopicsPerCard = 4; // Number of topic chips in each card
   private maxAuthorsPerCard = 4; // Number of authors chips in each card
 
+  private topicUrl: string;
+
   chartData = {
     labels: [], // Must be configured with appropriate data
     datasets: [
@@ -150,10 +152,11 @@ export class PapersPage implements OnInit, AfterContentInit {
     });
   }
 
-  //It retrieves data if it is not redirecting
+  // It retrieves data if it is not redirecting
   ngAfterContentInit() {
-    if (!this.isRedirecting)
-       this.fetchData();
+    if (!this.isRedirecting) {
+      this.fetchData();
+    }
   }
 
   // Fetch more data (scrolling)
@@ -190,6 +193,21 @@ export class PapersPage implements OnInit, AfterContentInit {
       });
   }
 
+  openTopicUrl() {
+    if (!this.isLoading) {
+      window.open(this.topicUrl, '_blank');
+    }
+  }
+
+  getTopicUrl(newPapers: SimplifiedPaper[]) {
+    for (const topic of newPapers[0].topics) {
+      if (topic.label.toLowerCase() === this.searchKey.toLowerCase()) {
+        const parts = topic.url.split('/');
+        this.topicUrl = 'https://wikipedia.org/wiki/' + parts[parts.length - 1];
+      }
+    }
+  }
+
   // Fetch data for the initial loading
   fetchData() {
     this.isLoading = true;
@@ -203,6 +221,7 @@ export class PapersPage implements OnInit, AfterContentInit {
           // If there are no results
           this.endOfResults = true;
         } else {
+          this.getTopicUrl(newPapers);
           for (const newPaper of newPapers) {
             newPaper.topics = this.filterTopics(
               newPaper.topics,
@@ -262,10 +281,6 @@ export class PapersPage implements OnInit, AfterContentInit {
     first = first.charAt(0).toUpperCase() + first.slice(1);
     builder += first;
     return builder;
-  }
-
-  openNewTab(url: string) {
-    window.open(url, '_blank');
   }
 
   // On click on topic chip start a new search

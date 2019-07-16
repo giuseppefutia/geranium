@@ -1,3 +1,8 @@
+.disabled {
+  color: grey;
+  pointer-events: none;
+}
+
 .topView {
   background: var(--ion-color-primary-light);
   overflow-y: hidden;

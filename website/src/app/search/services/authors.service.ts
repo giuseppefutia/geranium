@@ -40,7 +40,7 @@ export class AuthorsService {
    */
   getAuthorsBlock(query: string, block: number): Observable<Author[]> {
 
-    const linesPerQuery = 100000;
+    const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url = 'http://api.geranium.nexacenter.org/api?'
               + encodeURI(`type=authors&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`);

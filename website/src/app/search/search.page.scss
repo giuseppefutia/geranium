@@ -17,9 +17,13 @@
 
 .about-label{
     position: absolute;
-    top: 95%;
+    bottom: 0%;
     right: 0%;
     padding-right: 10px;
+    padding-bottom: 10px;
+    font-style: italic;
+    font-size: 0.875em;
+    color: grey;
 }
 
 @keyframes expanded {

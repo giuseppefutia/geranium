@@ -151,11 +151,11 @@ export class PapersPage implements OnInit, AfterContentInit {
     });
   }
 
-  // It retrieves data if it is not redirecting
-  // ngAfterContentInit() {
-  //   if (!this.isRedirecting)
-  //      this.fetchData();
-  // }
+  //It retrieves data if it is not redirecting
+  ngAfterContentInit() {
+    // if (!this.isRedirecting)
+    //    this.fetchData();
+  }
 
   // Fetch more data (scrolling)
   addData() {
@@ -407,7 +407,7 @@ export class PapersPage implements OnInit, AfterContentInit {
           '',
           '',
           [new SimplifiedAuthor('', '', '')],
-          [new Topic('', '')],
+          [new Topic('', '', "")],
           new Date(''),
           ''
         )

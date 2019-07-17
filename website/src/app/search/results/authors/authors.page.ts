@@ -11,7 +11,6 @@ import { ResultsService } from '../../services/results.service';
   styleUrls: ['./authors.page.scss']
 })
 export class AuthorsPage implements OnInit, AfterContentInit {
-  
   searchKey: string;
   currentBlock = 0;
   allAuthors: Author[] = [];
@@ -32,11 +31,12 @@ export class AuthorsPage implements OnInit, AfterContentInit {
    * Initialization of the component
    */
   ngOnInit() {
-
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('authorId')) {
         this.isRedirecting = true;
-        this.onAuthorDetails(this.resultsService.getAuthorFromId(paramMap.get('authorId')));
+        this.onAuthorDetails(
+          this.resultsService.getAuthorFromId(paramMap.get('authorId'))
+        );
         return;
       }
       if (paramMap.has('searchKey')) {
@@ -65,7 +65,6 @@ export class AuthorsPage implements OnInit, AfterContentInit {
    * After component is initialized, fetch data from server
    */
   ngAfterContentInit() {
-
     if (!this.isRedirecting) {
       this.fetchData();
     }
@@ -75,21 +74,19 @@ export class AuthorsPage implements OnInit, AfterContentInit {
    * Get data from backend and add them to the collection
    */
   fetchData() {
-
     this.isLoading = true;
     this.addDummySlides(10);
 
     this.resultsService
       .getAuthorsBlock(this.searchKey, this.currentBlock)
       .subscribe(newAuthors => {
-      
         this.allAuthors = [];
         this.isLoading = false;
-        
-        if(newAuthors.length === 0) {
+
+        if (newAuthors.length === 0) {
           this.endOfResults = true;
         } else {
-          for(const newAuthor of newAuthors){
+          for (const newAuthor of newAuthors) {
             newAuthor.topics = this.filterTopics(
               newAuthor.topics,
               this.maxTopicsPerCard
@@ -98,8 +95,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
           }
           this.currentBlock++;
         }
-
-      })
+      });
   }
 
   /**
@@ -108,29 +104,22 @@ export class AuthorsPage implements OnInit, AfterContentInit {
    * @param topicsLimit number of topic to be showed
    */
   filterTopics(topics: string[], topicsLimit: number): string[] {
-   
-    return topics.filter(
-        topic => topic.toLowerCase() !== this.searchKey.toLowerCase()
-      )
-      .slice(
-        0, topicsLimit > topics.length ? topics.length : topicsLimit
-      );
+    return topics
+      .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
+      .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
   /**
    * Get more authors to be showed, scrolling
-   * @param atleast 
    */
   fetchMoreData() {
-
     this.resultsService
       .getAuthorsBlock(this.searchKey, this.currentBlock)
       .subscribe(newAuthors => {
-
-        if(newAuthors.length === 0) {
-          this.endOfResults = true; //no more results
+        if (newAuthors.length === 0) {
+          this.endOfResults = true; // no more results
         } else {
-          for(const newAuthor of newAuthors){
+          for (const newAuthor of newAuthors) {
             newAuthor.topics = this.filterTopics(
               newAuthor.topics,
               this.maxTopicsPerCard
@@ -139,8 +128,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
           }
           this.currentBlock++;
         }
-
-      })
+      });
   }
 
   openNewTab(url: string) {
@@ -149,7 +137,6 @@ export class AuthorsPage implements OnInit, AfterContentInit {
 
   // Called by infinite scroll to load more data
   onMoreAuthors(event) {
-
     setTimeout(() => {
       this.fetchMoreData();
       event.target.complete();
@@ -163,7 +150,6 @@ export class AuthorsPage implements OnInit, AfterContentInit {
 
   // Open modal when clicked on MORE in a card
   onAuthorDetails(author: Author) {
-    
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
@@ -202,16 +188,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
-      this.allAuthors.push(
-        new Author(
-          '',
-          '',
-          '',
-          [''],
-          '',
-          0
-        )
-      );
+      this.allAuthors.push(new Author('', '', '', [''], '', 0));
     }
   }
 }

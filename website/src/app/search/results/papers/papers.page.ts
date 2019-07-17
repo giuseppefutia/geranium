@@ -3,7 +3,6 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  AfterViewInit,
   AfterContentInit
 } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';

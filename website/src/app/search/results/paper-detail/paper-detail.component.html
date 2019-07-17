@@ -13,7 +13,7 @@
   <ion-grid *ngIf="isLoaded">
     <ion-row padding>
       <ion-col size="4">
-        <ion-img [src]="selectedPaper.imageUrl"></ion-img>
+        <ion-img #paperImg [src]="selectedPaper.imageUrl"></ion-img>
       </ion-col>
       <ion-col padding>
         <ion-text color="primary"

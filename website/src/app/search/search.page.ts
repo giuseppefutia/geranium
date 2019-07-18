@@ -1,80 +1,113 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResultsService } from './services/results.service';
+import { ModelService } from '../model/model.service';
 
+
+/**
+ * Landing page component
+ */
 @Component({
   selector: 'app-search',
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss']
 })
-export class SearchPage implements OnInit {
-  public searchKey = '';
-  private prevKey = '';
-  public results: string[] = [];
-  private allTopics: string[];
-  public canSearch = false;
-  public expand = 'retracted';
+export class SearchPage implements OnInit{
 
+  /**
+   * local attributes of the component
+   */
+  public expand = 'retracted'; // autocompletion view status
   private minLettersSuggestions = 4;
+  private searchSuggestions: string[] = []
 
-  constructor(private router: Router, private resultsService: ResultsService) {}
+  /**
+   * Constructor
+   * @param router in charge of routing between pages
+   * @param resultsService in charge of querying the API
+   * @param dataModel in charge of maintaining the model of the application
+   */
+  constructor(private router: Router, private resultsService: ResultsService, private dataModel: ModelService) {}
 
-  ngOnInit() {}
+  /**
+   * After component is initialized, get the list of all topics contained in the graph, used for autocompletion
+   */
+  ngOnInit(){
 
-  ionViewDidEnter() {
-    this.resultsService.searchKey = '';
-    this.resultsService.getAllTopics().subscribe(topics => {
-      this.allTopics = topics;
-      this.canSearch = true;
-    });
+    this.resultsService.getAllTopics().subscribe(
+      topics => {
+        this.dataModel.allTopicsInGraph = topics;
+        this.dataModel.canSearch = true;
+      }
+    );
   }
 
-  search() {
-    if (this.prevKey !== this.searchKey) {
-      this.prevKey = this.searchKey;
-      if (this.searchKey.length >= this.minLettersSuggestions) {
-        const r = new RegExp(this.searchKey, 'gi');
-        this.results = this.allTopics
+  /**
+   * Display hints on possible search queries to the user
+   */
+  displaySuggestions() {
+
+    if (this.dataModel.prevSearchKey !== this.dataModel.searchKey) {
+      this.dataModel.prevSearchKey = this.dataModel.searchKey;
+
+      if (this.dataModel.searchKey.length >= this.minLettersSuggestions) {
+        // enough letters, display suggestions
+
+        const r = new RegExp(this.dataModel.searchKey, 'gi');
+        this.searchSuggestions = this.dataModel.allTopicsInGraph
           .filter(s => s.search(r) !== -1)
           .sort((a, b) => a.length - b.length);
-      } else if (
-        this.searchKey.length >= 1 &&
-        this.searchKey.length < this.minLettersSuggestions
-      ) {
-        this.results = [
+      
+      } else if (this.dataModel.searchKey.length >= 1 && this.dataModel.searchKey.length < this.minLettersSuggestions) {
+        // not enough letters, inform user of minimum number of letters
+
+        this.searchSuggestions = [
           'Inserisci almeno ' +
-            this.minLettersSuggestions +
-            ' lettere per suggerimenti'
+          this.minLettersSuggestions +
+          ' lettera per ottenere suggerimenti'
         ];
+      
       } else {
-        this.results = [];
+        this.searchSuggestions = [];
       }
     }
   }
 
-  navigate(key: string) {
-    this.resultsService.searchKey = key;
+  /**
+   * callback executed when the user confirms his input, navigates to new components in charge of displaying the results
+   * 
+   * @param searchKey user inserted input, the search key
+   */
+  navigate(searchKey: string) {
+
+    this.dataModel.searchKey = searchKey; // set search key in Model
+
     this.router.navigate([
       '/',
       'results',
       'tabs',
       'papers',
-      this.resultsService.searchKey
+      this.dataModel.searchKey
     ]);
   }
 
+  /**
+   * 
+   */
   addFocus() {
-    this.expand = 'expanded';
-    if (this.searchKey !== '') {
-      this.search();
-    }
+
+    this.expand = 'expanded'; //expand autocompletion
+    
+    if (this.dataModel.searchKey !== '')
+      this.displaySuggestions();
   }
 
+  /**
+   * 
+   */
   removeFocus() {
-    setTimeout(() => {
-      if (this.searchKey === '') {
+    
+    if (this.dataModel.searchKey === '')
         this.expand = 'retracted';
-      }
-    }, 320);
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AuthorsService } from '../../services/authors.service';
-import { Author } from '../../models/author.model';
+import { Author } from '../../model/author.model';
 
 @Component({
   selector: 'app-author-detail',

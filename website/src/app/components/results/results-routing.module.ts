@@ -12,12 +12,12 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: './papers/papers.module#PapersPageModule',
+            loadChildren: '../papers/papers.module#PapersPageModule',
             pathMatch: 'full'
           },
           {
             path: ':searchKey',
-            loadChildren: './papers/papers.module#PapersPageModule'
+            loadChildren: '../papers/papers.module#PapersPageModule'
           }
         ]
       },
@@ -26,16 +26,16 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: './authors/authors.module#AuthorsPageModule',
+            loadChildren: '../authors/authors.module#AuthorsPageModule',
             pathMatch: 'full'
           },
           {
             path: 'author/:authorId',
-            loadChildren: './authors/authors.module#AuthorsPageModule'
+            loadChildren: '../authors/authors.module#AuthorsPageModule'
           },
           {
             path: ':searchKey',
-            loadChildren: './authors/authors.module#AuthorsPageModule'
+            loadChildren: '../authors/authors.module#AuthorsPageModule'
           }
         ]
       },
@@ -44,12 +44,12 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: './journals/journals.module#JournalsPageModule',
+            loadChildren: '../journals/journals.module#JournalsPageModule',
             pathMatch: 'full'
           },
           {
             path: ':searchKey',
-            loadChildren: './journals/journals.module#JournalsPageModule'
+            loadChildren: '../journals/journals.module#JournalsPageModule'
           }
         ]
       }

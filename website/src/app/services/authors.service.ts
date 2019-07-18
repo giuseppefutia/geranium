@@ -4,8 +4,8 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Import models
-import { Author } from '../models/author.model';
-import { Topic } from '../models/topic.model';
+import { Author } from '../model/author.model';
+import { Topic } from '../model/topic.model';
 
 // Set interfaces to parse data
 interface Publication {

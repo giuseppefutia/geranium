@@ -5,11 +5,11 @@ const routes: Routes = [
   { path: '', redirectTo: 'search', pathMatch: 'full' },
   {
     path: 'search',
-    loadChildren: './search/search.module#SearchPageModule'
+    loadChildren: './components/search/search.module#SearchPageModule'
   },
   {
     path: 'results',
-    loadChildren: './search/results/results.module#ResultsPageModule'
+    loadChildren: './components/results/results.module#ResultsPageModule'
   }
 ];
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Journal } from '../models/journal.model';
+import { Journal } from '../model/journal.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

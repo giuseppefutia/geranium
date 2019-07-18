@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
-import { Author } from '../../models/author.model';
+import { Author } from '../../model/author.model';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsService } from '../../services/results.service';
 

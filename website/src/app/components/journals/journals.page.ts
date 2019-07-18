@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { Journal } from '../../models/journal.model';
+import { Journal } from '../../model/journal.model';
 import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
 import { ResultsService } from '../../services/results.service';
 

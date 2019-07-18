@@ -5,15 +5,14 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { PapersPage } from './papers.page';
-import { SharedModule } from '../../../shared/shared.module';
-import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
+import { JournalsPage } from './journals.page';
+import { SharedModule } from '../../shared/shared.module';
+import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PapersPage
+    component: JournalsPage
   }
 ];
 
@@ -25,7 +24,7 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PapersPage, PaperDetailComponent],
-  entryComponents: [PaperDetailComponent]
+  declarations: [JournalsPage, JournalDetailComponent],
+  entryComponents: [JournalDetailComponent]
 })
-export class PapersPageModule {}
+export class JournalsPageModule {}

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Paper } from '../../models/paper.model';
+import { Paper } from '../../model/paper.model';
 import { ModalController, NavController } from '@ionic/angular';
-import { SimplifiedAuthor } from '../../models/simplified-author.model';
+import { SimplifiedAuthor } from '../../model/simplified-author.model';
 import { ResultsService } from '../../services/results.service';
 
 @Component({

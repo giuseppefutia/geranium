@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 import { ResultsPage } from './results.page';
-import { PaperDetailComponent } from './paper-detail/paper-detail.component';
-import { AuthorDetailComponent } from './author-detail/author-detail.component';
+import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsRoutingModule } from './results-routing.module';
-import { JournalDetailComponent } from './journal-detail/journal-detail.component';
+import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
 
 @NgModule({
   imports: [

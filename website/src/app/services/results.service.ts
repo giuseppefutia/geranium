@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { PapersService } from './papers.service';
 import { AuthorsService } from './authors.service';
 import { JournalsService } from './journals.service';
-import { SimplifiedPaper } from '../models/simplified-paper.model';
-import { Paper } from '../models/paper.model';
-import { Author } from '../models/author.model';
-import { Journal } from '../models/journal.model';
+import { SimplifiedPaper } from '../model/simplified-paper.model';
+import { Paper } from '../model/paper.model';
+import { Author } from '../model/author.model';
+import { Journal } from '../model/journal.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 

@@ -4,10 +4,11 @@ import { AuthorsService } from './authors.service';
 import { map } from 'rxjs/operators';
 
 // Import models
-import { Paper } from '../models/paper.model';
-import { SimplifiedPaper } from '../models/simplified-paper.model';
-import { SimplifiedAuthor } from '../models/simplified-author.model';
-import { Topic } from '../models/topic.model';
+import { Paper } from '../model/paper.model';
+import { Author } from '../model/author.model';
+import { Topic } from '../model/topic.model';
+import { SimplifiedPaper } from '../model/simplified-paper.model';
+import { SimplifiedAuthor } from '../model/simplified-author.model';
 
 // Response interface
 export interface ResponsePaper {

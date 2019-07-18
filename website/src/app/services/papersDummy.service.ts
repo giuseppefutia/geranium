@@ -3,11 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthorsService } from './authors.service';
 
 // Import models
-import { Paper } from '../models/paper.model';
-import { Author } from '../models/author.model';
-import { Topic } from '../models/topic.model';
-import { SimplifiedPaper } from '../models/simplified-paper.model';
-import { SimplifiedAuthor } from '../models/simplified-author.model';
+import { Paper } from '../model/paper.model';
+import { Author } from '../model/author.model';
+import { Topic } from '../model/topic.model';
+import { SimplifiedPaper } from '../model/simplified-paper.model';
+import { SimplifiedAuthor } from '../model/simplified-author.model';
 
 /*papers = [
     new Paper(

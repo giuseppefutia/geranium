@@ -11,9 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 
 // Import models
-import { SimplifiedPaper } from '../../models/simplified-paper.model';
-import { SimplifiedAuthor } from '../../models/simplified-author.model';
-import { Topic } from '../../models/topic.model';
+import { SimplifiedPaper } from '../../model/simplified-paper.model';
+import { SimplifiedAuthor } from '../../model/simplified-author.model';
+import { Topic } from '../../model/topic.model';
 
 // Import components
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';

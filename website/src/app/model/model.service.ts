@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Paper } from './paper.model';
 
 /**
  * This service describes and contains the **model** of the application
@@ -11,18 +12,22 @@ export class ModelService {
   /**
    * Model data
    */
-  private _searchKey: string; // search keyword inserted by the user
-  private _prevSearchKey: string //the previously search key inserted by the user
   private _allTopicsInGraph: string[]; // list of all the topics in the graph, retrieved from the api
-  private _canSearch: boolean; //status flag: true if the user can perform a search
+
+  private _retrievedPapers: Paper[] = [];
+
+  private _searchKey: string; // search keyword inserted by the user
+  private _prevSearchKey: string // the previously search key inserted by the user
+  private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
+  private _searchCount = 0;
 
   /**
    * constructor
    */
   constructor() {
-
-    this._searchKey = "";
+    this._searchKey = '';
+    this._prevSearchKey = '';
   }
 
 
@@ -30,28 +35,29 @@ export class ModelService {
    * getters and setters
    */
   set searchKey(searchKey: string) {
-    this._searchKey = searchKey;
+    if (searchKey !== this._prevSearchKey) {
+      this._prevSearchKey = this._searchKey;
+      this._searchKey = searchKey;
+      this._searchCount++;
+      if (this._searchCount > 1) {
+        this._firstSearch = false;
+      }
+    }
   }
 
   get searchKey(): string {
     return this._searchKey;
   }
 
-
-  set prevSearchKey(prevSearchKey: string) {
-    this._prevSearchKey = prevSearchKey;
-  }
-
   get prevSearchKey(): string {
     return this._prevSearchKey;
   }
 
-
-  set allTopicsInGraph(topics: string[]){
+  set allTopicsInGraph(topics: string[]) {
     this._allTopicsInGraph = topics;
   }
 
-  get allTopicsInGraph(): string[]{
+  get allTopicsInGraph(): string[] {
     return this._allTopicsInGraph;
   }
 
@@ -64,18 +70,28 @@ export class ModelService {
     return this._canSearch;
   }
 
-
-  set firstSearch(isFirstSearch: boolean) {
-    this._firstSearch = isFirstSearch;
-  }
-
   get firstSearch(): boolean {
     return this._firstSearch;
   }
 
 
+  addPaper(newPaper: Paper) {
+    this._retrievedPapers.push(newPaper);
+  }
 
-  /**
-   * Model methods
-   */
+  addAllPapers(newPapers: Paper[]) {
+    this._retrievedPapers = this._retrievedPapers.concat(newPapers);
+  }
+
+  getPaperFromId(id: string): Paper {
+    return this._retrievedPapers.find(p => p.id === id);
+  }
+
+  getPapersCount(): number {
+    return this._retrievedPapers.length;
+  }
+
+  getPapers(): Paper[] {
+    return this._retrievedPapers;
+  }
 }

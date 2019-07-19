@@ -17,6 +17,7 @@ import { Topic } from '../../model/topic.model';
 
 // Import components
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
+import { ModelService } from 'src/app/model/model.service';
 
 class YearsData {
   constructor(
@@ -45,13 +46,9 @@ export class PapersPage implements OnInit, AfterContentInit {
   lightHiddenColor = 'rgba(0, 0, 0, 0.05)';
   topicChart: Chart;
   allPapersYears: YearsData[] = [];
-  papersCount = 0;
   papersYears = 0;
   currentBlock = 0;
 
-  searchKey: string; // Local copy of the search key
-
-  allPapers: SimplifiedPaper[] = [];
   filteredPapers: SimplifiedPaper[] = []; // Final filtered array of papers accessed by each card
 
   isLoading = false; // Hide/Show ionSkeletonText
@@ -116,7 +113,8 @@ export class PapersPage implements OnInit, AfterContentInit {
     private navCtrl: NavController,
     private resultsService: ResultsService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private dataModel: ModelService
   ) {}
 
   /* It checks if the searchKey is present in URI. (see results-routing.module.ts)
@@ -130,21 +128,19 @@ export class PapersPage implements OnInit, AfterContentInit {
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('searchKey')) {
-        this.searchKey = paramMap.get('searchKey');
-        this.resultsService.searchKey = this.searchKey;
+        this.dataModel.searchKey = paramMap.get('searchKey');
       } else {
-        if (this.resultsService.searchKey === '') {
+        if (this.dataModel.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.resultsService.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
             'results',
             'tabs',
             'papers',
-            this.searchKey
+            this.dataModel.searchKey
           ]);
         }
       }
@@ -161,27 +157,15 @@ export class PapersPage implements OnInit, AfterContentInit {
   // Fetch more data (scrolling)
   addData() {
     this.resultsService
-      .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
+      .getSimplifiedPapersBlock(this.dataModel.searchKey, this.currentBlock)
       .subscribe(newPapers => {
         if (newPapers.length === 0) {
           // If there are no results
           this.endOfResults = true;
         } else {
-          for (const newPaper of newPapers) {
-            newPaper.topics = this.filterTopics(
-              newPaper.topics,
-              this.maxTopicsPerCard
-            );
-            newPaper.authors = this.processAuthorNames(
-              newPaper.authors,
-              this.maxAuthorsPerCard
-            );
-            this.allPapers.push(newPaper);
-          }
           this.currentBlock++;
 
-          this.updatePapersYears(newPapers);
-          this.papersCount = this.allPapers.length;
+          this.updatePapersYears();
           this.papersYears =
             new Date().getFullYear() -
             Number.parseInt(this.allPapersYears[0].year, 10);
@@ -198,9 +182,9 @@ export class PapersPage implements OnInit, AfterContentInit {
     }
   }
 
-  getTopicUrl(newPapers: SimplifiedPaper[]) {
-    for (const topic of newPapers[0].topics) {
-      if (topic.label.toLowerCase() === this.searchKey.toLowerCase()) {
+  getTopicUrl() {
+    for (const topic of this.dataModel.getPapers()[0].topics) {
+      if (topic.label.toLowerCase() === this.dataModel.searchKey.toLowerCase()) {
         const parts = topic.url.split('/');
         this.topicUrl = 'https://wikipedia.org/wiki/' + parts[parts.length - 1];
       }
@@ -212,30 +196,19 @@ export class PapersPage implements OnInit, AfterContentInit {
     this.isLoading = true;
     this.addDummySlides(10);
     this.resultsService
-      .getSimplifiedPapersBlock(this.searchKey, this.currentBlock)
+      .getSimplifiedPapersBlock(this.dataModel.searchKey, this.currentBlock)
       .subscribe(newPapers => {
         this.filteredPapers = [];
         this.isLoading = false;
+        console.log(this.dataModel.getPapers());
         if (newPapers.length === 0) {
           // If there are no results
           this.endOfResults = true;
         } else {
-          this.getTopicUrl(newPapers);
-          for (const newPaper of newPapers) {
-            newPaper.topics = this.filterTopics(
-              newPaper.topics,
-              this.maxTopicsPerCard
-            );
-            newPaper.authors = this.processAuthorNames(
-              newPaper.authors,
-              this.maxAuthorsPerCard
-            );
-            this.allPapers.push(newPaper);
-          }
+          this.getTopicUrl();
           this.currentBlock++;
 
-          this.updatePapersYears(newPapers);
-          this.papersCount = this.allPapers.length;
+          this.updatePapersYears();
           this.papersYears =
             new Date().getFullYear() -
             Number.parseInt(this.allPapersYears[0].year, 10);
@@ -251,10 +224,10 @@ export class PapersPage implements OnInit, AfterContentInit {
   }
 
   // Eliminates the searchKey topic from the list of topics and limits it to a specific number
-  filterTopics(topics: Topic[], topicsLimit: number): Topic[] {
+  processTopics(topics: Topic[], topicsLimit: number): Topic[] {
     return topics
       .filter(
-        topic => topic.label.toLowerCase() !== this.searchKey.toLowerCase()
+        topic => topic.label.toLowerCase() !== this.dataModel.searchKey.toLowerCase()
       )
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
@@ -284,13 +257,13 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   // On click on topic chip start a new search
   onTopicChipClick(topic: Topic) {
-    this.resultsService.searchKey = topic.label;
+    this.dataModel.searchKey = topic.label;
     this.navCtrl.navigateForward([
       '/',
       'results',
       'tabs',
       'papers',
-      this.resultsService.searchKey
+      this.dataModel.searchKey
     ]);
   }
 
@@ -320,7 +293,6 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   // Open modal when clicked on MORE in a card
   onPaperDetails(paper: SimplifiedPaper) {
-    console.log(paper.id);
     this.modalCtrl
       .create({
         component: PaperDetailComponent,
@@ -333,7 +305,7 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   // Called when top button is clicked -> returns to search page
   onBackClick() {
-    if (this.resultsService.isFirstSearch) {
+    if (this.dataModel.firstSearch) {
       this.navCtrl.navigateBack(['/', 'search']);
     } else {
       this.navCtrl.back();
@@ -384,9 +356,10 @@ export class PapersPage implements OnInit, AfterContentInit {
 
   // Updates the allPapersYears array containing information about
   // the number of papers for each year sorted by ascending year number with newly received papers
-  updatePapersYears(newPapers: SimplifiedPaper[]) {
+  updatePapersYears() {
     let found: boolean;
-    for (const newPaper of newPapers) {
+    this.allPapersYears = [];
+    for (const newPaper of this.dataModel.getPapers()) {
       const yearString = this.yearString(newPaper.submittedDate);
 
       found = false;
@@ -426,7 +399,7 @@ export class PapersPage implements OnInit, AfterContentInit {
   // The allPapers array is filtered by the value of allPapersYears[i].shown
   // corresponding to each year. The result is stored in filteredPapers
   filterPapers() {
-    this.filteredPapers = this.allPapers.filter(el => {
+    this.filteredPapers = this.dataModel.getPapers().filter(el => {
       return (
         this.allPapersYears.find(y => {
           const yearString = this.yearString(el.submittedDate);

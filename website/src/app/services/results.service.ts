@@ -13,10 +13,6 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ResultsService {
-  private prevKey = '';
-  private _searchKey = '';
-  private searchCount = 0;
-  private _firstSearch = true;
 
   constructor(
     private papersService: PapersService,
@@ -27,21 +23,6 @@ export class ResultsService {
 
   get journalsBlockSize(): number {
     return this.journalsService.blockSize;
-  }
-  get isFirstSearch(): boolean {
-    return this._firstSearch;
-  }
-  get searchKey(): string {
-    return this._searchKey;
-  }
-  set searchKey(key: string) {
-    if (key !== this.prevKey) {
-      this._searchKey = key;
-      this.searchCount++;
-      if (this.searchCount > 1) {
-        this._firstSearch = false;
-      }
-    }
   }
 
   getAllTopics() {
@@ -54,8 +35,8 @@ export class ResultsService {
     return this.papersService.getSimplifiedPapersBlock(query, block);
   }
 
-  getPaperFromId(id: string): Paper {
-    return this.papersService.getPaperFromId(id);
+  getPaperFromId(paperId: string) {
+    return this.papersService.getPaperFromId(paperId);
   }
 
   // call service to request the author data

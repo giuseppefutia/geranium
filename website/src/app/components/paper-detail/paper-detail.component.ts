@@ -3,6 +3,7 @@ import { Paper } from '../../model/paper.model';
 import { ModalController, NavController } from '@ionic/angular';
 import { SimplifiedAuthor } from '../../model/simplified-author.model';
 import { ResultsService } from '../../services/results.service';
+import { ModelService } from 'src/app/model/model.service';
 
 @Component({
   selector: 'app-paper-detail',
@@ -17,7 +18,8 @@ export class PaperDetailComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private resultsService: ResultsService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private dataModel: ModelService
   ) {}
 
   ngOnInit() {
@@ -33,7 +35,7 @@ export class PaperDetailComponent implements OnInit {
   }
 
   onTopicChipClick(topic: string) {
-    this.resultsService.searchKey = topic;
+    this.dataModel.searchKey = topic;
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);
     this.onClose();
   }

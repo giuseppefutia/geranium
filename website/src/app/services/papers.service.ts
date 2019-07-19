@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthorsService } from './authors.service';
-import { map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 // Import models
 import { Paper } from '../model/paper.model';
-import { Author } from '../model/author.model';
 import { Topic } from '../model/topic.model';
-import { SimplifiedPaper } from '../model/simplified-paper.model';
 import { SimplifiedAuthor } from '../model/simplified-author.model';
+import { ModelService } from '../model/model.service';
 
 // Response interface
 export interface ResponsePaper {
@@ -25,9 +23,8 @@ export interface ResponsePaper {
   providedIn: 'root'
 })
 export class PapersService {
-  private papers: Paper[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private dataModel: ModelService) {}
 
   /**
    * Send HTTP GET request for all the publications inherent a specific topic, passed as parameter.
@@ -47,21 +44,11 @@ export class PapersService {
     console.log('GET: ' + url);
 
     return this.http.get<ResponsePaper[]>(url).pipe(
-      map(response => {
-        const newPapers: SimplifiedPaper[] = [];
-        console.log(response);
-
+      tap(response => {
         let topicImgChoosen: number = 0;
         for (const paper of response) {
-
-          console.log(topicImgChoosen);
           // build authors: for now authors and co-authors are processed together
           const authors: SimplifiedAuthor[] = [];
-          const author = new SimplifiedAuthor(
-            paper.author.id,
-            paper.author.name,
-            paper.author.url
-          );
 
           for (const co_author of paper.co_authors) {
             authors.push(
@@ -82,19 +69,7 @@ export class PapersService {
             topicImgChoosen++;
           }
 
-          // build paper
-          newPapers.push(
-            new SimplifiedPaper(
-              this.cleanID(paper.id),
-              paper.title,
-              authors,
-              topics,
-              new Date(paper.submitted_date),
-              topics[topicImgChoosen].img
-            )
-          );
-
-          this.papers.push(
+          this.dataModel.addPaper(
             new Paper(
               this.cleanID(paper.id),
               paper.title,
@@ -106,17 +81,19 @@ export class PapersService {
             )
           );
         }
-
-        return newPapers;
       })
     );
   }
 
-  private cleanID(dirty: string) {
-    return dirty.replace('/', '-');
+  getPaperFromId(paperId: string) {
+    const res = this.dataModel.getPaperFromId(paperId);
+    if (res === undefined) {
+      // TODO: QUery to server
+    }
+    return res;
   }
 
-  getPaperFromId(id: string): Paper {
-    return this.papers.find(p => p.id === id);
+  private cleanID(dirty: string) {
+    return dirty.replace('/', '-');
   }
 }

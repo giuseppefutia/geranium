@@ -12,7 +12,7 @@
               </ion-col>
               <ion-col size-lg="4">
                 <h2 no-padding style="text-transform: capitalize;">
-                  <b>{{ searchKey }}</b>
+                  <b>{{ dataModel.searchKey }}</b>
                 </h2>
                 <a
                   tappable
@@ -28,8 +28,8 @@
                   padding
                 ></ion-skeleton-text>
                 <p *ngIf="!isLoading">
-                  {{ papersCount }} showed papers on this topic in the last
-                  {{ papersYears }} years
+                  {{ dataModel.getPapersCount() }} showed papers on this topic
+                  in the last {{ papersYears }} years
                 </p>
                 <p
                   class="ion-hide-sm-down"
@@ -56,7 +56,7 @@
   <ion-grid *ngIf="filteredPapers.length <= 0 && !isRedirecting">
     <ion-row>
       <ion-col text-center>
-        <p>Sorry, there are no results for {{ searchKey }}</p>
+        <p>Sorry, there are no results for {{ dataModel.searchKey }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -101,8 +101,15 @@
             </ion-card-subtitle>
             <ion-card-subtitle *ngIf="!isLoading">
               <ion-chip
-                *ngFor="let author of paper.authors; let i = index"
-                (click)="onAuthorClick(author)">
+                *ngFor="
+                  let author of processAuthorNames(
+                    paper.authors,
+                    maxAuthorsPerCard
+                  );
+                  let i = index
+                "
+                (click)="onAuthorClick(author)"
+              >
                 <ion-icon name="person" *ngIf="i === 0"></ion-icon>
                 <ion-label color="primary">{{ author.name }}</ion-label>
               </ion-chip>
@@ -111,15 +118,19 @@
 
           <ion-card-content>
             <ion-item-divider no-padding no-margin padding-bottom>
-                <ion-skeleton-text
+              <ion-skeleton-text
                 style="height: 1em;"
                 *ngIf="isLoading"
               ></ion-skeleton-text>
               <div *ngIf="!isLoading">
                 <ion-chip
-                  *ngFor="let topic of paper.topics; let i = index"
+                  *ngFor="
+                    let topic of processTopics(paper.topics, maxTopicsPerCard);
+                    let i = index
+                  "
                   color="primary"
-                  (click)="onTopicChipClick(topic)">
+                  (click)="onTopicChipClick(topic)"
+                >
                   <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
                   <ion-label color="primary">{{ topic.label }}</ion-label>
                 </ion-chip>

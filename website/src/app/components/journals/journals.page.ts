@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Journal } from '../../model/journal.model';
 import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
 import { ResultsService } from '../../services/results.service';
+import { ModelService } from 'src/app/model/model.service';
 
 @Component({
   selector: 'app-journals',
@@ -24,20 +25,21 @@ export class JournalsPage implements OnInit, AfterContentInit {
     private navCtrl: NavController,
     private resultsService: ResultsService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private dataModel: ModelService
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
-        this.resultsService.searchKey = this.searchKey;
+        this.dataModel.searchKey = this.searchKey;
       } else {
-        if (this.resultsService.searchKey === '') {
+        if (this.dataModel.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.resultsService.searchKey;
+          this.searchKey = this.dataModel.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',

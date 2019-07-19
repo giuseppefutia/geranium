@@ -4,6 +4,7 @@ import { NavController, ModalController } from '@ionic/angular';
 import { Author } from '../../model/author.model';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsService } from '../../services/results.service';
+import { ModelService } from 'src/app/model/model.service';
 
 @Component({
   selector: 'app-authors',
@@ -24,7 +25,8 @@ export class AuthorsPage implements OnInit, AfterContentInit {
     private navCtrl: NavController,
     private resultsService: ResultsService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private dataModel: ModelService
   ) {}
 
   /**
@@ -41,13 +43,13 @@ export class AuthorsPage implements OnInit, AfterContentInit {
       }
       if (paramMap.has('searchKey')) {
         this.searchKey = paramMap.get('searchKey');
-        this.resultsService.searchKey = this.searchKey;
+        this.dataModel.searchKey = this.searchKey;
       } else {
-        if (this.resultsService.searchKey === '') {
+        if (this.dataModel.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.resultsService.searchKey;
+          this.searchKey = this.dataModel.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
@@ -161,11 +163,11 @@ export class AuthorsPage implements OnInit, AfterContentInit {
       })
       .then(result => {
         if (this.isRedirecting) {
-          if (this.resultsService.searchKey === '') {
+          if (this.dataModel.searchKey === '') {
             this.navCtrl.navigateBack(['/search']);
             return;
           } else {
-            this.searchKey = this.resultsService.searchKey;
+            this.searchKey = this.dataModel.searchKey;
             this.isRedirecting = true;
             this.navCtrl.navigateForward([
               '/',

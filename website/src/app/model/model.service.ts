@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Paper } from './paper.model';
+import { Author } from './author.model';
 
 /**
  * This service describes and contains the **model** of the application
@@ -15,6 +16,7 @@ export class ModelService {
   private _allTopicsInGraph: string[]; // list of all the topics in the graph, retrieved from the api
 
   private _retrievedPapers: Paper[] = [];
+  private _retrievedAuthors: Author[] = [];
 
   private _searchKey: string; // search keyword inserted by the user
   private _prevSearchKey: string // the previously search key inserted by the user
@@ -93,5 +95,25 @@ export class ModelService {
 
   getPapers(): Paper[] {
     return this._retrievedPapers;
+  }
+
+  addAuthor(newAuthor: Author) {
+    this._retrievedAuthors.push(newAuthor);
+  }
+
+  addAllAuthors(newAuthors: Author[]) {
+    this._retrievedAuthors = this._retrievedAuthors.concat(newAuthors);
+  }
+
+  getAuthorFromId(id: string): Author {
+    return this._retrievedAuthors.find(a => a.id === id);
+  }
+
+  getAuthors(): Author[] {
+    return this._retrievedAuthors;
+  }
+
+  emptyAuthors() {
+    this._retrievedAuthors = [];
   }
 }

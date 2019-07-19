@@ -12,7 +12,7 @@
               </ion-col>
               <ion-col padding-bottom>
                 <h2 no-padding style="text-transform: capitalize;">
-                  <b>{{ searchKey }}</b>
+                  <b>{{ dataModel.searchKey }}</b>
                 </h2>
                 <a
                   tappable
@@ -33,20 +33,20 @@
 </ion-header>
 
 <ion-content #scrollArea scrollEvents="true">
-  <ion-grid *ngIf="allAuthors.length <= 0 && !isRedirecting">
+  <ion-grid *ngIf="filteredAuthors.length <= 0 && !isRedirecting">
     <ion-row>
       <ion-col text-center>
-        <p>Sorry, there are no results for {{ searchKey }}</p>
+        <p>Sorry, there are no results for {{ dataModel.searchKey }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-grid *ngIf="allAuthors.length > 0 && !isRedirecting">
+  <ion-grid *ngIf="filteredAuthors.length > 0 && !isRedirecting">
     <ion-row wrap>
       <ion-col
         size="12"
         size-sm="6"
         size-lg="3"
-        *ngFor="let author of allAuthors"
+        *ngFor="let author of filteredAuthors"
       >
         <ion-card style="animation-name: fadeIn; animation-duration: 1s;">
           <ion-card-header>
@@ -92,7 +92,7 @@
             ></ion-skeleton-text>
             <div *ngIf="!isLoading">
               <ion-chip
-                *ngFor="let topic of author.topics; let i = index"
+                *ngFor="let topic of processTopics(author.topics, maxTopicsPerCard); let i = index"
                 color="primary"
               >
                 <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>

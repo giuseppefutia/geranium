@@ -88,7 +88,7 @@ export class PapersService {
   getPaperFromId(paperId: string) {
     const res = this.dataModel.getPaperFromId(paperId);
     if (res === undefined) {
-      // TODO: QUery to server
+      // TODO: Query to server
     }
     return res;
   }

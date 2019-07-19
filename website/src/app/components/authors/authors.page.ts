@@ -12,10 +12,9 @@ import { ModelService } from 'src/app/model/model.service';
   styleUrls: ['./authors.page.scss']
 })
 export class AuthorsPage implements OnInit, AfterContentInit {
-  searchKey: string;
   currentBlock = 0;
-  allAuthors: Author[] = [];
   maxTopicsPerCard = 4;
+  filteredAuthors: Author[] = [];
 
   isLoading = false;
   isRedirecting = false;
@@ -42,21 +41,19 @@ export class AuthorsPage implements OnInit, AfterContentInit {
         return;
       }
       if (paramMap.has('searchKey')) {
-        this.searchKey = paramMap.get('searchKey');
-        this.dataModel.searchKey = this.searchKey;
+        this.dataModel.searchKey = paramMap.get('searchKey');
       } else {
         if (this.dataModel.searchKey === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.dataModel.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
             'results',
             'tabs',
             'authors',
-            this.searchKey
+            this.dataModel.searchKey
           ]);
         }
       }
@@ -80,23 +77,17 @@ export class AuthorsPage implements OnInit, AfterContentInit {
     this.addDummySlides(10);
 
     this.resultsService
-      .getAuthorsBlock(this.searchKey, this.currentBlock)
+      .getAuthorsBlock(this.dataModel.searchKey, this.currentBlock)
       .subscribe(newAuthors => {
-        this.allAuthors = [];
         this.isLoading = false;
 
         if (newAuthors.length === 0) {
           this.endOfResults = true;
         } else {
-          for (const newAuthor of newAuthors) {
-            newAuthor.topics = this.filterTopics(
-              newAuthor.topics,
-              this.maxTopicsPerCard
-            );
-            this.allAuthors.push(newAuthor);
-          }
           this.currentBlock++;
         }
+
+        this.filterAuthors();
       });
   }
 
@@ -105,32 +96,16 @@ export class AuthorsPage implements OnInit, AfterContentInit {
    * @param topics array of the topic of interest
    * @param topicsLimit number of topic to be showed
    */
-  filterTopics(topics: string[], topicsLimit: number): string[] {
+  processTopics(topics: string[], topicsLimit: number): string[] {
     return topics
-      .filter(topic => topic.toLowerCase() !== this.searchKey.toLowerCase())
+      .filter(
+        topic => topic.toLowerCase() !== this.dataModel.searchKey.toLowerCase()
+      )
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
-  /**
-   * Get more authors to be showed, scrolling
-   */
-  fetchMoreData() {
-    this.resultsService
-      .getAuthorsBlock(this.searchKey, this.currentBlock)
-      .subscribe(newAuthors => {
-        if (newAuthors.length === 0) {
-          this.endOfResults = true; // no more results
-        } else {
-          for (const newAuthor of newAuthors) {
-            newAuthor.topics = this.filterTopics(
-              newAuthor.topics,
-              this.maxTopicsPerCard
-            );
-            this.allAuthors.push(newAuthor);
-          }
-          this.currentBlock++;
-        }
-      });
+  filterAuthors() {
+    this.filteredAuthors = this.dataModel.getAuthors();
   }
 
   openNewTab(url: string) {
@@ -139,15 +114,16 @@ export class AuthorsPage implements OnInit, AfterContentInit {
 
   // Called by infinite scroll to load more data
   onMoreAuthors(event) {
-    setTimeout(() => {
-      this.fetchMoreData();
-      event.target.complete();
-
-      // disable the infinite scroll
-      if (this.endOfResults === true) {
-        event.target.disabled = true;
-      }
-    }, 1500);
+    this.resultsService
+      .getAuthorsBlock(this.dataModel.searchKey, this.currentBlock)
+      .subscribe(newAuthors => {
+        event.target.complete();
+        if (newAuthors.length === 0) {
+          event.target.disabled = true; // no more results
+        } else {
+          this.currentBlock++;
+        }
+      });
   }
 
   // Open modal when clicked on MORE in a card
@@ -167,14 +143,13 @@ export class AuthorsPage implements OnInit, AfterContentInit {
             this.navCtrl.navigateBack(['/search']);
             return;
           } else {
-            this.searchKey = this.dataModel.searchKey;
             this.isRedirecting = true;
             this.navCtrl.navigateForward([
               '/',
               'results',
               'tabs',
               'authors',
-              this.searchKey
+              this.dataModel.searchKey
             ]);
           }
         }
@@ -190,7 +165,7 @@ export class AuthorsPage implements OnInit, AfterContentInit {
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
-      this.allAuthors.push(new Author('', '', '', [''], '', 0));
+      this.filteredAuthors.push(new Author('', '', '', [''], '', 0));
     }
   }
 }

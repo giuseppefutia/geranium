@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Import models
 import { Author } from '../model/author.model';
 import { Topic } from '../model/topic.model';
+import { ModelService } from '../model/model.service';
 
 // Set interfaces to parse data
 interface Publication {
@@ -28,7 +29,7 @@ export interface ResponseAuthors {
   providedIn: 'root'
 })
 export class AuthorsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private dataModel: ModelService) {}
 
   /**
    * Send HTTP GET request for all the authors that have publications inherent the topic passed as argument
@@ -36,7 +37,7 @@ export class AuthorsService {
    * @param query the topic to be used as query
    * @param block the block of authors to show
    */
-  getAuthorsBlock(query: string, block: number): Observable<Author[]> {
+  getAuthorsBlock(query: string, block: number): Observable<ResponseAuthors[]> {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
@@ -48,10 +49,9 @@ export class AuthorsService {
     console.log('GET: ' + url);
 
     return this.http.get<ResponseAuthors[]>(url).pipe(
-      map(response => {
-        const newAuthors: Author[] = [];
+      tap(response => {
         for (const author of response) {
-          // Get the most common topics
+          // Get topics and number of occurences
           const allTopics: { url: string; label: string; occ: number }[] = [];
           for (const publication of author.publications_on_topic) {
             for (const topic of publication.topics) {
@@ -63,12 +63,14 @@ export class AuthorsService {
               allTopics.push({url: topic.url, label: topic.label, occ: 1});
             }
           }
-          console.log(allTopics);
+
+          // Sort topics by number of occurences and convert to label
           const stringTopics: string[] = [];
           for (const topic of allTopics.sort((a, b) => b.occ - a .occ)) {
             stringTopics.push(topic.label);
           }
-          newAuthors.push(
+
+          this.dataModel.addAuthor(
             new Author(
               author.id,
               author.name,
@@ -79,7 +81,6 @@ export class AuthorsService {
             )
           );
         }
-        return newAuthors;
       })
     );
   }

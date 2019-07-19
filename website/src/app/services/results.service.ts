@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PapersService } from './papers.service';
-import { AuthorsService } from './authors.service';
+import { AuthorsService, ResponseAuthors } from './authors.service';
 import { JournalsService } from './journals.service';
-import { SimplifiedPaper } from '../model/simplified-paper.model';
-import { Paper } from '../model/paper.model';
-import { Author } from '../model/author.model';
 import { Journal } from '../model/journal.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -40,7 +37,7 @@ export class ResultsService {
   }
 
   // call service to request the author data
-  getAuthorsBlock(query: string, block: number) : Observable<Author[]> {
+  getAuthorsBlock(query: string, block: number) : Observable<ResponseAuthors[]> {
     return this.authorsService.getAuthorsBlock(query, block);
   }
 

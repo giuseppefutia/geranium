@@ -155,13 +155,13 @@ export class PapersPage implements OnInit, AfterContentInit {
   }
 
   // Fetch more data (scrolling)
-  addData() {
+  addData(event) {
     this.resultsService
       .getSimplifiedPapersBlock(this.dataModel.searchKey, this.currentBlock)
       .subscribe(newPapers => {
         if (newPapers.length === 0) {
-          // If there are no results
-          this.endOfResults = true;
+          // If there are no results disable infinite scroll
+          event.target.disabled = true;
         } else {
           this.currentBlock++;
 
@@ -172,6 +172,7 @@ export class PapersPage implements OnInit, AfterContentInit {
 
           this.filterPapers();
           this.updateChart();
+          event.target.complete();
         }
       });
   }
@@ -277,18 +278,6 @@ export class PapersPage implements OnInit, AfterContentInit {
       'author',
       author.url
     ]);
-  }
-
-  // Called by infinite scroll to load more data
-  onMorePapers(event) {
-    // disable the infinite scroll
-    if (this.endOfResults === true) {
-      event.target.disabled = true;
-    }
-
-    this.addData();
-    this.updateChart();
-    event.target.complete();
   }
 
   // Open modal when clicked on MORE in a card

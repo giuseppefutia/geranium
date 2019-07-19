@@ -137,7 +137,7 @@ def set_topics_query(lines, offset):
     query = """ \
     PREFIX gpo:<http://geranium-project.org/ontology/>
 
-    SELECT DISTINCT ?t_label
+    SELECT DISTINCT ?t ?t_label
 
     WHERE {{
         ?t rdf:type gpo:TMFResource .
@@ -151,7 +151,7 @@ def set_topics_query(lines, offset):
 def set_dbpedia_thumbnail_query(topicUri: str) -> str:
     query = """\
         prefix dbpedia-owl: <http://dbpedia.org/ontology/>
-        select ?thumbnail where {{ 
+        select ?thumbnail where {{
         <{t}> dbpedia-owl:thumbnail ?thumbnail .
         \
         }}""".format(t=topicUri)

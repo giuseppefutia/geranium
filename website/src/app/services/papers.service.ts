@@ -4,7 +4,7 @@ import { tap } from 'rxjs/operators';
 
 // Import models
 import { Paper } from '../model/paper.model';
-import { Topic } from '../model/topic.model';
+import { Topic, TopicNoImg } from '../model/topic.model';
 import { SimplifiedAuthor } from '../model/simplified-author.model';
 import { ModelService } from '../model/model.service';
 
@@ -32,27 +32,27 @@ export class PapersService {
    * @param query the topic to be used for the search
    * @param block the current pagination block
    */
-  getSimplifiedPapersBlock(query: string, block: number) {
+  getSimplifiedPapersBlock(topicQuery: TopicNoImg, block: number) {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(
-        `type=publications&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`
+        `type=publications&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
       );
 
     console.log('GET: ' + url);
 
     return this.http.get<ResponsePaper[]>(url).pipe(
       tap(response => {
-        let topicImgChoosen: number = 0;
+        let topicImgChoosen = 0;
         for (const paper of response) {
           // build authors: for now authors and co-authors are processed together
           const authors: SimplifiedAuthor[] = [];
 
-          for (const co_author of paper.co_authors) {
+          for (const coAuthor of paper.co_authors) {
             authors.push(
-              new SimplifiedAuthor(co_author.id, co_author.name, co_author.url)
+              new SimplifiedAuthor(coAuthor.id, coAuthor.name, coAuthor.url)
             );
           }
 

@@ -5,6 +5,9 @@ import { JournalsService } from './journals.service';
 import { Journal } from '../model/journal.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { TopicNoImg, Topic } from '../model/topic.model';
+import { ModelService } from '../model/model.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +18,7 @@ export class ResultsService {
     private papersService: PapersService,
     private authorsService: AuthorsService,
     private journalsService: JournalsService,
+    private dataModel: ModelService,
     private http: HttpClient
   ) {}
 
@@ -22,14 +26,8 @@ export class ResultsService {
     return this.journalsService.blockSize;
   }
 
-  getAllTopics() {
-    const url = 'http://api.geranium.nexacenter.org/api?'
-              + encodeURI(`type=topics&lines=100000&offset=0`);
-    return this.http.get<string[]>(url);
-  }
-
-  getSimplifiedPapersBlock(query: string, block: number) {
-    return this.papersService.getSimplifiedPapersBlock(query, block);
+  getSimplifiedPapersBlock(topic: TopicNoImg, block: number) {
+    return this.papersService.getSimplifiedPapersBlock(topic, block);
   }
 
   getPaperFromId(paperId: string) {
@@ -37,8 +35,8 @@ export class ResultsService {
   }
 
   // call service to request the author data
-  getAuthorsBlock(query: string, block: number) : Observable<ResponseAuthors[]> {
-    return this.authorsService.getAuthorsBlock(query, block);
+  getAuthorsBlock(topic: TopicNoImg, block: number): Observable<ResponseAuthors[]> {
+    return this.authorsService.getAuthorsBlock(topic, block);
   }
 
   getAuthorFromId(authorId: string) {

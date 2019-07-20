@@ -32,21 +32,23 @@ export class JournalsPage implements OnInit, AfterContentInit {
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('searchKey')) {
-        this.searchKey = paramMap.get('searchKey');
-        this.dataModel.searchKey = this.searchKey;
+        this.dataModel
+          .searchTopicFromString(paramMap.get('searchKey'))
+          .subscribe(r => {
+            this.fetchData();
+          });
       } else {
-        if (this.dataModel.searchKey === '') {
+        if (this.dataModel.searchTopicToString() === '') {
           this.navCtrl.navigateBack(['/search']);
           return;
         } else {
-          this.searchKey = this.dataModel.searchKey;
           this.isRedirecting = true;
           this.navCtrl.navigateForward([
             '/',
             'results',
             'tabs',
             'journals',
-            this.searchKey
+            this.dataModel.searchTopicToString()
           ]);
         }
       }

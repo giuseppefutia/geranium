@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Paper } from './paper.model';
 import { Author } from './author.model';
+import { TopicNoImg, Topic } from './topic.model';
+import { tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 /**
  * This service describes and contains the **model** of the application
@@ -9,17 +13,17 @@ import { Author } from './author.model';
   providedIn: 'root'
 })
 export class ModelService {
-
   /**
    * Model data
    */
-  private _allTopicsInGraph: string[]; // list of all the topics in the graph, retrieved from the api
+  private _allTopicsInGraph: TopicNoImg[]; // list of all the topics in the graph, retrieved from the api
 
   private _retrievedPapers: Paper[] = [];
   private _retrievedAuthors: Author[] = [];
 
-  private _searchKey: string; // search keyword inserted by the user
-  private _prevSearchKey: string // the previously search key inserted by the user
+  private _searchTopic: TopicNoImg; // search keyword inserted by the user
+  private _prevSearchTopic: TopicNoImg; // the previously search key inserted by the user
+  private _topicWikiUrl: string;
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
   private _searchCount = 0;
@@ -27,19 +31,18 @@ export class ModelService {
   /**
    * constructor
    */
-  constructor() {
-    this._searchKey = '';
-    this._prevSearchKey = '';
+  constructor(private http: HttpClient) {
+    this.getAllTopics().subscribe();
   }
-
 
   /**
    * getters and setters
    */
-  set searchKey(searchKey: string) {
-    if (searchKey !== this._prevSearchKey) {
-      this._prevSearchKey = this._searchKey;
-      this._searchKey = searchKey;
+  set searchTopic(searchTopic: TopicNoImg) {
+    if (searchTopic !== this._prevSearchTopic) {
+      this._prevSearchTopic = this._searchTopic;
+      this._searchTopic = searchTopic;
+      this.updateTopicWikiUrl();
       this._searchCount++;
       if (this._searchCount > 1) {
         this._firstSearch = false;
@@ -47,22 +50,60 @@ export class ModelService {
     }
   }
 
-  get searchKey(): string {
-    return this._searchKey;
+  get searchTopic(): TopicNoImg {
+    return this._searchTopic;
   }
 
-  get prevSearchKey(): string {
-    return this._prevSearchKey;
+  getAllTopics() {
+    const url =
+      'http://api.geranium.nexacenter.org/api?' +
+      encodeURI(`type=topics&lines=100000&offset=0`);
+    return this.http.get<TopicNoImg[]>(url).pipe(
+      tap(result => {
+        this.allTopicsInGraph = result;
+        this.canSearch = true;
+      })
+    );
   }
 
-  set allTopicsInGraph(topics: string[]) {
+  searchTopicFromString(topicString: string) {
+    if (this.allTopicsInGraph === undefined) {
+      return this.getAllTopics().pipe(tap(r => {
+        const topic = this.allTopicsInGraph.find(s => s.label === topicString);
+        this.searchTopic = topic;
+      }));
+    }
+    const topic = this.allTopicsInGraph.find(s => s.label === topicString);
+    this.searchTopic = topic;
+
+    // Fake observable to subscribe to
+    return new Observable<TopicNoImg[]>(t => { t.next(); t.complete(); });
+  }
+
+  searchTopicToString(): string {
+    return this.searchTopic.label;
+  }
+
+  updateTopicWikiUrl() {
+    const parts = this.searchTopic.url.split('/');
+    this._topicWikiUrl = 'https://wikipedia.org/wiki/' + parts[parts.length - 1];
+  }
+
+  get prevSearchTopic(): TopicNoImg {
+    return this._prevSearchTopic;
+  }
+
+  get topicWikiUrl(): string {
+    return this._topicWikiUrl;
+  }
+
+  set allTopicsInGraph(topics: TopicNoImg[]) {
     this._allTopicsInGraph = topics;
   }
 
-  get allTopicsInGraph(): string[] {
+  get allTopicsInGraph(): TopicNoImg[] {
     return this._allTopicsInGraph;
   }
-
 
   set canSearch(isSearchEnabled: boolean) {
     this._canSearch = isSearchEnabled;
@@ -75,7 +116,6 @@ export class ModelService {
   get firstSearch(): boolean {
     return this._firstSearch;
   }
-
 
   addPaper(newPaper: Paper) {
     this._retrievedPapers.push(newPaper);

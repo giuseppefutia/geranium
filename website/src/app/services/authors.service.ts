@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 // Import models
 import { Author } from '../model/author.model';
-import { Topic } from '../model/topic.model';
+import { Topic, TopicNoImg } from '../model/topic.model';
 import { ModelService } from '../model/model.service';
 
 // Set interfaces to parse data
@@ -37,13 +37,13 @@ export class AuthorsService {
    * @param query the topic to be used as query
    * @param block the block of authors to show
    */
-  getAuthorsBlock(query: string, block: number): Observable<ResponseAuthors[]> {
+  getAuthorsBlock(topicQuery: TopicNoImg, block: number): Observable<ResponseAuthors[]> {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(
-        `type=authors&topic=${query}&lines=${linesPerQuery}&offset=${linesOffset}`
+        `type=authors&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
       );
 
     console.log('GET: ' + url);

@@ -11,14 +11,20 @@
                 ></ion-button>
               </ion-col>
               <ion-col padding-bottom>
-                <h2 no-padding style="text-transform: capitalize;">
-                  <b>{{ dataModel.searchKey }}</b>
+                  <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 80%; height: 0.5em;"
+                  padding
+                  margin-bottom
+                ></ion-skeleton-text>
+                <h2 no-padding style="text-transform: capitalize;" *ngIf="!isLoading">
+                  <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
                 <a
                   tappable
-                  (click)="
-                    openNewTab('https://en.wikipedia.org/wiki/Deep_learning')
-                  "
+                  [class]="isLoading ? 'disabled' : ''"
+                  (click)="openTopicUrl()"
                   margin-bottom
                 >
                   More on this topic
@@ -33,10 +39,10 @@
 </ion-header>
 
 <ion-content #scrollArea scrollEvents="true">
-  <ion-grid *ngIf="filteredAuthors.length <= 0 && !isRedirecting">
+  <ion-grid *ngIf="filteredAuthors.length <= 0 && !isRedirecting && !isLoading">
     <ion-row>
       <ion-col text-center>
-        <p>Sorry, there are no results for {{ dataModel.searchKey }}</p>
+        <p>Sorry, there are no results for {{ dataModel.searchTopic.label }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -35,7 +35,6 @@ export class PaperDetailComponent implements OnInit {
   }
 
   onTopicChipClick(topic: string) {
-    this.dataModel.searchKey = topic;
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);
     this.onClose();
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 import { ModelService } from '../../model/model.service';
+import { TopicNoImg } from 'src/app/model/topic.model';
 
 /**
  * Landing page component
@@ -17,7 +18,8 @@ export class SearchPage implements OnInit {
    */
   public expand = 'retracted'; // autocompletion view status
   private minLettersSuggestions = 4;
-  private searchSuggestions: string[] = [];
+  private searchSuggestions: TopicNoImg[] = [];
+  searchTopicString = '';
 
   /**
    * Constructor
@@ -35,39 +37,36 @@ export class SearchPage implements OnInit {
    * After component is initialized, get the list of all topics contained in the graph, used for autocompletion
    */
   ngOnInit() {
-    this.resultsService.getAllTopics().subscribe(topics => {
-      this.dataModel.allTopicsInGraph = topics;
-      this.dataModel.canSearch = true;
-    });
   }
 
   /**
    * Display hints on possible search queries to the user
    */
   displaySuggestions() {
-    if (this.dataModel.prevSearchKey !== this.dataModel.searchKey) {
+    if (this.searchTopicString.length >= this.minLettersSuggestions) {
+      // enough letters, display suggestions
 
-      if (this.dataModel.searchKey.length >= this.minLettersSuggestions) {
-        // enough letters, display suggestions
+      const r = new RegExp(this.searchTopicString, 'gi');
+      this.searchSuggestions = this.dataModel.allTopicsInGraph
+        .filter(s => s.label.search(r) !== -1)
+        .sort((a, b) => a.label.length - b.label.length);
+    } else if (
+      this.searchTopicString.length >= 1 &&
+      this.searchTopicString.length < this.minLettersSuggestions
+    ) {
+      // not enough letters, inform user of minimum number of letters
 
-        const r = new RegExp(this.dataModel.searchKey, 'gi');
-        this.searchSuggestions = this.dataModel.allTopicsInGraph
-          .filter(s => s.search(r) !== -1)
-          .sort((a, b) => a.length - b.length);
-      } else if (
-        this.dataModel.searchKey.length >= 1 &&
-        this.dataModel.searchKey.length < this.minLettersSuggestions
-      ) {
-        // not enough letters, inform user of minimum number of letters
-
-        this.searchSuggestions = [
-          'Inserisci almeno ' +
+      this.searchSuggestions = [
+        {
+          label:
+            'Inserisci almeno ' +
             this.minLettersSuggestions +
-            ' lettere per ottenere suggerimenti'
-        ];
-      } else {
-        this.searchSuggestions = [];
-      }
+            ' lettere per ottenere suggerimenti',
+          url: ''
+        }
+      ];
+    } else {
+      this.searchSuggestions = [];
     }
   }
 
@@ -76,15 +75,15 @@ export class SearchPage implements OnInit {
    *
    * @param searchKey user inserted input, the search key
    */
-  navigate(searchKey: string) {
-    this.dataModel.searchKey = searchKey; // set search key in Model
+  navigate(searchTopic: TopicNoImg) {
+    this.dataModel.searchTopic = searchTopic; // set search key in Model
 
     this.router.navigate([
       '/',
       'results',
       'tabs',
       'papers',
-      this.dataModel.searchKey
+      this.dataModel.searchTopic.label
     ]);
   }
 
@@ -94,7 +93,7 @@ export class SearchPage implements OnInit {
   addFocus() {
     this.expand = 'expanded'; // expand autocompletion
 
-    if (this.dataModel.searchKey !== '') {
+    if (this.searchTopicString !== '') {
       this.displaySuggestions();
     }
   }
@@ -103,7 +102,7 @@ export class SearchPage implements OnInit {
    *
    */
   removeFocus() {
-    if (this.dataModel.searchKey === '') {
+    if (this.searchTopicString === '') {
       this.expand = 'retracted';
     }
   }

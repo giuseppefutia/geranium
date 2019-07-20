@@ -20,7 +20,7 @@
       <ion-item>
         <ion-label position="floating">Search here</ion-label>
         <ion-input
-          [(ngModel)]="dataModel.searchKey"
+          [(ngModel)]="dataModel.searchTopic.label"
           (ionChange)="displaySuggestions()"
           (ionFocus)="addFocus()"
           (ionBlur)="removeFocus()"
@@ -53,7 +53,7 @@
                 <ion-item>
                   <ion-label position="floating">Search here</ion-label>
                   <ion-input
-                    [(ngModel)]="dataModel.searchKey"
+                    [(ngModel)]="searchTopicString"
                     (ionChange)="displaySuggestions()"
                     (ionFocus)="addFocus()"
                     (ionBlur)="removeFocus()"
@@ -65,7 +65,7 @@
                 <ion-list>
                   <ion-item *ngFor="let suggestion of searchSuggestions" (click)="navigate(suggestion)">
                     <ion-icon name="bulb" margin></ion-icon>
-                    {{ suggestion }}
+                    {{ suggestion.label }}
                   </ion-item>
                 </ion-list>
               </div>

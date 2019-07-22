@@ -62,8 +62,8 @@
                 style="height: 1em;"
               ></ion-skeleton-text>
             </ion-card-title>
-            <ion-card-title *ngIf="!isLoading" class="card-title">
-              {{ author.name }}
+            <ion-card-title *ngIf="!isLoading">
+              {{ capitalizeName(author.name) }}
             </ion-card-title>
             <ion-card-subtitle *ngIf="isLoading">
               <ion-skeleton-text animated></ion-skeleton-text>

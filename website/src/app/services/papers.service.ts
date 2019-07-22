@@ -86,7 +86,7 @@ export class PapersService {
   }
 
   getPaperFromId(paperId: string) {
-    const res = this.dataModel.getPaperFromId(paperId);
+    const res = this.dataModel.findPaperFromId(paperId);
     if (res === undefined) {
       // TODO: Query to server
     }

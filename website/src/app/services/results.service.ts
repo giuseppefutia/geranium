@@ -4,10 +4,7 @@ import { AuthorsService, ResponseAuthors } from './authors.service';
 import { JournalsService } from './journals.service';
 import { Journal } from '../model/journal.model';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { TopicNoImg, Topic } from '../model/topic.model';
-import { ModelService } from '../model/model.service';
-import { tap } from 'rxjs/operators';
+import { TopicNoImg} from '../model/topic.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +14,7 @@ export class ResultsService {
   constructor(
     private papersService: PapersService,
     private authorsService: AuthorsService,
-    private journalsService: JournalsService,
-    private dataModel: ModelService,
-    private http: HttpClient
+    private journalsService: JournalsService
   ) {}
 
   get journalsBlockSize(): number {

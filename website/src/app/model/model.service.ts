@@ -126,7 +126,7 @@ export class ModelService {
     this._retrievedPapers = this._retrievedPapers.concat(newPapers);
   }
 
-  getPaperFromId(id: string): Paper {
+  findPaperFromId(id: string): Paper {
     return this._retrievedPapers.find(p => p.id === id);
   }
 
@@ -134,7 +134,7 @@ export class ModelService {
     return this._retrievedPapers.length;
   }
 
-  getPapers(): Paper[] {
+  getRetrievedPapers(): Paper[] {
     return this._retrievedPapers;
   }
 
@@ -146,11 +146,11 @@ export class ModelService {
     this._retrievedAuthors = this._retrievedAuthors.concat(newAuthors);
   }
 
-  getAuthorFromId(id: string): Author {
+  findAuthorFromId(id: string): Author {
     return this._retrievedAuthors.find(a => a.id === id);
   }
 
-  getAuthors(): Author[] {
+  getRetrievedAuthors(): Author[] {
     return this._retrievedAuthors;
   }
 

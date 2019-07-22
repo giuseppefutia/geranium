@@ -11,8 +11,8 @@
                 ></ion-button>
               </ion-col>
               <ion-col padding-bottom>
-                <h2 no-padding style="text-transform: capitalize;">
-                  <b>{{ searchKey }}</b>
+                <h2 no-padding style="text-transform: capitalize;" *ngIf="!IsLoading">
+                  <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
                 <a
                   tappable
@@ -33,14 +33,21 @@
 </ion-header>
 
 <ion-content #scrollArea scrollEvents="true">
-  <ion-grid *ngIf="allJournals.length <= 0 && !isRedirecting">
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center>
+        <p>Coming soon!</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="false && allJournals.length <= 0 && !isRedirecting">
     <ion-row>
       <ion-col text-center>
         <p>Sorry, there are no results for {{ searchKey }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-grid *ngIf="allJournals.length > 0 && !isRedirecting">
+  <ion-grid *ngIf="false && allJournals.length > 0 && !isRedirecting">
     <ion-row wrap>
       <ion-col
         size="12"

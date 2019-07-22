@@ -188,7 +188,7 @@ export class PapersPage implements OnInit {
       .subscribe(newPapers => {
         this.filteredPapers = [];
         this.isLoading = false;
-        console.log(this.dataModel.getPapers());
+        console.log(this.dataModel.getRetrievedPapers());
         if (newPapers.length === 0) {
           // If there are no results
           this.endOfResults = true;
@@ -336,7 +336,7 @@ export class PapersPage implements OnInit {
   updatePapersYears() {
     let found: boolean;
     this.allPapersYears = [];
-    for (const newPaper of this.dataModel.getPapers()) {
+    for (const newPaper of this.dataModel.getRetrievedPapers()) {
       const yearString = this.yearString(newPaper.submittedDate);
 
       found = false;
@@ -376,7 +376,7 @@ export class PapersPage implements OnInit {
   // The allPapers array is filtered by the value of allPapersYears[i].shown
   // corresponding to each year. The result is stored in filteredPapers
   filterPapers() {
-    this.filteredPapers = this.dataModel.getPapers().filter(el => {
+    this.filteredPapers = this.dataModel.getRetrievedPapers().filter(el => {
       return (
         this.allPapersYears.find(y => {
           const yearString = this.yearString(el.submittedDate);

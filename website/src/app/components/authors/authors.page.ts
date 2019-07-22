@@ -94,6 +94,10 @@ export class AuthorsPage implements OnInit {
       });
   }
 
+  capitalizeName(name: string) {
+    return name.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+  }
+
   /**
    * Filter the topics of interest of each Author
    * @param topics array of the topic of interest
@@ -108,7 +112,7 @@ export class AuthorsPage implements OnInit {
   }
 
   filterAuthors() {
-    this.filteredAuthors = this.dataModel.getAuthors();
+    this.filteredAuthors = this.dataModel.getRetrievedAuthors();
   }
 
   openTopicUrl() {

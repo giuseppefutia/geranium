@@ -88,9 +88,9 @@ export class AuthorsPage implements OnInit {
           this.endOfResults = true;
         } else {
           this.currentBlock++;
+          this.filterAuthors();
         }
 
-        this.filterAuthors();
       });
   }
 

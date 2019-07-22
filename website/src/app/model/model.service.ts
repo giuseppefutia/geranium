@@ -32,6 +32,7 @@ export class ModelService {
    * constructor
    */
   constructor(private http: HttpClient) {
+    this._searchTopic = new TopicNoImg('', '');
     this.getAllTopics().subscribe();
   }
 

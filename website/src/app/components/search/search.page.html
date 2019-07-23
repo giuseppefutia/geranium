@@ -25,13 +25,16 @@
           (ionFocus)="addFocus()"
           (ionBlur)="removeFocus()"
           debounce="300"
-          [disabled]="!(dataModel.canSearch)"
+          [disabled]="!dataModel.canSearch"
           required
         ></ion-input>
       </ion-item>
     </div>
     <ion-list style="height: 75%; overflow-y:scroll;">
-      <ion-item *ngFor="let suggestion of searchSuggestions" (click)="navigate(suggestion)">
+      <ion-item
+        *ngFor="let suggestion of searchSuggestions"
+        (click)="navigate(suggestion)"
+      >
         <ion-icon name="bulb" margin></ion-icon>
         {{ suggestion }}
       </ion-item>
@@ -58,14 +61,21 @@
                     (ionFocus)="addFocus()"
                     (ionBlur)="removeFocus()"
                     debounce="300"
-                    [disabled]="!(dataModel.canSearch)"
+                    [disabled]="!dataModel.canSearch"
                     required
                   ></ion-input>
                 </ion-item>
                 <ion-list>
-                  <ion-item *ngFor="let suggestion of searchSuggestions" (click)="navigate(suggestion)">
+                  <ion-item
+                    *ngFor="let suggestion of searchSuggestions"
+                    (click)="navigate(suggestion)"
+                  >
                     <ion-icon name="bulb" margin></ion-icon>
                     {{ suggestion.label }}
+                    <p style="font-size: 0.8em; color: grey;"
+                    *ngIf="countInSuggestions(suggestion.label) > 1">
+                      &nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ suggestion.wikiUrl }}
+                    </p>
                   </ion-item>
                 </ion-list>
               </div>

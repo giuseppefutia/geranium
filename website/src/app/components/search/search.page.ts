@@ -36,8 +36,7 @@ export class SearchPage implements OnInit {
   /**
    * After component is initialized, get the list of all topics contained in the graph, used for autocompletion
    */
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   /**
    * Display hints on possible search queries to the user
@@ -62,12 +61,17 @@ export class SearchPage implements OnInit {
             'Inserisci almeno ' +
             this.minLettersSuggestions +
             ' lettere per ottenere suggerimenti',
-          url: ''
+          url: '',
+          wikiUrl: ''
         }
       ];
     } else {
       this.searchSuggestions = [];
     }
+  }
+
+  countInSuggestions(label: string) {
+    return this.searchSuggestions.filter(p => p.label === label).length;
   }
 
   /**

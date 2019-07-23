@@ -23,7 +23,6 @@ export class ModelService {
 
   private _searchTopic: TopicNoImg; // search keyword inserted by the user
   private _prevSearchTopic: TopicNoImg; // the previously search key inserted by the user
-  private _topicWikiUrl: string;
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
   private _searchCount = 0;
@@ -32,7 +31,7 @@ export class ModelService {
    * constructor
    */
   constructor(private http: HttpClient) {
-    this._searchTopic = new TopicNoImg('', '');
+    this._searchTopic = new TopicNoImg('', '', '');
     this.getAllTopics().subscribe();
   }
 
@@ -43,7 +42,6 @@ export class ModelService {
     if (searchTopic !== this._prevSearchTopic) {
       this._prevSearchTopic = this._searchTopic;
       this._searchTopic = searchTopic;
-      this.updateTopicWikiUrl();
       this._searchCount++;
       if (this._searchCount > 1) {
         this._firstSearch = false;
@@ -59,9 +57,14 @@ export class ModelService {
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(`type=topics&lines=100000&offset=0`);
-    return this.http.get<TopicNoImg[]>(url).pipe(
+    return this.http.get<{ url: string; label: string }[]>(url).pipe(
       tap(result => {
-        this.allTopicsInGraph = result;
+        this._allTopicsInGraph = [];
+        for (const topic of result) {
+          this._allTopicsInGraph.push(
+            new TopicNoImg(topic.url, this.getWikiUrl(topic.url), topic.label)
+          );
+        }
         this.canSearch = true;
       })
     );
@@ -69,33 +72,36 @@ export class ModelService {
 
   searchTopicFromString(topicString: string) {
     if (this.allTopicsInGraph === undefined) {
-      return this.getAllTopics().pipe(tap(r => {
-        const topic = this.allTopicsInGraph.find(s => s.label === topicString);
-        this.searchTopic = topic;
-      }));
+      return this.getAllTopics().pipe(
+        tap(r => {
+          const topic = this.allTopicsInGraph.find(
+            s => s.label === topicString
+          );
+          this.searchTopic = topic;
+        })
+      );
     }
     const topic = this.allTopicsInGraph.find(s => s.label === topicString);
     this.searchTopic = topic;
 
     // Fake observable to subscribe to
-    return new Observable<TopicNoImg[]>(t => { t.next(); t.complete(); });
+    return new Observable<TopicNoImg[]>(t => {
+      t.next();
+      t.complete();
+    });
   }
 
   searchTopicToString(): string {
     return this.searchTopic.label;
   }
 
-  updateTopicWikiUrl() {
-    const parts = this.searchTopic.url.split('/');
-    this._topicWikiUrl = 'https://wikipedia.org/wiki/' + parts[parts.length - 1];
+  getWikiUrl(url: string): string {
+    const parts = url.split('/');
+    return 'en.wikipedia.org/wiki/' + parts[parts.length - 1];
   }
 
   get prevSearchTopic(): TopicNoImg {
     return this._prevSearchTopic;
-  }
-
-  get topicWikiUrl(): string {
-    return this._topicWikiUrl;
   }
 
   set allTopicsInGraph(topics: TopicNoImg[]) {

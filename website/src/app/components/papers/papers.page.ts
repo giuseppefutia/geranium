@@ -177,7 +177,7 @@ export class PapersPage implements OnInit {
 
   openTopicUrl() {
     if (!this.isLoading) {
-      window.open(this.dataModel.topicWikiUrl, '_blank');
+      window.open('https://'.concat(this.dataModel.searchTopic.wikiUrl), '_blank');
     }
   }
 
@@ -188,7 +188,6 @@ export class PapersPage implements OnInit {
       .subscribe(newPapers => {
         this.filteredPapers = [];
         this.isLoading = false;
-        console.log(this.dataModel.getRetrievedPapers());
         if (newPapers.length === 0) {
           // If there are no results
           this.endOfResults = true;
@@ -395,7 +394,7 @@ export class PapersPage implements OnInit {
           '',
           '',
           [new SimplifiedAuthor('', '', '')],
-          [new Topic('', '', '')],
+          [new Topic('', '', '', '')],
           new Date(''),
           ''
         )

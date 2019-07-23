@@ -23,7 +23,6 @@ export interface ResponsePaper {
   providedIn: 'root'
 })
 export class PapersService {
-
   constructor(private http: HttpClient, private dataModel: ModelService) {}
 
   /**
@@ -38,7 +37,9 @@ export class PapersService {
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(
-        `type=publications&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
+        `type=publications&topic=${
+          topicQuery.label
+        }&lines=${linesPerQuery}&offset=${linesOffset}`
       );
 
     console.log('GET: ' + url);
@@ -50,6 +51,7 @@ export class PapersService {
           // build authors: for now authors and co-authors are processed together
           const authors: SimplifiedAuthor[] = [];
 
+          authors.push(new SimplifiedAuthor(paper.author.id, paper.author.name, paper.author.url));
           for (const coAuthor of paper.co_authors) {
             authors.push(
               new SimplifiedAuthor(coAuthor.id, coAuthor.name, coAuthor.url)
@@ -59,7 +61,14 @@ export class PapersService {
           // build topics
           const topics: Topic[] = [];
           for (const topic of paper.topics) {
-            topics.push(new Topic(topic.url, topic.label, topic.img));
+            topics.push(
+              new Topic(
+                topic.url,
+                this.dataModel.getWikiUrl(topic.url),
+                topic.label,
+                topic.img
+              )
+            );
           }
 
           // calculate topic index for selecting the image

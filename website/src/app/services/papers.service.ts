@@ -51,7 +51,13 @@ export class PapersService {
           // build authors: for now authors and co-authors are processed together
           const authors: SimplifiedAuthor[] = [];
 
-          authors.push(new SimplifiedAuthor(paper.author.id, paper.author.name, paper.author.url));
+          authors.push(
+            new SimplifiedAuthor(
+              paper.author.id,
+              paper.author.name,
+              paper.author.url
+            )
+          );
           for (const coAuthor of paper.co_authors) {
             authors.push(
               new SimplifiedAuthor(coAuthor.id, coAuthor.name, coAuthor.url)

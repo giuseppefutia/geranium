@@ -152,6 +152,10 @@ export class PapersPage implements OnInit {
     });
   }
 
+  ionViewDidEnter() {
+    // Controllo se back click da altro topic
+  }
+
   // Fetch more data (scrolling)
   addData(event) {
     this.resultsService
@@ -177,12 +181,16 @@ export class PapersPage implements OnInit {
 
   openTopicUrl() {
     if (!this.isLoading) {
-      window.open('https://'.concat(this.dataModel.searchTopic.wikiUrl), '_blank');
+      window.open(
+        'https://'.concat(this.dataModel.searchTopic.wikiUrl),
+        '_blank'
+      );
     }
   }
 
   // Fetch data for the initial loading
   fetchData() {
+    this.currentBlock = 0;
     this.resultsService
       .getSimplifiedPapersBlock(this.dataModel.searchTopic, this.currentBlock)
       .subscribe(newPapers => {
@@ -225,22 +233,20 @@ export class PapersPage implements OnInit {
     authors: SimplifiedAuthor[],
     authorsLimit: number
   ): SimplifiedAuthor[] {
-    return authors
-      .filter(author => (author.name = this.simplifyAuthorName(author.name)))
-      .slice(0, authorsLimit > authors.length ? authors.length : authorsLimit);
-  }
-
-  simplifyAuthorName(name: string): string {
-    let builder = '';
-    let i: number;
-    const names = name.split(' ');
-    for (i = 0; i < names.length - 1; i++) {
-      builder += names[i].charAt(0).toUpperCase() + '. ';
+    if (authorsLimit > authors.length) {
+      return authors.filter(
+        author => (author.name = this.dataModel.simplifyAuthorName(author.name))
+      );
+    } else {
+      authors = authors
+        .filter(
+          author =>
+            (author.name = this.dataModel.simplifyAuthorName(author.name))
+        )
+        .slice(0, authorsLimit);
+      authors.push(new SimplifiedAuthor('', '...', ''));
+      return authors;
     }
-    let first = names[i].toLowerCase();
-    first = first.charAt(0).toUpperCase() + first.slice(1);
-    builder += first;
-    return builder;
   }
 
   // On click on topic chip start a new search
@@ -376,6 +382,8 @@ export class PapersPage implements OnInit {
   // corresponding to each year. The result is stored in filteredPapers
   filterPapers() {
     this.filteredPapers = this.dataModel.getRetrievedPapers().filter(el => {
+      el.topics = this.processTopics(el.topics, this.maxTopicsPerCard);
+      el.authors = this.processAuthorNames(el.authors, this.maxAuthorsPerCard);
       return (
         this.allPapersYears.find(y => {
           const yearString = this.yearString(el.submittedDate);

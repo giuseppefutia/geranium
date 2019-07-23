@@ -17,7 +17,7 @@ export class SearchPage implements OnInit {
    * local attributes of the component
    */
   public expand = 'retracted'; // autocompletion view status
-  private minLettersSuggestions = 4;
+  private minLettersSuggestions = 2;
   private searchSuggestions: TopicNoImg[] = [];
   searchTopicString = '';
 

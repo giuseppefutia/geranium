@@ -40,6 +40,7 @@ export class ModelService {
    */
   set searchTopic(searchTopic: TopicNoImg) {
     if (searchTopic !== this._prevSearchTopic) {
+      this.emptyPrevResults();
       this._prevSearchTopic = this._searchTopic;
       this._searchTopic = searchTopic;
       this._searchCount++;
@@ -141,7 +142,7 @@ export class ModelService {
   }
 
   getRetrievedPapers(): Paper[] {
-    return this._retrievedPapers;
+    return [...this._retrievedPapers];
   }
 
   addAuthor(newAuthor: Author) {
@@ -157,10 +158,28 @@ export class ModelService {
   }
 
   getRetrievedAuthors(): Author[] {
-    return this._retrievedAuthors;
+    return [...this._retrievedAuthors];
   }
 
   emptyAuthors() {
     this._retrievedAuthors = [];
+  }
+
+  emptyPrevResults() {
+    this.emptyAuthors();
+    this._retrievedPapers = [];
+  }
+
+  simplifyAuthorName(name: string): string {
+    let builder = '';
+    let i: number;
+    const names = name.split(' ');
+    for (i = 0; i < names.length - 1; i++) {
+      builder += names[i].charAt(0).toUpperCase() + '. ';
+    }
+    let first = names[i].toLowerCase();
+    first = first.charAt(0).toUpperCase() + first.slice(1);
+    builder += first;
+    return builder;
   }
 }

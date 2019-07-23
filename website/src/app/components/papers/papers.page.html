@@ -110,12 +110,10 @@
             <ion-card-subtitle *ngIf="!isLoading">
               <ion-chip
                 *ngFor="
-                  let author of processAuthorNames(
-                    paper.authors,
-                    maxAuthorsPerCard
-                  );
-                  let i = index
+                  let author of paper.authors
+                  index as i
                 "
+
                 (click)="onAuthorClick(author)"
               >
                 <ion-icon name="person" *ngIf="i === 0"></ion-icon>
@@ -133,13 +131,12 @@
               <div *ngIf="!isLoading">
                 <ion-chip
                   *ngFor="
-                    let topic of processTopics(paper.topics, maxTopicsPerCard);
-                    let i = index
+                    let topic of paper.topics
                   "
                   color="primary"
                   (click)="onTopicChipClick(topic)"
                 >
-                  <ion-icon name="bulb" *ngIf="i === 0"></ion-icon>
+                  <ion-icon name="bulb"></ion-icon>
                   <ion-label color="primary">{{ topic.label }}</ion-label>
                 </ion-chip>
               </div>

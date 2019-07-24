@@ -19,7 +19,8 @@ export class PaperDetailComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private resultsService: ResultsService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private dataModel: ModelService
   ) {}
 
   ngOnInit() {
@@ -38,6 +39,15 @@ export class PaperDetailComponent implements OnInit {
       .then(modalEl => {
         modalEl.present();
       });
+  }
+
+  onIRISDetails() {
+    if (this.isLoaded) {
+      window.open(
+        this.dataModel.getIRISUrl(this.selectedPaper),
+        '_blank'
+      );
+    }
   }
 
   onTopicChipClick(topic: string) {

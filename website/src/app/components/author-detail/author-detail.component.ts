@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { AuthorsService } from '../../services/authors.service';
 import { Author } from '../../model/author.model';
+import { ResultsService } from 'src/app/services/results.service';
 
 @Component({
   selector: 'app-author-detail',
@@ -10,15 +10,16 @@ import { Author } from '../../model/author.model';
 })
 export class AuthorDetailComponent implements OnInit {
   @Input() selectedAuthorId: string;
+  selectedAuthor: Author;
   isLoading = false;
 
-  constructor(private modalCtrl: ModalController, private authorsService: AuthorsService) { }
+  constructor(private modalCtrl: ModalController, private resultsService: ResultsService) {
+    this.isLoading = true;
+  }
 
   ngOnInit() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
+    this.selectedAuthor = this.resultsService.getAuthorFromId(this.selectedAuthorId);
+    this.isLoading = false;
   }
 
   onClose() {

@@ -84,6 +84,13 @@ export class PapersService {
             topicImgChoosen++;
           }
 
+          let imgUrl: string;
+          if ((/\.(gif|jpe?g|tiff|png|svg)(\?width=300)?$/i).test(topics[topicImgChoosen].img)) {
+            imgUrl = topics[topicImgChoosen].img;
+          } else {
+            imgUrl = 'assets/img/defaultPaper.jpg';
+          }
+
           this.dataModel.addPaper(
             new Paper(
               this.cleanID(paper.id),
@@ -92,7 +99,7 @@ export class PapersService {
               authors,
               topics,
               new Date(paper.submitted_date),
-              topics[topicImgChoosen].img
+              imgUrl
             )
           );
         }

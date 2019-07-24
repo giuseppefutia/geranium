@@ -70,7 +70,8 @@ export class AuthorsPage implements OnInit {
    * Get data from backend and add them to the collection
    */
   fetchData() {
-     this.resultsService
+    this.currentBlock = 0;
+    this.resultsService
       .getAuthorsBlock(this.dataModel.searchTopic, this.currentBlock)
       .subscribe(newAuthors => {
         this.isLoading = false;
@@ -81,12 +82,7 @@ export class AuthorsPage implements OnInit {
           this.currentBlock++;
           this.filterAuthors();
         }
-
       });
-  }
-
-  capitalizeName(name: string) {
-    return name.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
   }
 
   /**
@@ -97,13 +93,24 @@ export class AuthorsPage implements OnInit {
   processTopics(topics: string[], topicsLimit: number): string[] {
     return topics
       .filter(
-        topic => topic.toLowerCase() !== this.dataModel.searchTopicToString().toLowerCase()
+        topic =>
+          topic.toLowerCase() !==
+          this.dataModel.searchTopicToString().toLowerCase()
       )
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 
   filterAuthors() {
-    this.filteredAuthors = this.dataModel.getRetrievedAuthors();
+    this.filteredAuthors = this.dataModel.getRetrievedAuthors().map(author => {
+      return new Author(
+        author.id,
+        author.name,
+        author.department,
+        this.processTopics(author.topics, this.maxTopicsPerCard),
+        author.imageUrl,
+        author.numberOfPapers
+      );
+    });
   }
 
   openTopicUrl() {
@@ -123,6 +130,7 @@ export class AuthorsPage implements OnInit {
         } else {
           this.currentBlock++;
         }
+        this.filterAuthors();
       });
   }
 
@@ -138,9 +146,26 @@ export class AuthorsPage implements OnInit {
       });
   }
 
+  // On click on topic chip start a new search
+  onTopicChipClick(topic: string) {
+    this.dataModel.searchTopicFromString(topic).subscribe(res => {
+      this.navCtrl.navigateForward([
+        '/',
+        'results',
+        'tabs',
+        'authors',
+        this.dataModel.searchTopicToString()
+      ]);
+    });
+  }
+
   // Called when top button is clicked -> returns to search page
   onBackClick() {
-    this.navCtrl.navigateBack(['/', 'search']);
+    if (this.dataModel.firstSearch) {
+      this.navCtrl.navigateBack(['/', 'search']);
+    } else {
+      this.navCtrl.back();
+    }
   }
 
   // Adds dummy slides while fetching data

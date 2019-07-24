@@ -73,7 +73,7 @@ export class AuthorsService {
           this.dataModel.addAuthor(
             new Author(
               author.id,
-              author.name,
+              this.dataModel.normalizeAuthorName(author.name),
               '',
               stringTopics,
               'assets/img/defaultAuthor.jpg',
@@ -85,7 +85,11 @@ export class AuthorsService {
     );
   }
 
-  getAuthorFromId(authorId: string) {
-    return new Author('fake', 'fake', 'fake', ['fake'], 'fake', 3); //this.authors.find(author => author.id === authorId);
+  getAuthorFromId(authorId: string): Author {
+    const res = this.dataModel.findAuthorFromId(authorId);
+    if (res === undefined) {
+      // TODO: Query to server
+    }
+    return res;
   }
 }

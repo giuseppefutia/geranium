@@ -171,12 +171,12 @@ export class ModelService {
     this._retrievedPapers = [];
   }
 
-  simplifyAuthorName(name: string): string {
+  shortenAuthorName(name: string): string {
     let builder = '';
     let i: number;
     if (name.search(/,/g) !== -1) {
       const names_ = name.split(',');
-      name = names_[1].trim() + ' ' +  names_[0].trim();
+      name = names_[1].trim() + ' ' + names_[0].trim();
     } else {
       if (name.search(/\./g) !== -1) {
         return name;
@@ -189,6 +189,26 @@ export class ModelService {
     let first = names[i].toLowerCase();
     first = first.charAt(0).toUpperCase() + first.slice(1);
     builder += first;
+    return builder;
+  }
+
+  normalizeAuthorName(name: string): string {
+    let newName;
+    let builder = '';
+    let i: number;
+    if (name.search(/,/g) === -1) {
+      if (name.search(/\./g) !== -1) {
+        return name;
+      }
+      newName = name;
+    } else {
+      const names_ = name.split(',');
+      newName = names_[1].trim() + ' ' + names_[0].trim();
+    }
+    const names = newName.split(' ');
+    for (i = 0; i < names.length; i++) {
+      builder += names[i].charAt(0).toUpperCase() + names[i].substring(1).toLowerCase() + ' ';
+    }
     return builder;
   }
 

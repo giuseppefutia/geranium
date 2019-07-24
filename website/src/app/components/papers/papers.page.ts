@@ -173,7 +173,7 @@ export class PapersPage implements OnInit {
             new Date().getFullYear() -
             Number.parseInt(this.allPapersYears[0].year, 10);
 
-          this.filterPapers();
+          this.filterPapers(true);
           this.updateChart();
           event.target.complete();
         }
@@ -208,7 +208,7 @@ export class PapersPage implements OnInit {
             new Date().getFullYear() -
             Number.parseInt(this.allPapersYears[0].year, 10);
 
-          this.filterPapers();
+          this.filterPapers(false);
 
           // The timeout is needed for the component to be first drawn
           setTimeout(() => {
@@ -236,13 +236,13 @@ export class PapersPage implements OnInit {
   ): SimplifiedAuthor[] {
     if (authorsLimit > authors.length) {
       return authors.filter(
-        author => (author.name = this.dataModel.simplifyAuthorName(author.name))
+        author => (author.name = this.dataModel.shortenAuthorName(author.name))
       );
     } else {
       const shortAuthors = authors
         .filter(
           author =>
-            (author.name = this.dataModel.simplifyAuthorName(author.name))
+            (author.name = this.dataModel.shortenAuthorName(author.name))
         )
         .slice(0, authorsLimit);
       shortAuthors.push(new SimplifiedAuthor('', '...', ''));
@@ -290,10 +290,7 @@ export class PapersPage implements OnInit {
 
   onIRISDetails(paper: SimplifiedPaper) {
     if (!this.isLoading) {
-      window.open(
-        this.dataModel.getIRISUrl(paper),
-        '_blank'
-      );
+      window.open(this.dataModel.getIRISUrl(paper), '_blank');
     }
   }
 
@@ -352,8 +349,9 @@ export class PapersPage implements OnInit {
   // the number of papers for each year sorted by ascending year number with newly received papers
   updatePapersYears() {
     let found: boolean;
-    this.allPapersYears = [];
-    for (const newPaper of this.dataModel.getRetrievedPapers()) {
+    for (const newPaper of this.dataModel
+      .getRetrievedPapers()
+      .slice(this.filteredPapers.length)) {
       const yearString = this.yearString(newPaper.submittedDate);
 
       found = false;
@@ -385,28 +383,52 @@ export class PapersPage implements OnInit {
       this.allPapersYears[bar.dataIndex].shown === true
         ? this.primaryColor
         : this.hiddenColor;
-    this.filterPapers();
+    this.filterPapers(false);
     // Update grid (is automatic)
     this.topicChart.update();
   }
 
   // The allPapers array is filtered by the value of allPapersYears[i].shown
   // corresponding to each year. The result is stored in filteredPapers
-  filterPapers() {
-    this.filteredPapers = [];
-    for (const paper of this.dataModel.getRetrievedPapers()) {
-      if (this.allPapersYears.find(y => {
-        const yearString = this.yearString(paper.submittedDate);
-        return yearString === y.year && y.shown === true;
-      }) !== undefined) {
-        this.filteredPapers.push(new SimplifiedPaper(
-          paper.id,
-          paper.title,
-          this.processAuthorNames(paper.authors, this.maxAuthorsPerCard),
-          this.processTopics(paper.topics, this.maxTopicsPerCard),
-          paper.submittedDate,
-          paper.imageUrl
-        ));
+  filterPapers(isAppending: boolean) {
+    let toBePushed;
+    if (isAppending) {
+      toBePushed = this.dataModel
+        .getRetrievedPapers()
+        .slice(this.filteredPapers.length);
+    } else {
+      toBePushed = this.dataModel.getRetrievedPapers().filter(newPaper => {
+        return !this.filteredPapers.some(
+          filtered => filtered.id === newPaper.id
+        );
+      });
+      this.filteredPapers = this.filteredPapers.filter(paper => {
+        return (
+          this.allPapersYears.find(y => {
+            const yearString = this.yearString(paper.submittedDate);
+            return yearString === y.year && y.shown === true;
+          }) !== undefined
+        );
+      });
+    }
+
+    for (const paper of toBePushed) {
+      if (
+        this.allPapersYears.find(y => {
+          const yearString = this.yearString(paper.submittedDate);
+          return yearString === y.year && y.shown === true;
+        }) !== undefined
+      ) {
+        this.filteredPapers.push(
+          new SimplifiedPaper(
+            paper.id,
+            paper.title,
+            this.processAuthorNames(paper.authors, this.maxAuthorsPerCard),
+            this.processTopics(paper.topics, this.maxTopicsPerCard),
+            paper.submittedDate,
+            paper.imageUrl
+          )
+        );
       }
     }
   }

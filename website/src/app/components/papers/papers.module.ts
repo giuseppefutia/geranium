@@ -7,8 +7,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { PapersPage } from './papers.page';
 import { SharedModule } from '../../shared/shared.module';
-import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 const routes: Routes = [
   {
@@ -25,7 +23,6 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PapersPage, PaperDetailComponent],
-  entryComponents: [PaperDetailComponent]
+  declarations: [PapersPage]
 })
 export class PapersPageModule {}

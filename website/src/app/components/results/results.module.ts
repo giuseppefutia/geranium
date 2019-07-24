@@ -5,9 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ResultsPage } from './results.page';
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsRoutingModule } from './results-routing.module';
-import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 @NgModule({
   imports: [
@@ -16,6 +15,7 @@ import { JournalDetailComponent } from '../journal-detail/journal-detail.compone
     IonicModule,
     ResultsRoutingModule
   ],
-  declarations: [ResultsPage]
+  declarations: [ResultsPage, PaperDetailComponent, AuthorDetailComponent],
+  entryComponents: [PaperDetailComponent, AuthorDetailComponent]
 })
 export class ResultsPageModule { }

@@ -4,6 +4,7 @@ import { ModalController, NavController } from '@ionic/angular';
 import { SimplifiedAuthor } from '../../model/simplified-author.model';
 import { ResultsService } from '../../services/results.service';
 import { ModelService } from 'src/app/model/model.service';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 @Component({
   selector: 'app-paper-detail',
@@ -18,8 +19,7 @@ export class PaperDetailComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private resultsService: ResultsService,
-    private navCtrl: NavController,
-    private dataModel: ModelService
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
@@ -30,8 +30,14 @@ export class PaperDetailComponent implements OnInit {
   }
 
   onAuthorChipClick(author: SimplifiedAuthor) {
-    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'authors', 'author', author.id]);
-    this.onClose();
+    this.modalCtrl
+      .create({
+        component: AuthorDetailComponent,
+        componentProps: { selectedAuthorId: author.id }
+      })
+      .then(modalEl => {
+        modalEl.present();
+      });
   }
 
   onTopicChipClick(topic: string) {

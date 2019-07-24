@@ -5,6 +5,7 @@ import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SimplifiedPaper } from './simplified-paper.model';
 
 /**
  * This service describes and contains the **model** of the application
@@ -173,6 +174,14 @@ export class ModelService {
   simplifyAuthorName(name: string): string {
     let builder = '';
     let i: number;
+    if (name.search(/,/g) !== -1) {
+      const names_ = name.split(',');
+      name = names_[1].trim() + ' ' +  names_[0].trim();
+    } else {
+      if (name.search(/\./g) !== -1) {
+        return name;
+      }
+    }
     const names = name.split(' ');
     for (i = 0; i < names.length - 1; i++) {
       builder += names[i].charAt(0).toUpperCase() + '. ';
@@ -181,5 +190,9 @@ export class ModelService {
     first = first.charAt(0).toUpperCase() + first.slice(1);
     builder += first;
     return builder;
+  }
+
+  getIRISUrl(paper: SimplifiedPaper): string {
+    return 'https://iris.polito.it/handle/' + paper.id.replace('-', '/');
   }
 }

@@ -12,6 +12,7 @@ import { Topic } from '../../model/topic.model';
 // Import components
 import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 import { ModelService } from 'src/app/model/model.service';
+import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 class YearsData {
   constructor(
@@ -238,16 +239,18 @@ export class PapersPage implements OnInit {
         author => (author.name = this.dataModel.simplifyAuthorName(author.name))
       );
     } else {
-      authors = authors
+      const shortAuthors = authors
         .filter(
           author =>
             (author.name = this.dataModel.simplifyAuthorName(author.name))
         )
         .slice(0, authorsLimit);
-      authors.push(new SimplifiedAuthor('', '...', ''));
-      return authors;
+      shortAuthors.push(new SimplifiedAuthor('', '...', ''));
+      return shortAuthors;
     }
   }
+
+  processPaperTitle(title: string) {}
 
   // On click on topic chip start a new search
   onTopicChipClick(topic: Topic) {
@@ -263,14 +266,14 @@ export class PapersPage implements OnInit {
 
   // Open modal to get authors information -- XXX duplicated function in paper details
   onAuthorClick(author: SimplifiedAuthor) {
-    this.navCtrl.navigateForward([
-      '/',
-      'results',
-      'tabs',
-      'authors',
-      'author',
-      author.url
-    ]);
+    this.modalCtrl
+      .create({
+        component: AuthorDetailComponent,
+        componentProps: { selectedAuthorId: author.id }
+      })
+      .then(modalEl => {
+        modalEl.present();
+      });
   }
 
   // Open modal when clicked on MORE in a card
@@ -283,6 +286,15 @@ export class PapersPage implements OnInit {
       .then(modalEl => {
         modalEl.present();
       });
+  }
+
+  onIRISDetails(paper: SimplifiedPaper) {
+    if (!this.isLoading) {
+      window.open(
+        this.dataModel.getIRISUrl(paper),
+        '_blank'
+      );
+    }
   }
 
   // Called when top button is clicked -> returns to search page
@@ -381,16 +393,22 @@ export class PapersPage implements OnInit {
   // The allPapers array is filtered by the value of allPapersYears[i].shown
   // corresponding to each year. The result is stored in filteredPapers
   filterPapers() {
-    this.filteredPapers = this.dataModel.getRetrievedPapers().filter(el => {
-      el.topics = this.processTopics(el.topics, this.maxTopicsPerCard);
-      el.authors = this.processAuthorNames(el.authors, this.maxAuthorsPerCard);
-      return (
-        this.allPapersYears.find(y => {
-          const yearString = this.yearString(el.submittedDate);
-          return yearString === y.year && y.shown === true;
-        }) !== undefined
-      );
-    });
+    this.filteredPapers = [];
+    for (const paper of this.dataModel.getRetrievedPapers()) {
+      if (this.allPapersYears.find(y => {
+        const yearString = this.yearString(paper.submittedDate);
+        return yearString === y.year && y.shown === true;
+      }) !== undefined) {
+        this.filteredPapers.push(new SimplifiedPaper(
+          paper.id,
+          paper.title,
+          this.processAuthorNames(paper.authors, this.maxAuthorsPerCard),
+          this.processTopics(paper.topics, this.maxTopicsPerCard),
+          paper.submittedDate,
+          paper.imageUrl
+        ));
+      }
+    }
   }
 
   // Adds dummy slides while fetching data

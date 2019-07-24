@@ -10,11 +10,11 @@
                   ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
                 ></ion-button>
               </ion-col>
-              <ion-col size-lg="4">
+              <ion-col size-lg="7">
                   <ion-skeleton-text
                   animated
                   *ngIf="isLoading"
-                  style="width: 80%; height: 0.5em;"
+                  style="width: 50%; height: 0.5em;"
                   padding
                   margin-bottom
                 ></ion-skeleton-text>
@@ -31,7 +31,7 @@
                 <ion-skeleton-text
                   animated
                   *ngIf="isLoading"
-                  style="width: 80%; height: 0.8em;"
+                  style="width: 50%; height: 0.8em;"
                   padding
                   margin-top
                 ></ion-skeleton-text>
@@ -144,10 +144,19 @@
           </ion-card-content>
           <div padding-start padding-bottom>
             <ion-button
-              fill="clear"
+              fill="solid"
               color="primary"
+              slot="start"
               (click)="onPaperDetails(paper)"
               >More</ion-button
+            >
+            <ion-button
+              fill="outline"
+              color="tertiary"
+              slot="end"
+              padding-start
+              (click)="onIRISDetails(paper)"
+              >IRIS</ion-button
             >
           </div>
         </ion-card>

@@ -20,7 +20,7 @@
       <ion-item>
         <ion-label position="floating">Search here</ion-label>
         <ion-input
-          [(ngModel)]="dataModel.searchTopic.label"
+          [(ngModel)]="searchTopicString"
           (ionChange)="displaySuggestions()"
           (ionFocus)="addFocus()"
           (ionBlur)="removeFocus()"
@@ -36,7 +36,17 @@
         (click)="navigate(suggestion)"
       >
         <ion-icon name="bulb" margin></ion-icon>
-        {{ suggestion }}
+        {{ suggestion.label }}
+        <p
+          style="font-size: 0.8em; color: grey;"
+          *ngIf="countInSuggestions(suggestion.label) > 1"
+        >
+          &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+        </p>
+        <p style="font-size: 0.8em; color: grey;"
+        *ngIf="countInSuggestions(suggestion.label) > 1">
+          {{ suggestion.wikiUrl }}
+        </p>
       </ion-item>
     </ion-list>
   </div>
@@ -72,8 +82,10 @@
                   >
                     <ion-icon name="bulb" margin></ion-icon>
                     {{ suggestion.label }}
-                    <p style="font-size: 0.8em; color: grey;"
-                    *ngIf="countInSuggestions(suggestion.label) > 1">
+                    <p
+                      style="font-size: 0.8em; color: grey;"
+                      *ngIf="countInSuggestions(suggestion.label) > 1"
+                    >
                       &nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ suggestion.wikiUrl }}
                     </p>
                   </ion-item>

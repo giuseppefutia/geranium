@@ -39,15 +39,6 @@ export class AuthorsPage implements OnInit {
     this.isLoading = true;
     this.addDummySlides(10);
     this.route.paramMap.subscribe(paramMap => {
-      if (paramMap.has('authorId')) {
-        this.isRedirecting = true;
-
-        // Show author details modal if authorId present in URL
-        this.onAuthorDetails(
-          this.resultsService.getAuthorFromId(paramMap.get('authorId'))
-        );
-        return;
-      }
       if (paramMap.has('searchKey')) {
         this.dataModel
           .searchTopicFromString(paramMap.get('searchKey'))
@@ -140,28 +131,10 @@ export class AuthorsPage implements OnInit {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { selectedAuthor: author }
+        componentProps: { selectedAuthorId: author.id }
       })
       .then(modalEl => {
         modalEl.present();
-        return modalEl.onDidDismiss();
-      })
-      .then(result => {
-        if (this.isRedirecting) {
-          if (this.dataModel.searchTopicToString() === '') {
-            this.navCtrl.navigateBack(['/search']);
-            return;
-          } else {
-            this.isRedirecting = true;
-            this.navCtrl.navigateForward([
-              '/',
-              'results',
-              'tabs',
-              'authors',
-              this.dataModel.searchTopicToString()
-            ]);
-          }
-        }
       });
   }
 

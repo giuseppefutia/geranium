@@ -9,7 +9,7 @@ import { Author } from '../../model/author.model';
   styleUrls: ['./author-detail.component.scss'],
 })
 export class AuthorDetailComponent implements OnInit {
-  @Input() selectedAuthor: Author;
+  @Input() selectedAuthorId: string;
   isLoading = false;
 
   constructor(private modalCtrl: ModalController, private authorsService: AuthorsService) { }

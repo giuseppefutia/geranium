@@ -76,7 +76,7 @@ export class AuthorsService {
               author.name,
               '',
               stringTopics,
-              'https://avatars3.githubusercontent.com/u/12415265?s=40&v=4',
+              'assets/img/defaultAuthor.jpg',
               author.publications_on_topic.length
             )
           );

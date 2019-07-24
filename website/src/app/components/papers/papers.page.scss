@@ -24,6 +24,10 @@ a.disabled {
   }
 }
 
+.sc-ion-item-divider-ios-h {
+  background-color: #ffffff;
+}
+
 @mixin imgResponsiveHeight() {
   height: 270px;
   @media screen and (min-width: 768px) {

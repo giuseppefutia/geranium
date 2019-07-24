@@ -26,7 +26,7 @@ def set_publications_query(topic, lines, offset):
         ?other_t rdf:type gpo:TMFResource .
         ?other_t rdfs:label ?other_t_label .
         ?other_t foaf:img ?other_t_img .
-    }} LIMIT {l} OFFSET {o} \
+    }} ORDER BY ASC(UCASE(str(?p_label))) LIMIT {l} OFFSET {o} \
     """.format(t=topic, l=lines, o=offset)
     return query
 
@@ -62,7 +62,7 @@ def set_authors_query(topic, lines, offset):
         ?p purl:contributor ?other_ca .
         ?other_ca purl:identifier ?other_ca_id .
         ?other_ca rdfs:label ?other_ca_label .
-    }} LIMIT {l} OFFSET {o} \
+    }} ORDER BY ASC(UCASE(str(?p_label))) LIMIT {l} OFFSET {o} \
     """.format(t=topic, l=lines, o=offset)
     return query
 

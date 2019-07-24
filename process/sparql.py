@@ -4,7 +4,6 @@ def set_publications_query(topic, lines, offset):
     PREFIX dbp:<http://dbpedia.org/resource/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-
     SELECT DISTINCT ?p ?p_id ?p_label ?p_abstract ?p_date
                     ?a ?a_id ?a_label ?ca ?ca_id ?ca_label
                     ?other_t ?other_t_label ?other_t_img
@@ -36,7 +35,6 @@ def set_authors_query(topic, lines, offset):
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX dbp:<http://dbpedia.org/resource/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
-
     SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?p_date
                     ?all_t ?all_t_label
                     ?other_a ?other_a_id ?other_a_label
@@ -71,7 +69,6 @@ def set_author_details_query(topic, lines, offset, author_url):
     query = """ \
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
-
     SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?p_date
                     ?other_t ?other_t_label
                     ?other_a ?other_a_id ?other_a_label
@@ -107,10 +104,8 @@ def set_publication_details_query(lines, offset, publication_url):
     query = """ \
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
-
     SELECT DISTINCT ?p ?p_id ?p_label ?p_date ?t ?t_label ?a ?a_id ?a_label
                     ?ca ?ca_id ?ca_label
-
     WHERE {{
         <{p}> purl:identifier ?p_id .
         ?p purl:identifier ?p_id .
@@ -136,9 +131,7 @@ def set_publication_details_query(lines, offset, publication_url):
 def set_topics_query(lines, offset):
     query = """ \
     PREFIX gpo:<http://geranium-project.org/ontology/>
-
     SELECT DISTINCT ?t ?t_label
-
     WHERE {{
         ?t rdf:type gpo:TMFResource .
         ?t rdfs:label ?t_label .
@@ -148,11 +141,36 @@ def set_topics_query(lines, offset):
     return query
 
 
+def set_topic_abstract_query(topic):
+    query = """ \
+    PREFIX purl:<http://purl.org/dc/terms/>
+    SELECT DISTINCT ?abstract
+    WHERE {{
+        <{t}> purl:abstract ?abstract .
+    }}
+    \
+    """.format(t=topic)
+    return query
+
+
 def set_dbpedia_thumbnail_query(topicUri: str) -> str:
     query = """\
-        prefix dbpedia-owl: <http://dbpedia.org/ontology/>
+        prefix dbo: <http://dbpedia.org/ontology/>
         select ?thumbnail where {{
-        <{t}> dbpedia-owl:thumbnail ?thumbnail .
+        <{t}> dbo:thumbnail ?thumbnail .
         \
         }}""".format(t=topicUri)
+    return query
+
+
+def set_dbpedia_abstract_query(topic_uri):
+    query = """ \
+    PREFIX dbo: <http://dbpedia.org/ontology/>
+    SELECT DISTINCT ?abstract
+    WHERE {{
+        <{t}> dbo:abstract ?abstract .
+        FILTER (langMatches(lang(?abstract),"en"))
+    }}
+    \
+    """.format(t=topic_uri)
     return query

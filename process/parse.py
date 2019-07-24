@@ -188,6 +188,15 @@ def get_topics(data):
     return jsonify(final)
 
 
+def get_abstract(data):
+    final = {}
+    for row in data:
+        abstract = row['abstract']['value']
+    final['abstract'] = abstract
+    final = list(final.values())
+    return jsonify(final)
+
+
 def set_author_data(row, author_fields):
     author_data = dict()
     for field, value in author_fields.items():

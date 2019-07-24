@@ -50,6 +50,10 @@ def api():
             lines = flask.request.args.get('lines')
             offset = flask.request.args.get('offset')
             query = set_topics_query(lines, offset)
+        # Manage abstract topic request
+        elif request_type == 'abstract':
+            topic = flask.request.args.get('topic')
+            query = set_topic_abstract_query(topic)
 
         query = quote(query)  # get url encoding
 
@@ -73,6 +77,8 @@ def api():
             return get_author_details(data)
         elif request_type == 'topics':
             return get_topics(data)
+        elif request_type == 'abstract':
+            return get_abstract(data)
 
     return 'Invalid request!'
 

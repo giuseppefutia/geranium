@@ -66,8 +66,18 @@ http://localhost:5000/api?type=author&topic=Carbon%20nanotube&lines=10000&offset
 ### Get all topics
 
 #### Parameters:
+* type: topics
 * limit: "Number of lines"
 * offset: "Offset within the response"
 
 #### Example:
 http://localhost:5000/api?type=topics&lines=100000&offset=0
+
+### Get abstract of a single topic
+
+#### Parameters:
+* type: abstract
+* topic: DBpedia URI of the topic
+
+#### Example:
+http://localhost:5000/api?type=abstract&topic=http://dbpedia.org/resource/2D_computer_graphics

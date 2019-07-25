@@ -154,10 +154,6 @@ export class ModelService {
     this._retrievedAuthors = this._retrievedAuthors.concat(newAuthors);
   }
 
-  findAuthorFromId(id: string): Author {
-    return this._retrievedAuthors.find(a => a.id === id);
-  }
-
   getRetrievedAuthors(): Author[] {
     return [...this._retrievedAuthors];
   }

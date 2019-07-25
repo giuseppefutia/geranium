@@ -9,8 +9,9 @@ import { ResultsService } from 'src/app/services/results.service';
   styleUrls: ['./author-detail.component.scss'],
 })
 export class AuthorDetailComponent implements OnInit {
-  @Input() selectedAuthorId: string;
-  selectedAuthor: Author;
+  @Input() selectedAuthorURI: string;
+  @input() se
+  selectedAuthor: ExpandedAuthor;
   isLoading = false;
 
   constructor(private modalCtrl: ModalController, private resultsService: ResultsService) {
@@ -18,7 +19,7 @@ export class AuthorDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedAuthor = this.resultsService.getAuthorFromId(this.selectedAuthorId);
+    this.selectedAuthor = this.resultsService.getAuthorFromURI(this.selectedAuthorURI);
     this.isLoading = false;
   }
 

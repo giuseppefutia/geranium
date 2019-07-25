@@ -135,11 +135,13 @@ export class AuthorsPage implements OnInit {
   }
 
   // Open modal when clicked on MORE in a card
+  // To get data of an author we need the author URI and the topic label
   onAuthorDetails(author: Author) {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { selectedAuthorId: author.id }
+        componentProps: { selectedAuthorURI: author.url,
+                          selectedTopicLabel: this.dataModel.searchTopic()}
       })
       .then(modalEl => {
         modalEl.present();

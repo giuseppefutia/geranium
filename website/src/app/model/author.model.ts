@@ -4,6 +4,7 @@ export class Author {
     constructor(
         public id: string,
         public name: string,
+        public url: string,
         public department: string,
         public topics: string[],
         public imageUrl: string,
@@ -15,12 +16,13 @@ export class ExpandedAuthor extends Author {
     constructor(
         id: string,
         name: string,
+        url: string,
         department: string,
         topics: string[],
         imageUrl: string,
         numberOfPapers: number,
         public papers: SimplifiedPaper[]
     ) {
-        super(id, name, department, topics, imageUrl, numberOfPapers);
+        super(id, name, url, department, topics, imageUrl, numberOfPapers);
     }
 }

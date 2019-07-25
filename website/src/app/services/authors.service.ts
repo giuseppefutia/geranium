@@ -85,8 +85,20 @@ export class AuthorsService {
     );
   }
 
-  getAuthorFromId(authorId: string): Author {
-    const res = this.dataModel.findAuthorFromId(authorId);
+  getAuthorFromURI(authorURI: string): Author {
+    // Get the author data through its URI and the SPARQL query
+    const url =
+      'http://api.geranium.nexacenter.org/api?' +
+      encodeURI(
+        `type=authors&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
+      );
+
+
+
+    //const res = this.dataModel.findAuthorFromU(authorId);
+    //console.log(res);
+
+
     if (res === undefined) {
       // TODO: Query to server
     }

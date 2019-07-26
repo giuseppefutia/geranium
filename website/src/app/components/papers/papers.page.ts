@@ -136,11 +136,13 @@ export class PapersPage implements OnInit {
       if (paramMap.has('searchKey')) {
         this.dataModel
           .searchTopicFromString(paramMap.get('searchKey'))
-          .subscribe(r => {
-            if (this.firstTime) {
-              this.fetchData();
-              this.firstTime = false;
-            }
+          .subscribe(() => {
+            this.dataModel.getAbstract().subscribe(() => {
+              if (this.firstTime) {
+                this.fetchData();
+                this.firstTime = false;
+              }
+            });
           });
       } else {
         if (this.dataModel.searchTopicToString() === '') {

@@ -23,10 +23,10 @@ export class ModelService {
   private _retrievedAuthors: Author[] = [];
   private _authorDetails: ExpandedAuthor;
 
+  private _searchStack: TopicNoImg[];
+  private _currentAbstract: string;
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
-
-  private searchStack: TopicNoImg[];
 
   /**
    * constructor
@@ -34,7 +34,7 @@ export class ModelService {
   constructor(private http: HttpClient) {
     this._retrievedAuthors = [];
     this._retrievedPapers = [];
-    this.searchStack = [];
+    this._searchStack = [];
     this.getAllTopics().subscribe();
   }
 
@@ -42,34 +42,31 @@ export class ModelService {
    * getters and setters
    */
   set searchTopic(searchTopic: TopicNoImg) {
-    if (this.searchStack.length === 0) {
-      this.searchStack.push(searchTopic);
+    if (this._searchStack.length === 0) {
+      this._searchStack.push(searchTopic);
       this._firstSearch = true;
     } else {
       if (searchTopic.label !== this.searchTopic.label) {
         this.emptyPrevResults();
-        this.searchStack.push(searchTopic);
+        this._searchStack.push(searchTopic);
         this._firstSearch = false;
       }
     }
   }
 
   get searchTopic(): TopicNoImg {
-    return this.searchStack[this.searchStack.length - 1];
+    return this._searchStack[this._searchStack.length - 1];
   }
 
   popSearchState(): TopicNoImg {
-    const old = this.searchStack.pop();
-    console.log('Popped: ');
-    console.log(old);
-    return old;
+    return this._searchStack.pop();
   }
 
   getSearchStackLength(): number {
-    return this.searchStack.length;
+    return this._searchStack.length;
   }
 
-  getAllTopics() {
+  private getAllTopics() {
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(`type=topics&lines=100000&offset=0`);
@@ -82,6 +79,22 @@ export class ModelService {
           );
         }
         this.canSearch = true;
+      })
+    );
+  }
+
+  get currentTopicAbstract(): string {
+    return this._currentAbstract;
+  }
+
+  getAbstract() {
+    const url =
+      'http://api.geranium.nexacenter.org/api?' +
+      encodeURI(`type=abstract&topic=${this.searchTopic.url}`);
+    return this.http.get<string>(url).pipe(
+      tap(result => {
+        console.log(result);
+        this._currentAbstract = result;
       })
     );
   }

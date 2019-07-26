@@ -6,7 +6,7 @@ a.disabled {
 .topView {
   background: var(--ion-color-primary-light);
   overflow-y: hidden;
-  height: 175px; // If changed change also myHeaderMaxHeight in HTML
+  height: 180px; // If changed change also myHeaderMaxHeight in HTML
 }
 
 .barCanvasClass {
@@ -67,10 +67,6 @@ a.disabled {
   @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
 }
 
-.card-abstract {
-  @include multiLineEllipsis($lineHeight: 1em, $lineCount: 3, $bgColor: white);
-}
-
 .card-img {
   overflow: hidden;
   position: relative;
@@ -80,4 +76,11 @@ a.disabled {
 .card-img ion-img {
   position: absolute;
   width: 100%;
+}
+
+.p-abstract {
+  color: grey;
+  font-size: small;
+  width: 90%;
+  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
 }

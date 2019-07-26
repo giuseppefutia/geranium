@@ -1,5 +1,5 @@
 <ion-header *ngIf="!isRedirecting">
-  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="102px">
+  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="143px">
     <ion-row no-padding>
       <ion-col no-padding>
         <div class="topView">
@@ -14,6 +14,9 @@
                 <h2 no-padding style="text-transform: capitalize;" *ngIf="!IsLoading">
                   <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
+                <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
+                  {{ dataModel.currentTopicAbstract }}
+                </p>
                 <a
                   tappable
                   (click)="

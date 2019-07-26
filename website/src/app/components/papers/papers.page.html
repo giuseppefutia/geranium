@@ -11,14 +11,18 @@
                 ></ion-button>
               </ion-col>
               <ion-col size-lg="7">
-                  <ion-skeleton-text
+                <ion-skeleton-text
                   animated
                   *ngIf="isLoading"
                   style="width: 50%; height: 0.5em;"
                   padding
                   margin-bottom
                 ></ion-skeleton-text>
-                <h2 no-padding style="text-transform: capitalize;" *ngIf="!isLoading">
+                <h2
+                  no-padding
+                  style="text-transform: capitalize;"
+                  *ngIf="!isLoading && dataModel.getSearchStackLength() !== 0"
+                >
                   <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
                 <a
@@ -39,18 +43,20 @@
                   {{ dataModel.getPapersCount() }} showed papers on this topic
                   in the last {{ papersYears }} years
                 </p>
-                <p
-                  class="ion-hide-sm-down"
-                  style="color: grey; font-size: small"
-                  *ngIf="!isLoading"
-                >
-                  Click on chart bars to filter results
-                </p>
               </ion-col>
               <ion-col class="ion-hide-sm-down">
                 <div class="chart-container">
                   <canvas #barCanvas class="barCanvasClass"></canvas>
                 </div>
+                <p
+                  class="ion-hide-sm-down"
+                  style="color: grey; font-size: small; text-align: center; max-width: 300px;"
+                  *ngIf="!isLoading"
+                  no-margin
+                  no-padding
+                >
+                  Click on chart bars to filter results
+                </p>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -109,11 +115,7 @@
             </ion-card-subtitle>
             <ion-card-subtitle *ngIf="!isLoading">
               <ion-chip
-                *ngFor="
-                  let author of paper.authors
-                  index as i
-                "
-
+                *ngFor="let author of paper.authors; index as i"
                 (click)="onAuthorClick(author)"
               >
                 <ion-icon name="person" *ngIf="i === 0"></ion-icon>
@@ -130,9 +132,7 @@
               ></ion-skeleton-text>
               <div *ngIf="!isLoading">
                 <ion-chip
-                  *ngFor="
-                    let topic of paper.topics
-                  "
+                  *ngFor="let topic of paper.topics"
                   color="primary"
                   (click)="onTopicChipClick(topic)"
                 >

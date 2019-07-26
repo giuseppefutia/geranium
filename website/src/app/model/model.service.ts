@@ -19,20 +19,21 @@ export class ModelService {
    */
   private _allTopicsInGraph: TopicNoImg[]; // list of all the topics in the graph, retrieved from the api
 
-  private _retrievedPapers: Paper[] = [];
-  private _retrievedAuthors: Author[] = [];
+  private _retrievedPapers: Paper[];
+  private _retrievedAuthors: Author[];
 
-  private _searchTopic: TopicNoImg; // search keyword inserted by the user
-  private _prevSearchTopic: TopicNoImg; // the previously search key inserted by the user
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
-  private _searchCount = 0;
+
+  private searchStack: TopicNoImg[];
 
   /**
    * constructor
    */
   constructor(private http: HttpClient) {
-    this._searchTopic = new TopicNoImg('', '', '');
+    this._retrievedAuthors = [];
+    this._retrievedPapers = [];
+    this.searchStack = [];
     this.getAllTopics().subscribe();
   }
 
@@ -40,19 +41,31 @@ export class ModelService {
    * getters and setters
    */
   set searchTopic(searchTopic: TopicNoImg) {
-    if (searchTopic !== this._prevSearchTopic) {
-      this.emptyPrevResults();
-      this._prevSearchTopic = this._searchTopic;
-      this._searchTopic = searchTopic;
-      this._searchCount++;
-      if (this._searchCount > 1) {
+    if (this.searchStack.length === 0) {
+      this.searchStack.push(searchTopic);
+      this._firstSearch = true;
+    } else {
+      if (searchTopic.label !== this.searchTopic.label) {
+        this.emptyPrevResults();
+        this.searchStack.push(searchTopic);
         this._firstSearch = false;
       }
     }
   }
 
   get searchTopic(): TopicNoImg {
-    return this._searchTopic;
+    return this.searchStack[this.searchStack.length - 1];
+  }
+
+  popSearchState(): TopicNoImg {
+    const old = this.searchStack.pop();
+    console.log('Popped: ');
+    console.log(old);
+    return old;
+  }
+
+  getSearchStackLength(): number {
+    return this.searchStack.length;
   }
 
   getAllTopics() {
@@ -100,10 +113,6 @@ export class ModelService {
   getWikiUrl(url: string): string {
     const parts = url.split('/');
     return 'en.wikipedia.org/wiki/' + parts[parts.length - 1];
-  }
-
-  get prevSearchTopic(): TopicNoImg {
-    return this._prevSearchTopic;
   }
 
   set allTopicsInGraph(topics: TopicNoImg[]) {
@@ -207,7 +216,10 @@ export class ModelService {
     }
     const names = newName.split(' ');
     for (i = 0; i < names.length; i++) {
-      builder += names[i].charAt(0).toUpperCase() + names[i].substring(1).toLowerCase() + ' ';
+      builder +=
+        names[i].charAt(0).toUpperCase() +
+        names[i].substring(1).toLowerCase() +
+        ' ';
     }
     return builder;
   }

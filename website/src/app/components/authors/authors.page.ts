@@ -161,10 +161,17 @@ export class AuthorsPage implements OnInit {
 
   // Called when top button is clicked -> returns to search page
   onBackClick() {
-    if (this.dataModel.firstSearch) {
+    this.dataModel.popSearchState();
+    if (this.dataModel.getSearchStackLength() === 0) {
       this.navCtrl.navigateBack(['/', 'search']);
     } else {
-      this.navCtrl.back();
+      this.navCtrl.navigateForward([
+        '/',
+        'results',
+        'tabs',
+        'authors',
+        this.dataModel.searchTopic.label
+      ]);
     }
   }
 

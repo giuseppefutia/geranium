@@ -11,14 +11,18 @@
                 ></ion-button>
               </ion-col>
               <ion-col padding-bottom>
-                  <ion-skeleton-text
+                <ion-skeleton-text
                   animated
                   *ngIf="isLoading"
                   style="width: 80%; height: 0.5em;"
                   padding
                   margin-bottom
                 ></ion-skeleton-text>
-                <h2 no-padding style="text-transform: capitalize;" *ngIf="!isLoading">
+                <h2
+                  no-padding
+                  style="text-transform: capitalize;"
+                  *ngIf="!isLoading && dataModel.getSearchStackLength() !== 0"
+                >
                   <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
                 <a
@@ -72,7 +76,7 @@
               {{ author.department }}
             </ion-card-subtitle>
           </ion-card-header>
-          
+
           <ion-skeleton-text
             *ngIf="isLoading"
             style="width:100%; height: 220px;"

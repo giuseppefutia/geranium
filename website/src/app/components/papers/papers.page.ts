@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
+import {
+  NavController,
+  ModalController,
+  LoadingController
+} from '@ionic/angular';
 import { Chart } from 'chart.js';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
@@ -46,8 +50,8 @@ export class PapersPage implements OnInit {
 
   filteredPapers: SimplifiedPaper[] = []; // Final filtered array of papers accessed by each card
 
-  isLoading = false; // Hide/Show ionSkeletonText
-  isRedirecting = false; // Does not display the content of the page if it is redirecting
+  isLoading; // Hide/Show ionSkeletonText
+  isRedirecting; // Does not display the content of the page if it is redirecting
   endOfResults = false; // Blocks the ionInfinite when no more data is available (true)
 
   private noDateString = 'No Date'; // String to show in graph when no date is available
@@ -109,9 +113,12 @@ export class PapersPage implements OnInit {
     private resultsService: ResultsService,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
-    private dataModel: ModelService
+    private dataModel: ModelService,
+    private loadingCtrl: LoadingController
   ) {
     this.firstTime = true;
+    this.isRedirecting = false;
+    this.isLoading = false;
   }
 
   /* It checks if the searchKey is present in URI. (see results-routing.module.ts)
@@ -254,14 +261,22 @@ export class PapersPage implements OnInit {
 
   // On click on topic chip start a new search
   onTopicChipClick(topic: Topic) {
-    this.dataModel.searchTopic = topic; // Upcast
-    this.navCtrl.navigateForward([
-      '/',
-      'results',
-      'tabs',
-      'papers',
-      this.dataModel.searchTopicToString()
-    ]);
+    this.loadingCtrl
+      .create({
+        message: 'Please wait'
+      })
+      .then(loadingEl => {
+        loadingEl.present();
+        this.dataModel.searchTopic = topic; // Upcast
+        this.navCtrl.navigateForward([
+          '/',
+          'results',
+          'tabs',
+          'papers',
+          this.dataModel.searchTopicToString()
+        ]);
+        loadingEl.dismiss();
+      });
   }
 
   // Open modal to get authors information -- XXX duplicated function in paper details
@@ -296,10 +311,17 @@ export class PapersPage implements OnInit {
 
   // Called when top button is clicked -> returns to search page
   onBackClick() {
-    if (this.dataModel.firstSearch) {
+    this.dataModel.popSearchState();
+    if (this.dataModel.getSearchStackLength() === 0) {
       this.navCtrl.navigateBack(['/', 'search']);
     } else {
-      this.navCtrl.back();
+      this.navCtrl.navigateForward([
+        '/',
+        'results',
+        'tabs',
+        'papers',
+        this.dataModel.searchTopic.label
+      ]);
     }
   }
 

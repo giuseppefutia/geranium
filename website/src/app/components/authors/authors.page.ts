@@ -43,10 +43,12 @@ export class AuthorsPage implements OnInit {
         this.dataModel
           .searchTopicFromString(paramMap.get('searchKey'))
           .subscribe(r => {
-            if (this.firstTime) {
-              this.fetchData();
-              this.firstTime = false;
-            }
+            this.dataModel.getAbstract().subscribe(() => {
+              if (this.firstTime) {
+                this.fetchData();
+                this.firstTime = false;
+              }
+            });
           });
       } else {
         if (this.dataModel.searchTopicToString() === '') {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Paper } from './paper.model';
-import { Author } from './author.model';
+import { Author, ExpandedAuthor } from './author.model';
 import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -21,6 +21,7 @@ export class ModelService {
 
   private _retrievedPapers: Paper[] = [];
   private _retrievedAuthors: Author[] = [];
+  private _authorDetails: ExpandedAuthor;
 
   private _searchTopic: TopicNoImg; // search keyword inserted by the user
   private _prevSearchTopic: TopicNoImg; // the previously search key inserted by the user
@@ -136,6 +137,14 @@ export class ModelService {
 
   findPaperFromId(id: string): Paper {
     return this._retrievedPapers.find(p => p.id === id);
+  }
+
+  getAuthorDetails() {
+      return this._authorDetails;
+  }
+
+  setAuthorDetails(authorDetails: ExpandedAuthor) {
+      this._authorDetails = authorDetails;
   }
 
   getPapersCount(): number {

@@ -269,11 +269,12 @@ export class PapersPage implements OnInit {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { selectedAuthorId: author.id }
+        componentProps: { selectedAuthorURI: author.url,
+                            selectedTopicLabel: this.dataModel.searchTopicToString()}
       })
       .then(modalEl => {
         modalEl.present();
-      });
+    });
   }
 
   // Open modal when clicked on MORE in a card

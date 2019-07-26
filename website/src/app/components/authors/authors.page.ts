@@ -119,7 +119,10 @@ export class AuthorsPage implements OnInit {
 
   openTopicUrl() {
     if (!this.isLoading) {
-      window.open(this.dataModel.searchTopic.wikiUrl, '_blank');
+      window.open(
+        'https://'.concat(this.dataModel.searchTopic.wikiUrl),
+        '_blank'
+      );
     }
   }
 

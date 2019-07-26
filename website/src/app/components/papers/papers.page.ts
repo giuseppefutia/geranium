@@ -100,10 +100,12 @@ export class PapersPage implements OnInit {
         ]
       },
       onClick: (v, e) => {
-        this.onChartClick.call(
-          this,
-          new BarData(e[0]._datasetIndex, e[0]._index)
-        );
+        if (e[0] !== undefined) {
+          this.onChartClick.call(
+            this,
+            new BarData(e[0]._datasetIndex, e[0]._index)
+          );
+        }
       }
     }
   };
@@ -283,15 +285,20 @@ export class PapersPage implements OnInit {
 
   // Open modal to get authors information -- XXX duplicated function in paper details
   onAuthorClick(author: SimplifiedAuthor) {
+    if (author.name === '...') {
+      return;
+    }
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { selectedAuthorURI: author.url,
-                            selectedTopicLabel: this.dataModel.searchTopicToString()}
+        componentProps: {
+          selectedAuthorURI: author.url,
+          selectedTopicLabel: this.dataModel.searchTopicToString()
+        }
       })
       .then(modalEl => {
         modalEl.present();
-    });
+      });
   }
 
   // Open modal when clicked on MORE in a card

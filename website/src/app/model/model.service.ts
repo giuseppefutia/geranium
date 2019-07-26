@@ -43,6 +43,7 @@ export class ModelService {
    */
   set searchTopic(searchTopic: TopicNoImg) {
     if (this._searchStack.length === 0) {
+      this.emptyPrevResults();
       this._searchStack.push(searchTopic);
       this._firstSearch = true;
     } else {
@@ -93,7 +94,6 @@ export class ModelService {
       encodeURI(`type=abstract&topic=${this.searchTopic.url}`);
     return this.http.get<string>(url).pipe(
       tap(result => {
-        console.log(result);
         this._currentAbstract = result;
       })
     );
@@ -244,5 +244,9 @@ export class ModelService {
 
   getIRISUrl(paper: SimplifiedPaper): string {
     return 'https://iris.polito.it/handle/' + paper.id.replace('-', '/');
+  }
+
+  cleanID(dirty: string) {
+    return dirty.replace('/', '-');
   }
 }

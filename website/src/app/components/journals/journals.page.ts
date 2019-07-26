@@ -114,7 +114,12 @@ export class JournalsPage implements OnInit, AfterContentInit {
   }
 
   openNewTab(url: string) {
-    window.open(url, '_blank');
+    if (!this.isLoading) {
+      window.open(
+        'https://'.concat(this.dataModel.searchTopic.wikiUrl),
+        '_blank'
+      );
+    }
   }
 
   // Called by infinite scroll to load more data

@@ -192,7 +192,11 @@ def get_abstract(data):
     final = {}
     for row in data:
         abstract = row['abstract']['value']
-    final['abstract'] = abstract
+    # XXX Need to be checked why it does not exist
+    if len(data) == 0:
+        final['abstract'] = ''
+    else:
+        final['abstract'] = abstract
     final = list(final.values())
     return jsonify(final)
 

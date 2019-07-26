@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start" class="ion-hide-sm-down">
       <a href="search#checosa"><ion-button>Che cosa è</ion-button></a>
-      <a href="search#come"><ion-button>Come Funziona</ion-button></a>
+      <a href="search#come"><ion-button>Come funziona</ion-button></a>
       <a href="search#team"><ion-button>Team</ion-button></a>
       <a href="search#contatti"><ion-button>Contatti</ion-button></a>
       <a href="https://forms.gle/bodTTkpXj64mVPVS8"><ion-button>Questionario</ion-button></a>
@@ -27,7 +27,7 @@
     ></ion-img>
     <div class="autocomplete-mobile">
       <ion-item>
-        <ion-label position="floating">Search here</ion-label>
+        <ion-label position="floating">Digita un argomento di ricerca e clicca tra quelli suggeriti nel menu</ion-label>
         <ion-input
           [(ngModel)]="searchTopicString"
           (ionChange)="displaySuggestions()"
@@ -73,7 +73,7 @@
             <ion-col>
               <div class="autocomplete">
                 <ion-item>
-                  <ion-label position="floating">Search here</ion-label>
+                  <ion-label position="floating">Digita un argomento di ricerca e clicca tra quelli suggeriti nel menu</ion-label>
                   <ion-input
                     [(ngModel)]="searchTopicString"
                     (ionChange)="displaySuggestions()"
@@ -120,7 +120,7 @@
   <!-- Import needed JavaScript and CSS from assets -->
   <link rel="stylesheet" type="text/css" href="assets/css/landing.css">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
- 
+
   <section class="bg-primary" id="checosa">
     <div class="container">
       <!--Che cos'è-->
@@ -140,16 +140,16 @@
       <br><br>
       <div class="row" id="come">
         <div class="col-lg-8 mx-auto text-center" style="max-width: 85%; flex: 85%;">
-          <h2 class="section-heading text-white">Come Funziona</h2>
+          <h2 class="section-heading text-white">Come funziona</h2>
           <hr class="light">
           <p class="text-faded">
-            La versione alpha di Geranium consente di esplorare le informazioni sulle pubblicazioni, e i relativi autori (sfruttando un menu a piè pagina), a partire da un topic di ricerca. I topic, a differenza di parole chiave o keyword che causano spesso ambiguità, sono argomenti specifici relativi ad una pubblicazione univocamente identificabili una <a href="https://en.wikipedia.org/wiki/Knowledge_base">knowledge base</a>.
+            La versione alpha di Geranium consente di esplorare le informazioni sulle pubblicazioni, e i relativi autori (sfruttando un menu a piè pagina), a partire da un argomento di ricerca. Gli argomenti, a differenza di parole chiave o keyword che causano spesso ambiguità, sono argomenti specifici relativi ad una pubblicazione univocamente identificabili una <a href="https://en.wikipedia.org/wiki/Knowledge_base">knowledge base</a>.
             <br><br>
-            I topic di ricerca sono estratti in automatico dagli abstract delle pubblicazioni grazie a un tool open source sviluppato dal Centro Nexa, <a href="http://tellmefirst.polito.it">TellMeFirst</a>), che sfrutta algoritmi di Machine Learning e Wikipedia. Attraverso TellMeFirst, e il collegamento in automatico delle pubblicazioni a voci di Wikipedia, si otterrà nell’immediato una panoramica dei principali argomenti trattati nelle pubblicazioni.
+            Gli argomenti di ricerca sono estratti in automatico dagli abstract delle pubblicazioni grazie a un tool open source sviluppato dal Centro Nexa, <a href="http://tellmefirst.polito.it">TellMeFirst</a>), che sfrutta algoritmi di Machine Learning e Wikipedia. Attraverso TellMeFirst, e il collegamento in automatico delle pubblicazioni a voci di Wikipedia, si otterrà nell’immediato una panoramica dei principali argomenti trattati nelle pubblicazioni.
             <br><br>
-            La sezione delle pubblicazioni fornisce i relativi metadati e un grafico a barre in alto a destra che, oltre a mostrare la distribuzione delle pubblicazioni per anno, consente anche di filtrare le pubblicazioni per periodo. Da ciascuna pubblicazione è possibile passare con facilità a una pagina con informazioni su ogni singolo autore, oppure avviare una nuova ricerca cliccando su un singolo topic.
+            La sezione delle pubblicazioni fornisce i relativi metadati e un grafico a barre in alto a destra che, oltre a mostrare la distribuzione delle pubblicazioni per anno, consente anche di filtrare le pubblicazioni per periodo. Da ciascuna pubblicazione è possibile passare con facilità a una pagina con informazioni su ogni singolo autore, oppure avviare una nuova ricerca cliccando su un singolo argomento.
             <br><br>
-            Per ogni autore è possibile esplorare, oltre ai metadati di base provenienti direttamente da IRIS, anche informazioni relative ai co-autori con cui ha maggiormente collaborato e l’evoluzione storica dei topic di ricerca.
+            Per ogni autore è possibile esplorare, oltre ai metadati di base provenienti direttamente da IRIS, anche gli argomenti di ricerca di cui l'autore si occupa che sono affini all'argomento cercato.
           </p>
         </div>
       </div>
@@ -162,7 +162,7 @@
           <p class="text-faded">
             La versione alpha di Geranium si avvale delle informazioni sulle pubblicazioni del periodo compreso tra gli anni 2013 e 2018 pubblicate su <a href="https://iris.polito.it/">IRIS</a>.
             <br><br>
-            Come training set per l’estrazione automatica dei topic dagli abstract delle pubblicazioni, Geranium sfrutta il corpus testuale multilinguistico Wikipedia e la Knowledge Base <a href="https://wiki.dbpedia.org/">DBpedia</a>.
+            Come training set per l’estrazione automatica degli argomenti di ricerca dagli abstract delle pubblicazioni, Geranium sfrutta il corpus testuale multilinguistico Wikipedia e la Knowledge Base <a href="https://wiki.dbpedia.org/">DBpedia</a>.
           </p>
         </div>
       </div>

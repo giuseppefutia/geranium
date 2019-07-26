@@ -18,7 +18,7 @@ export class SearchPage implements OnInit {
    */
   public expand = 'retracted'; // autocompletion view status
   private minLettersSuggestions = 2;
-  private searchSuggestions: TopicNoImg[] = [];
+  public searchSuggestions: TopicNoImg[] = [];
   searchTopicString = '';
 
   /**
@@ -30,7 +30,7 @@ export class SearchPage implements OnInit {
   constructor(
     private router: Router,
     private resultsService: ResultsService,
-    private dataModel: ModelService
+    public dataModel: ModelService
   ) {}
 
   /**

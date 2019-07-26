@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Author } from '../../model/author.model';
+import { ExpandedAuthor } from '../../model/author.model';
 import { ResultsService } from 'src/app/services/results.service';
 
 @Component({
@@ -9,9 +9,9 @@ import { ResultsService } from 'src/app/services/results.service';
   styleUrls: ['./author-detail.component.scss'],
 })
 export class AuthorDetailComponent implements OnInit {
+  // Input defined in authors.page.ts
   @Input() selectedAuthorURI: string;
-  @input() se
-  selectedAuthor: ExpandedAuthor;
+  @Input() selectedTopicLabel: string;
   isLoading = false;
 
   constructor(private modalCtrl: ModalController, private resultsService: ResultsService) {
@@ -19,7 +19,13 @@ export class AuthorDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedAuthor = this.resultsService.getAuthorFromURI(this.selectedAuthorURI);
+    this.resultsService
+      .getAuthorFromURIandTopic(this.selectedAuthorURI,
+                                this.selectedTopicLabel)
+      .subscribe(author => {
+          this.isLoading = false;
+          console.log(author);
+      });
     this.isLoading = false;
   }
 

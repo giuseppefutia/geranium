@@ -4,9 +4,10 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Import models
-import { Author } from '../model/author.model';
+import { Author, ExpandedAuthor } from '../model/author.model';
 import { Topic, TopicNoImg } from '../model/topic.model';
 import { ModelService } from '../model/model.service';
+import { SimplifiedPaper } from '../model/simplified-paper.model';
 
 // Set interfaces to parse data
 interface Publication {
@@ -24,6 +25,16 @@ export interface ResponseAuthors {
   url: string;
   publications_on_topic: Publication[];
 }
+
+// XXX Should be removed because currently it is duplicated
+// In the API publications should be replaced with publications_on_topic
+export interface ResponseAuthor {
+  id: string;
+  name: string;
+  url: string;
+  publications: Publication[];
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +85,7 @@ export class AuthorsService {
             new Author(
               author.id,
               this.dataModel.normalizeAuthorName(author.name),
+              author.url,
               '',
               stringTopics,
               'assets/img/defaultAuthor.jpg',
@@ -85,13 +97,48 @@ export class AuthorsService {
     );
   }
 
-  getAuthorFromURI(authorURI: string): Author {
-    // Get the author data through its URI and the SPARQL query
+  getAuthorFromURIandTopic(authorURI: string, topicLabel: string): Observable<ResponseAuthor[]>{
+    // Get the author data using its URI and the topicLabel through the API
+    const url =
+      'http://api.geranium.nexacenter.org/api?' +
+      encodeURI(
+        `type=author&topic=${topicLabel}&lines=10000&offset=0&url=${authorURI}`
+      );
+
+     console.log('GET: ' + url);
+
+     return this.http.get<ResponseAuthor[]>(url).pipe(
+       tap(response => {
+         for (const author of response) {
+             console.log(author);
+
+         }
+       })
+     );
+
+
+
+
+
+
+
+
+
+
+    //new SimplifiedPaper
+    //return new ExpandedAuthor('','','','',[],[],1,[])
+
+
+
+
+
+    /*
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(
         `type=authors&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
       );
+      */
 
 
 
@@ -99,9 +146,9 @@ export class AuthorsService {
     //console.log(res);
 
 
-    if (res === undefined) {
+    //if (res === undefined) {
       // TODO: Query to server
-    }
-    return res;
+    //}
+    //return res;
   }
 }

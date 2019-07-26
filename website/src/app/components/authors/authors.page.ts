@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
 import { Author } from '../../model/author.model';
+import { ExpandedAuthor} from '../../model/author.model';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsService } from '../../services/results.service';
 import { ModelService } from 'src/app/model/model.service';
@@ -105,6 +106,7 @@ export class AuthorsPage implements OnInit {
       return new Author(
         author.id,
         author.name,
+        author.url,
         author.department,
         this.processTopics(author.topics, this.maxTopicsPerCard),
         author.imageUrl,
@@ -135,13 +137,13 @@ export class AuthorsPage implements OnInit {
   }
 
   // Open modal when clicked on MORE in a card
-  // To get data of an author we need the author URI and the topic label
+  // To get data of an author we need the author URI and the searched topic
   onAuthorDetails(author: Author) {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
         componentProps: { selectedAuthorURI: author.url,
-                          selectedTopicLabel: this.dataModel.searchTopic()}
+                          selectedTopicLabel: this.dataModel.searchTopicToString()}
       })
       .then(modalEl => {
         modalEl.present();
@@ -174,7 +176,7 @@ export class AuthorsPage implements OnInit {
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
-      this.filteredAuthors.push(new Author('', '', '', [''], '', 0));
+      this.filteredAuthors.push(new Author('', '', '', '',[''], '', 0));
     }
   }
 }

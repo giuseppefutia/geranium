@@ -19,14 +19,9 @@ export class ModelService {
    */
   private _allTopicsInGraph: TopicNoImg[]; // list of all the topics in the graph, retrieved from the api
 
-<<<<<<< HEAD
-  private _retrievedPapers: Paper[];
-  private _retrievedAuthors: Author[];
-=======
   private _retrievedPapers: Paper[] = [];
   private _retrievedAuthors: Author[] = [];
   private _authorDetails: ExpandedAuthor;
->>>>>>> author_details
 
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;

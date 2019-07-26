@@ -18,7 +18,7 @@ export class SearchPage implements OnInit {
    */
   public expand = 'retracted'; // autocompletion view status
   private minLettersSuggestions = 2;
-  private searchSuggestions: TopicNoImg[] = [];
+  public searchSuggestions: TopicNoImg[] = [];
   searchTopicString = '';
   searchBarLabel: string;
 
@@ -33,7 +33,7 @@ export class SearchPage implements OnInit {
     private dataModel: ModelService,
     private loadingCtrl: LoadingController
   ) {
-    this.searchBarLabel = 'Search here';
+    this.searchBarLabel = 'Digita un argomento di ricerca e clicca tra quelli suggeriti nel menu';
   }
 
   /**

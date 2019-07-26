@@ -5,6 +5,7 @@
 __pycache__
 config.py
 *.rdf
+*.xcf
 
 *~
 *.sw[mnpcod]

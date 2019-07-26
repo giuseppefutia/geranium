@@ -49,19 +49,20 @@
           ><h3 no-margin><b>Interested Topics</b></h3></ion-text
         >
         <div margin>
-          <ion-chip
-            *ngFor="let topic of selectedAuthor.topics"
-            (click)="onTopicChipClick(topic.label)"
+            <ion-chip
+            *ngFor="let ppt of selectedAuthor.papersPerTopics"
+            (click)="onTopicChipClick(ppt.label)"
             color="primary"
           >
             <ion-icon name="bulb"></ion-icon>
-            <ion-label color="primary">{{ topic }}</ion-label>
+            <ion-label color="primary">{{ ppt.label }}</ion-label>
+            <ion-badge style="margin-left: 5px;">{{ ppt.occ }}</ion-badge>
           </ion-chip>
         </div>
       </ion-col>
     </ion-row>
     <ion-row no-padding>
-      <ion-col offset="1" size="10">
+      <ion-col offset-md="1" size-md="10">
         <ion-card>
           <ion-card-header>
             <ion-card-title>

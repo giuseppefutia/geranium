@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ResultsService } from '../../services/results.service';
 import { ModelService } from '../../model/model.service';
 import { TopicNoImg } from 'src/app/model/topic.model';
+import { LoadingController } from '@ionic/angular';
 
 /**
  * Landing page component
@@ -20,6 +20,7 @@ export class SearchPage implements OnInit {
   private minLettersSuggestions = 2;
   private searchSuggestions: TopicNoImg[] = [];
   searchTopicString = '';
+  searchBarLabel: string;
 
   /**
    * Constructor
@@ -29,14 +30,28 @@ export class SearchPage implements OnInit {
    */
   constructor(
     private router: Router,
-    private resultsService: ResultsService,
-    private dataModel: ModelService
-  ) {}
+    private dataModel: ModelService,
+    private loadingCtrl: LoadingController
+  ) {
+    this.searchBarLabel = 'Search here';
+  }
 
   /**
    * After component is initialized, get the list of all topics contained in the graph, used for autocompletion
    */
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadingCtrl.create({
+      message: 'Fetching search suggestions'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.dataModel.getAllTopics().subscribe(() => {
+        loadingEl.dismiss();
+      }, () => {
+        loadingEl.dismiss();
+        this.searchBarLabel = 'An error occured while fetching suggestions';
+      });
+    });
+  }
 
   /**
    * Display hints on possible search queries to the user
@@ -80,15 +95,21 @@ export class SearchPage implements OnInit {
    * @param searchKey user inserted input, the search key
    */
   navigate(searchTopic: TopicNoImg) {
-    this.dataModel.searchTopic = searchTopic; // set search key in Model
+    this.loadingCtrl.create({
+      message: 'Loading'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.dataModel.searchTopic = searchTopic; // set search key in Model
 
-    this.router.navigate([
-      '/',
-      'results',
-      'tabs',
-      'papers',
-      this.dataModel.searchTopic.label
-    ]);
+      this.router.navigate([
+        '/',
+        'results',
+        'tabs',
+        'papers',
+        this.dataModel.searchTopic.label
+      ]);
+      loadingEl.dismiss();
+    });
   }
 
   /**

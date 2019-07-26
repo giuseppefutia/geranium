@@ -1,5 +1,5 @@
 <ion-header *ngIf="!isRedirecting">
-  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="180px">
+  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="183px">
     <ion-row no-padding>
       <ion-col no-padding>
         <div class="topView">
@@ -16,7 +16,7 @@
                   *ngIf="isLoading"
                   style="width: 50%; height: 0.5em;"
                   padding
-                  margin-bottom
+                  margin-top
                 ></ion-skeleton-text>
                 <h2
                   no-padding
@@ -25,6 +25,11 @@
                 >
                   <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 1em; padding-bottom: 3em;"
+                ></ion-skeleton-text>
                 <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
                   {{ dataModel.currentTopicAbstract }}
                 </p>
@@ -48,7 +53,11 @@
                 </p>
               </ion-col>
               <ion-col class="ion-hide-sm-down">
-                <div class="chart-container">
+                <ion-skeleton-text
+                  *ngIf="isLoading"
+                  style="width: 300px; height: 150px;"
+                ></ion-skeleton-text>
+                <div class="chart-container" *ngIf="!isLoading">
                   <canvas #barCanvas class="barCanvasClass"></canvas>
                 </div>
                 <p
@@ -70,6 +79,13 @@
 </ion-header>
 
 <ion-content #scrollArea scrollEvents="true">
+  <ion-grid *ngIf="errorText !== null">
+    <ion-row>
+      <ion-col text-center>
+        <p>{{ errorText }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <ion-grid *ngIf="filteredPapers.length <= 0 && !isRedirecting && !isLoading">
     <ion-row>
       <ion-col text-center>
@@ -130,6 +146,7 @@
           <ion-card-content>
             <ion-item-divider no-padding no-margin padding-bottom>
               <ion-skeleton-text
+                animated
                 style="height: 1em;"
                 *ngIf="isLoading"
               ></ion-skeleton-text>

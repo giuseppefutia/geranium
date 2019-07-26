@@ -4,7 +4,7 @@ import { Author, ExpandedAuthor } from './author.model';
 import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { SimplifiedPaper } from './simplified-paper.model';
 
 /**
@@ -35,7 +35,6 @@ export class ModelService {
     this._retrievedAuthors = [];
     this._retrievedPapers = [];
     this._searchStack = [];
-    this.getAllTopics().subscribe();
   }
 
   /**
@@ -67,7 +66,7 @@ export class ModelService {
     return this._searchStack.length;
   }
 
-  private getAllTopics() {
+  getAllTopics() {
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(`type=topics&lines=100000&offset=0`);
@@ -107,6 +106,10 @@ export class ModelService {
             s => s.label === topicString
           );
           this.searchTopic = topic;
+          console.log(topic);
+          if (topic === undefined) {
+            throw throwError('Invalid search topic');
+          }
         })
       );
     }
@@ -114,10 +117,7 @@ export class ModelService {
     this.searchTopic = topic;
 
     // Fake observable to subscribe to
-    return new Observable<TopicNoImg[]>(t => {
-      t.next();
-      t.complete();
-    });
+    return of([topic]);
   }
 
   searchTopicToString(): string {

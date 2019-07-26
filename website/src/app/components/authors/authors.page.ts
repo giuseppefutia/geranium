@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
-import { Author } from '../../model/author.model';
-import { ExpandedAuthor} from '../../model/author.model';
+import { Author, PapersPerTopics } from '../../model/author.model';
+import { ExpandedAuthor } from '../../model/author.model';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsService } from '../../services/results.service';
 import { ModelService } from 'src/app/model/model.service';
@@ -20,6 +20,7 @@ export class AuthorsPage implements OnInit {
   isLoading = false;
   isRedirecting = false;
   endOfResults = false;
+  errorText: string;
 
   private firstTime: boolean;
 
@@ -31,6 +32,7 @@ export class AuthorsPage implements OnInit {
     private dataModel: ModelService
   ) {
     this.firstTime = true;
+    this.errorText = null;
   }
 
   /**
@@ -43,14 +45,27 @@ export class AuthorsPage implements OnInit {
       if (paramMap.has('searchKey')) {
         this.dataModel
           .searchTopicFromString(paramMap.get('searchKey'))
-          .subscribe(r => {
-            this.dataModel.getAbstract().subscribe(() => {
-              if (this.firstTime) {
-                this.fetchData();
-                this.firstTime = false;
-              }
-            });
-          });
+          .subscribe(
+            () => {
+              this.dataModel.getAbstract().subscribe(
+                () => {
+                  if (this.firstTime) {
+                    this.fetchData();
+                    this.firstTime = false;
+                  }
+                },
+                () => {
+                  this.isRedirecting = true;
+                  this.errorText =
+                    'An error occurred while fetching the topic abstract';
+                }
+              );
+            },
+            () => {
+              this.isRedirecting = true;
+              this.errorText = 'An error occurred while fetching topics';
+            }
+          );
       } else {
         if (this.dataModel.searchTopicToString() === '') {
           this.navCtrl.navigateBack(['/search']);
@@ -76,16 +91,21 @@ export class AuthorsPage implements OnInit {
     this.currentBlock = 0;
     this.resultsService
       .getAuthorsBlock(this.dataModel.searchTopic, this.currentBlock)
-      .subscribe(newAuthors => {
-        this.isLoading = false;
+      .subscribe(
+        newAuthors => {
+          this.isLoading = false;
 
-        if (newAuthors.length === 0) {
-          this.endOfResults = true;
-        } else {
-          this.currentBlock++;
-          this.filterAuthors();
+          if (newAuthors.length === 0) {
+            this.endOfResults = true;
+          } else {
+            this.currentBlock++;
+            this.filterAuthors();
+          }
+        },
+        () => {
+          this.errorText = 'An error occurred while fetching authors';
         }
-      });
+      );
   }
 
   /**
@@ -93,11 +113,11 @@ export class AuthorsPage implements OnInit {
    * @param topics array of the topic of interest
    * @param topicsLimit number of topic to be showed
    */
-  processTopics(topics: string[], topicsLimit: number): string[] {
+  processTopics(topics: PapersPerTopics[], topicsLimit: number): PapersPerTopics[] {
     return topics
       .filter(
         topic =>
-          topic.toLowerCase() !==
+          topic.label.toLowerCase() !==
           this.dataModel.searchTopicToString().toLowerCase()
       )
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
@@ -110,9 +130,10 @@ export class AuthorsPage implements OnInit {
         author.name,
         author.url,
         author.department,
-        this.processTopics(author.topics, this.maxTopicsPerCard),
+        author.topics,
         author.imageUrl,
-        author.numberOfPapers
+        author.numberOfPapers,
+        this.processTopics(author.papersPerTopics, this.maxTopicsPerCard)
       );
     });
   }
@@ -130,15 +151,20 @@ export class AuthorsPage implements OnInit {
   onMoreAuthors(event) {
     this.resultsService
       .getAuthorsBlock(this.dataModel.searchTopic, this.currentBlock)
-      .subscribe(newAuthors => {
-        event.target.complete();
-        if (newAuthors.length === 0) {
-          event.target.disabled = true; // no more results
-        } else {
-          this.currentBlock++;
+      .subscribe(
+        newAuthors => {
+          event.target.complete();
+          if (newAuthors.length === 0) {
+            event.target.disabled = true; // no more results
+          } else {
+            this.currentBlock++;
+          }
+          this.filterAuthors();
+        },
+        () => {
+          this.errorText = 'An error occurred while fetching authors';
         }
-        this.filterAuthors();
-      });
+      );
   }
 
   // Open modal when clicked on MORE in a card
@@ -147,8 +173,10 @@ export class AuthorsPage implements OnInit {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { selectedAuthorURI: author.url,
-                          selectedTopicLabel: this.dataModel.searchTopicToString()}
+        componentProps: {
+          selectedAuthorURI: author.url,
+          selectedTopicLabel: this.dataModel.searchTopicToString()
+        }
       })
       .then(modalEl => {
         modalEl.present();
@@ -188,7 +216,7 @@ export class AuthorsPage implements OnInit {
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
-      this.filteredAuthors.push(new Author('', '', '', '',[''], '', 0));
+      this.filteredAuthors.push(new Author('', '', '', '', [], '', 0, []));
     }
   }
 }

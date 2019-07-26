@@ -1,5 +1,11 @@
 import { SimplifiedPaper } from './simplified-paper.model';
 
+export interface PapersPerTopics {
+    url: string;
+    label: string;
+    occ: number;
+}
+
 export class Author {
     constructor(
         public id: string,
@@ -8,7 +14,8 @@ export class Author {
         public department: string,
         public topics: string[],
         public imageUrl: string,
-        public numberOfPapers: number
+        public numberOfPapers: number,
+        public papersPerTopics: PapersPerTopics[]
     ) {}
 }
 
@@ -21,8 +28,9 @@ export class ExpandedAuthor extends Author {
         topics: string[],
         imageUrl: string,
         numberOfPapers: number,
+        papersPerTopics: PapersPerTopics[],
         public papers: SimplifiedPaper[]
     ) {
-        super(id, name, url, department, topics, imageUrl, numberOfPapers);
+        super(id, name, url, department, topics, imageUrl, numberOfPapers, papersPerTopics);
     }
 }

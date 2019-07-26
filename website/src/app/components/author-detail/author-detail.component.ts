@@ -47,6 +47,7 @@ export class AuthorDetailComponent implements OnInit {
   }
 
   onPaperDetails(paperId: string) {
+    console.log(paperId);
     this.modalCtrl.create({
       component: PaperDetailComponent,
       componentProps: { selecedPaperId: paperId }

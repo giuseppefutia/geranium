@@ -53,6 +53,7 @@ export class PapersPage implements OnInit {
   isLoading; // Hide/Show ionSkeletonText
   isRedirecting; // Does not display the content of the page if it is redirecting
   endOfResults = false; // Blocks the ionInfinite when no more data is available (true)
+  errorText: string;
 
   private noDateString = 'No Date'; // String to show in graph when no date is available
   private maxTopicsPerCard = 4; // Number of topic chips in each card
@@ -121,6 +122,7 @@ export class PapersPage implements OnInit {
     this.firstTime = true;
     this.isRedirecting = false;
     this.isLoading = false;
+    this.errorText = null;
   }
 
   /* It checks if the searchKey is present in URI. (see results-routing.module.ts)
@@ -138,14 +140,27 @@ export class PapersPage implements OnInit {
       if (paramMap.has('searchKey')) {
         this.dataModel
           .searchTopicFromString(paramMap.get('searchKey'))
-          .subscribe(() => {
-            this.dataModel.getAbstract().subscribe(() => {
-              if (this.firstTime) {
-                this.fetchData();
-                this.firstTime = false;
-              }
-            });
-          });
+          .subscribe(
+            () => {
+              this.dataModel.getAbstract().subscribe(
+                () => {
+                  if (this.firstTime) {
+                    this.fetchData();
+                    this.firstTime = false;
+                  }
+                },
+                () => {
+                  this.isRedirecting = true;
+                  this.errorText =
+                    'An error occurred while fetching the topic abstract';
+                }
+              );
+            },
+            () => {
+              this.isRedirecting = true;
+              this.errorText = 'An error occurred while fetching topics';
+            }
+          );
       } else {
         if (this.dataModel.searchTopicToString() === '') {
           this.navCtrl.navigateBack(['/search']);
@@ -172,23 +187,29 @@ export class PapersPage implements OnInit {
   addData(event) {
     this.resultsService
       .getSimplifiedPapersBlock(this.dataModel.searchTopic, this.currentBlock)
-      .subscribe(newPapers => {
-        if (newPapers.length === 0) {
-          // If there are no results disable infinite scroll
-          event.target.disabled = true;
-        } else {
-          this.currentBlock++;
+      .subscribe(
+        newPapers => {
+          if (newPapers.length === 0) {
+            // If there are no results disable infinite scroll
+            event.target.disabled = true;
+          } else {
+            this.currentBlock++;
 
-          this.updatePapersYears();
-          this.papersYears =
-            new Date().getFullYear() -
-            Number.parseInt(this.allPapersYears[0].year, 10);
+            this.updatePapersYears();
+            this.papersYears =
+              new Date().getFullYear() -
+              Number.parseInt(this.allPapersYears[0].year, 10);
 
-          this.filterPapers(true);
-          this.updateChart();
-          event.target.complete();
+            this.filterPapers(true);
+            this.updateChart();
+            event.target.complete();
+          }
+        },
+        () => {
+          this.isRedirecting = true;
+          this.errorText = 'An error occurred while fetching topics';
         }
-      });
+      );
   }
 
   openTopicUrl() {
@@ -226,6 +247,9 @@ export class PapersPage implements OnInit {
             this.createChart();
           }, 300);
         }
+      }, () => {
+        this.isRedirecting = true;
+        this.errorText = 'An error occurred while fetching topics';
       });
   }
 

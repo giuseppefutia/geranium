@@ -27,7 +27,7 @@
     ></ion-img>
     <div class="autocomplete-mobile">
       <ion-item>
-        <ion-label position="floating">Search here</ion-label>
+        <ion-label position="floating">{{ searchBarLabel }}</ion-label>
         <ion-input
           [(ngModel)]="searchTopicString"
           (ionChange)="displaySuggestions()"

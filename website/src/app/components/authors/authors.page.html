@@ -14,9 +14,9 @@
                 <ion-skeleton-text
                   animated
                   *ngIf="isLoading"
-                  style="width: 80%; height: 0.5em;"
+                  style="width: 50%; height: 0.5em;"
                   padding
-                  margin-bottom
+                  margin-top
                 ></ion-skeleton-text>
                 <h2
                   no-padding
@@ -25,6 +25,11 @@
                 >
                   <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 1em; padding-bottom: 3em;"
+                ></ion-skeleton-text>
                 <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
                   {{ dataModel.currentTopicAbstract }}
                 </p>
@@ -46,6 +51,13 @@
 </ion-header>
 
 <ion-content #scrollArea scrollEvents="true">
+  <ion-grid *ngIf="errorText !== null">
+    <ion-row>
+      <ion-col text-center>
+        <p>{{ errorText }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <ion-grid *ngIf="filteredAuthors.length <= 0 && !isRedirecting && !isLoading">
     <ion-row>
       <ion-col text-center>
@@ -105,12 +117,13 @@
             ></ion-skeleton-text>
             <div *ngIf="!isLoading">
               <ion-chip
-                *ngFor="let topic of author.topics"
-                (click)="onTopicChipClick(topic)"
+                *ngFor="let ppt of author.papersPerTopics"
+                (click)="onTopicChipClick(ppt.label)"
                 color="primary"
               >
                 <ion-icon name="bulb"></ion-icon>
-                <ion-label color="primary">{{ topic }}</ion-label>
+                <ion-label color="primary">{{ ppt.label }}</ion-label>
+                <ion-badge style="margin-left: 5px;">{{ ppt.occ }}</ion-badge>
               </ion-chip>
             </div>
           </ion-card-content>

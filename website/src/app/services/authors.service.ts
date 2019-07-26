@@ -4,7 +4,7 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Import models
-import { Author, ExpandedAuthor } from '../model/author.model';
+import { Author, ExpandedAuthor, PapersPerTopics } from '../model/author.model';
 import { Topic, TopicNoImg } from '../model/topic.model';
 import { ModelService } from '../model/model.service';
 import { SimplifiedPaper } from '../model/simplified-paper.model';
@@ -67,7 +67,7 @@ export class AuthorsService {
       tap(response => {
         for (const author of response) {
           // Get topics and number of occurences
-          const allTopics: { url: string; label: string; occ: number }[] = [];
+          let allTopics: PapersPerTopics[] = [];
           for (const publication of author.publications_on_topic) {
             for (const topic of publication.topics) {
               const t = allTopics.find(x => x.url === topic.url);
@@ -81,7 +81,8 @@ export class AuthorsService {
 
           // Sort topics by number of occurences and convert to label
           const stringTopics: string[] = [];
-          for (const topic of allTopics.sort((a, b) => b.occ - a.occ)) {
+          allTopics = allTopics.sort((a, b) => b.occ - a.occ);
+          for (const topic of allTopics) {
             stringTopics.push(topic.label);
           }
 
@@ -93,7 +94,8 @@ export class AuthorsService {
               '',
               stringTopics,
               'assets/img/defaultAuthor.jpg',
-              author.publications_on_topic.length
+              author.publications_on_topic.length,
+              allTopics
             )
           );
         }
@@ -118,7 +120,7 @@ export class AuthorsService {
       tap(response => {
         for (const author of response) {
           // XXX This code is replicated, maybe you can use only one function
-          const allTopics: { url: string; label: string; occ: number }[] = [];
+          let allTopics: PapersPerTopics[] = [];
           for (const publication of author.publications) {
             for (const topic of publication.topics) {
               const t = allTopics.find(x => x.url === topic.url);
@@ -129,9 +131,11 @@ export class AuthorsService {
               allTopics.push({ url: topic.url, label: topic.label, occ: 1 });
             }
           }
+
           // Sort topics by number of occurences and convert to label
           const stringTopics: string[] = [];
-          for (const topic of allTopics.sort((a, b) => b.occ - a.occ)) {
+          allTopics = allTopics.sort((a, b) => b.occ - a.occ);
+          for (const topic of allTopics) {
             stringTopics.push(topic.label);
           }
 
@@ -162,6 +166,7 @@ export class AuthorsService {
               stringTopics,
               'assets/img/defaultAuthor.jpg',
               author.publications.length,
+              allTopics,
               papers
             )
           );

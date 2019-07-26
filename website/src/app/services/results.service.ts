@@ -34,8 +34,8 @@ export class ResultsService {
     return this.authorsService.getAuthorsBlock(topic, block);
   }
 
-  getAuthorFromId(authorId: string) {
-    return this.authorsService.getAuthorFromId(authorId);
+  getAuthorFromURIandTopic(authorURI: string, topicLabel:string) {
+    return this.authorsService.getAuthorFromURIandTopic(authorURI, topicLabel);
   }
 
   getJournalsBlock(query: string, block: number): Journal[] {

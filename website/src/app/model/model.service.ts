@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Paper } from './paper.model';
-import { Author } from './author.model';
+import { Author, ExpandedAuthor } from './author.model';
 import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -19,8 +19,14 @@ export class ModelService {
    */
   private _allTopicsInGraph: TopicNoImg[]; // list of all the topics in the graph, retrieved from the api
 
+<<<<<<< HEAD
   private _retrievedPapers: Paper[];
   private _retrievedAuthors: Author[];
+=======
+  private _retrievedPapers: Paper[] = [];
+  private _retrievedAuthors: Author[] = [];
+  private _authorDetails: ExpandedAuthor;
+>>>>>>> author_details
 
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
@@ -147,6 +153,14 @@ export class ModelService {
     return this._retrievedPapers.find(p => p.id === id);
   }
 
+  getAuthorDetails() {
+      return this._authorDetails;
+  }
+
+  setAuthorDetails(authorDetails: ExpandedAuthor) {
+      this._authorDetails = authorDetails;
+  }
+
   getPapersCount(): number {
     return this._retrievedPapers.length;
   }
@@ -161,10 +175,6 @@ export class ModelService {
 
   addAllAuthors(newAuthors: Author[]) {
     this._retrievedAuthors = this._retrievedAuthors.concat(newAuthors);
-  }
-
-  findAuthorFromId(id: string): Author {
-    return this._retrievedAuthors.find(a => a.id === id);
   }
 
   getRetrievedAuthors(): Author[] {

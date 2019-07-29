@@ -73,7 +73,7 @@ export class ModelService {
     return this.http.get<{ url: string; label: string }[]>(url).pipe(
       tap(result => {
         this._allTopicsInGraph = [];
-        for (const topic of result) {
+        for (const topic of result.sort((a, b) => a.label.length - b.label.length)) {
           this._allTopicsInGraph.push(
             new TopicNoImg(topic.url, this.getWikiUrl(topic.url), topic.label)
           );

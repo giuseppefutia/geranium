@@ -25,7 +25,6 @@ export class SearchPage implements OnInit {
   /**
    * Constructor
    * @param router in charge of routing between pages
-   * @param resultsService in charge of querying the API
    * @param dataModel in charge of maintaining the model of the application
    */
   constructor(
@@ -62,8 +61,7 @@ export class SearchPage implements OnInit {
 
       const r = new RegExp(this.searchTopicString, 'gi');
       this.searchSuggestions = this.dataModel.allTopicsInGraph
-        .filter(s => s.label.search(r) !== -1)
-        .sort((a, b) => a.label.length - b.label.length);
+        .filter(s => s.label.search(r) !== -1);
     } else if (
       this.searchTopicString.length >= 1 &&
       this.searchTopicString.length < this.minLettersSuggestions

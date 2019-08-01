@@ -10,22 +10,31 @@ export class ScrollVanishDirective implements OnInit {
 
   private hidden = false;
   private triggerDistance = 20;
+  private maxHeight: number;
 
   constructor(
     private element: ElementRef,
     private renderer: Renderer2,
     private domCtrl: DomController
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initStyles();
+    const temp = this.headerMaxHeight as string;
+    if (temp.endsWith('px')) {
+      this.maxHeight = Number.parseInt(temp.slice(0, -2), 10);
+    }
 
     this.scrollArea.ionScroll.subscribe(scrollEvent => {
-      let delta = scrollEvent. detail.deltaY;
+      let delta = scrollEvent.detail.deltaY;
 
       if (scrollEvent.detail.currentY === 0 && this.hidden) {
         this.show();
-      } else if (!this.hidden && delta > this.triggerDistance) {
+      } else if (
+        !this.hidden &&
+        delta > this.triggerDistance &&
+        scrollEvent.detail.currentY - this.maxHeight > 0
+      ) {
         this.hide();
       } else if (this.hidden && delta < -this.triggerDistance) {
         this.show();
@@ -40,7 +49,11 @@ export class ScrollVanishDirective implements OnInit {
         'transition',
         '0.2s linear'
       );
-      this.renderer.setStyle(this.element.nativeElement, 'height', this.headerMaxHeight);
+      this.renderer.setStyle(
+        this.element.nativeElement,
+        'height',
+        this.headerMaxHeight
+      );
     });
   }
 
@@ -58,7 +71,11 @@ export class ScrollVanishDirective implements OnInit {
   show() {
     this.domCtrl.write(() => {
       this.renderer.removeStyle(this.element.nativeElement, 'min-height');
-      this.renderer.setStyle(this.element.nativeElement, 'height', this.headerMaxHeight);
+      this.renderer.setStyle(
+        this.element.nativeElement,
+        'height',
+        this.headerMaxHeight
+      );
       this.renderer.removeStyle(this.element.nativeElement, 'opacity');
       this.renderer.removeStyle(this.element.nativeElement, 'padding');
     });

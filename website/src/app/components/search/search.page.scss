@@ -1,3 +1,16 @@
+.search-parent {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.search-child {
+    position: absolute;
+    height: 50%;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
 .autocomplete {
     width: 100%;
 
@@ -29,32 +42,32 @@
 
 @keyframes expanded {
     0% {
-        height: 0px;
+        top: 50%;
     }
 
     100% {
-        height: 150px;
+        top: 40%;
     }
 }
 
 .expanded {
     animation-name: expanded;
     animation-duration: 0.5s;
-    height: 150px;
+    top: 40%;
 }
 
 @keyframes retracted {
     0% {
-        height: 150px;
+        top: 40%;
     }
 
     100% {
-        height: 0px;
+        top: 50%;
     }
 }
 
 .retracted {
     animation-name: retracted;
     animation-duration: 0.5s;
-    height: 0px;
+    top: 50%;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModelService } from '../../model/model.service';
 import { TopicNoImg } from 'src/app/model/topic.model';
@@ -16,11 +16,14 @@ export class SearchPage implements OnInit {
   /**
    * local attributes of the component
    */
-  public expand = 'retracted'; // autocompletion view status
+  public expand = 'search-child retracted'; // autocompletion view status
   private minLettersSuggestions = 2;
   public searchSuggestions: TopicNoImg[] = [];
   searchTopicString = '';
+  searchTopicStringMobile = '';
   searchBarLabel: string;
+  backgroundProcessInPlace: boolean;
+  private myWorker = new Worker('./assets/workers/worker.js');
 
   /**
    * Constructor
@@ -30,26 +33,40 @@ export class SearchPage implements OnInit {
   constructor(
     private router: Router,
     private dataModel: ModelService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private ngZone: NgZone
   ) {
-    this.searchBarLabel = 'Digita un argomento di ricerca e clicca tra quelli suggeriti nel menu';
+    this.backgroundProcessInPlace = false;
+    this.searchBarLabel =
+      'Digita un argomento di ricerca e clicca tra quelli suggeriti nel menu';
+    this.myWorker.onmessage = event => {
+      this.ngZone.run(() => {
+        this.searchSuggestions = event.data;
+        this.backgroundProcessInPlace = false;
+      });
+    };
   }
 
   /**
    * After component is initialized, get the list of all topics contained in the graph, used for autocompletion
    */
   ngOnInit() {
-    this.loadingCtrl.create({
-      message: 'Fetching search suggestions'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.dataModel.getAllTopics().subscribe(() => {
-        loadingEl.dismiss();
-      }, () => {
-        loadingEl.dismiss();
-        this.searchBarLabel = 'An error occured while fetching suggestions';
+    this.loadingCtrl
+      .create({
+        message: 'Fetching search suggestions'
+      })
+      .then(loadingEl => {
+        loadingEl.present();
+        this.dataModel.getAllTopics().subscribe(
+          () => {
+            loadingEl.dismiss();
+          },
+          () => {
+            loadingEl.dismiss();
+            this.searchBarLabel = 'An error occured while fetching suggestions';
+          }
+        );
       });
-    });
   }
 
   /**
@@ -58,10 +75,11 @@ export class SearchPage implements OnInit {
   displaySuggestions() {
     if (this.searchTopicString.length >= this.minLettersSuggestions) {
       // enough letters, display suggestions
-
-      const r = new RegExp(this.searchTopicString, 'gi');
-      this.searchSuggestions = this.dataModel.allTopicsInGraph
-        .filter(s => s.label.search(r) !== -1);
+      this.backgroundProcessInPlace = true;
+      this.myWorker.postMessage({
+        allTopics: this.dataModel.allTopicsInGraph,
+        typed: this.searchTopicString
+      });
     } else if (
       this.searchTopicString.length >= 1 &&
       this.searchTopicString.length < this.minLettersSuggestions
@@ -93,31 +111,31 @@ export class SearchPage implements OnInit {
    * @param searchKey user inserted input, the search key
    */
   navigate(searchTopic: TopicNoImg) {
-    this.loadingCtrl.create({
-      message: 'Loading'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.dataModel.searchTopic = searchTopic; // set search key in Model
+    this.loadingCtrl
+      .create({
+        message: 'Loading'
+      })
+      .then(loadingEl => {
+        loadingEl.present();
+        this.dataModel.searchTopic = searchTopic; // set search key in Model
 
-      this.router.navigate([
-        '/',
-        'results',
-        'tabs',
-        'papers',
-        this.dataModel.searchTopic.label
-      ]);
-      loadingEl.dismiss();
-    });
+        this.router.navigate([
+          '/',
+          'results',
+          'tabs',
+          'papers',
+          this.dataModel.searchTopic.label
+        ]);
+        loadingEl.dismiss();
+      });
   }
 
   /**
    *
    */
   addFocus() {
-    this.expand = 'expanded'; // expand autocompletion
-
-    if (this.searchTopicString !== '') {
-      this.displaySuggestions();
+    if (this.expand !== 'search-child expanded') {
+      this.expand = 'search-child expanded'; // expand autocompletion
     }
   }
 
@@ -126,7 +144,7 @@ export class SearchPage implements OnInit {
    */
   removeFocus() {
     if (this.searchTopicString === '') {
-      this.expand = 'retracted';
+      this.expand = 'search-child retracted';
     }
   }
 }

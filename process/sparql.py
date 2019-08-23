@@ -15,9 +15,11 @@ def set_publications_query(topic, lines, offset):
         ?p purl:creator ?a .
         ?a purl:identifier ?a_id .
         ?a rdfs:label ?a_label .
-        ?p purl:contributor ?ca .
-        ?ca purl:identifier ?ca_id .
-        ?ca rdfs:label ?ca_label .
+        OPTIONAL{{
+            ?p purl:contributor ?ca .
+            ?ca purl:identifier ?ca_id .
+            ?ca rdfs:label ?ca_label .
+        }}
         ?p purl:subject ?t .
         ?t rdfs:label "{t}" .
         ?t rdf:type gpo:TMFResource .

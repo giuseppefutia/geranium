@@ -1,5 +1,6 @@
 ## Description
-\[Brief description of your pull request\]
+<!-- Brief description. Refer to the related issues if existed.
+It'll be great if relevant reviewers can be assigned as well.-->
 
 ## Checklist
 Please feel free to remove inapplicable items for your PR.
@@ -11,4 +12,7 @@ Please feel free to remove inapplicable items for your PR.
 - [ ] Related issue is referred in this PR
 
 ## Changes
-\[Brief description of the changes that you made on the source code\]
+<!-- You could use following template
+- [ ] Feature1, tests, (and when applicable, API doc)
+- [ ] Feature2, tests, (and when applicable, API doc)
+-->

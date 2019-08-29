@@ -107,6 +107,9 @@ export class PapersPage implements OnInit {
             new BarData(e[0]._datasetIndex, e[0]._index)
           );
         }
+      },
+      onHover: (event, chartEl) => {
+        event.target.style.cursor = chartEl[0] ? 'pointer' : 'default';
       }
     }
   };
@@ -269,7 +272,7 @@ export class PapersPage implements OnInit {
     authors: SimplifiedAuthor[],
     authorsLimit: number
   ): SimplifiedAuthor[] {
-    if (authorsLimit > authors.length) {
+    if (authors.length <= authorsLimit) {
       return authors.filter(
         author => (author.name = this.dataModel.shortenAuthorName(author.name))
       );

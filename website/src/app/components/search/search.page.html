@@ -1,6 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" class="ion-hide-sm-down">
+        <a href="search#home"><ion-button>Home</ion-button></a>
       <a href="search#checosa"><ion-button>Che cosa è</ion-button></a>
       <a href="search#come"><ion-button>Come funziona</ion-button></a>
       <a href="search#team"><ion-button>Team</ion-button></a>
@@ -21,64 +22,66 @@
 </ion-header>
 
 <ion-content>
-  <div class="search-parent">
-    <div [class]="expand">
-      <ion-grid>
-        <ion-row>
-          <ion-col
-            size="8"
-            offset="2"
-            size-md="6"
-            offset-md="3"
-            size-lg="4"
-            offset-lg="4"
-          >
-            <ion-img src="assets/img/mainlogo-alpha.png"></ion-img>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size-md="8" offset-md="2" size-lg="6" offset-lg="3">
-            <div class="autocomplete">
-              <ion-item>
-                <ion-label
-                  position="floating"
-                  style="min-width: 100%; max-width: 0;"
-                  >{{ searchBarLabel }}</ion-label
-                >
-                <ion-input
-                  [(ngModel)]="searchTopicString"
-                  (ionChange)="displaySuggestions()"
-                  (ionFocus)="addFocus()"
-                  (ionBlur)="removeFocus()"
-                  debounce="300"
-                  [disabled]="!dataModel.canSearch"
-                  required
-                ></ion-input>
-              </ion-item>
-              <ion-spinner *ngIf="backgroundProcessInPlace" padding margin>
-              </ion-spinner>
-              <ion-list *ngIf="!backgroundProcessInPlace">
-                <ion-item
-                  *ngFor="let suggestion of searchSuggestions"
-                  (click)="navigate(suggestion)"
-                >
-                  <ion-icon name="bulb" margin></ion-icon>
-                  {{ suggestion.label }}
-                  <p
-                    style="font-size: 0.8em; color: grey;"
-                    *ngIf="countInSuggestions(suggestion.label) > 1"
-                    padding-top
+  <section style="width: 100%; height: 100%;" id="home">
+    <div class="search-parent">
+      <div [class]="expand">
+        <ion-grid>
+          <ion-row>
+            <ion-col
+              size="8"
+              offset="2"
+              size-md="6"
+              offset-md="3"
+              size-lg="4"
+              offset-lg="4"
+            >
+              <ion-img src="assets/img/mainlogo-alpha.png"></ion-img>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-md="8" offset-md="2" size-lg="6" offset-lg="3">
+              <div class="autocomplete">
+                <ion-item>
+                  <ion-label
+                    position="floating"
+                    style="min-width: 100%; max-width: 0;"
+                    >{{ searchBarLabel }}</ion-label
                   >
-                    &nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ suggestion.wikiUrl }}
-                  </p>
+                  <ion-input
+                    [(ngModel)]="searchTopicString"
+                    (ionChange)="displaySuggestions()"
+                    (ionFocus)="addFocus()"
+                    (ionBlur)="removeFocus()"
+                    debounce="300"
+                    [disabled]="!dataModel.canSearch"
+                    required
+                  ></ion-input>
                 </ion-item>
-              </ion-list>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+                <ion-spinner *ngIf="backgroundProcessInPlace" padding margin>
+                </ion-spinner>
+                <ion-list *ngIf="!backgroundProcessInPlace">
+                  <ion-item
+                    *ngFor="let suggestion of searchSuggestions"
+                    (click)="navigate(suggestion)"
+                  >
+                    <ion-icon name="bulb" margin></ion-icon>
+                    {{ suggestion.label }}
+                    <p
+                      style="font-size: 0.8em; color: grey;"
+                      *ngIf="countInSuggestions(suggestion.label) > 1"
+                      padding-top
+                    >
+                      &nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ suggestion.wikiUrl }}
+                    </p>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- LANDING PAGE -->
 

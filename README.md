@@ -18,6 +18,12 @@ $ pip install langdetect
 
 ## API
 
+### Start API
+While in the conda environment:
+```
+python app.py
+```
+
 ### Get publications on a specific topic
 
 #### Parameters:

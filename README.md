@@ -3,7 +3,7 @@
 The following commands are written for Debian 9.9, NodeJS v.12.6.0 and should be executed in sequence. 
 Skip those unnecessary for your working environment, if needed.
 
-## Dependancies
+## Dependencies
 
 ### NodeJS and NPM
 

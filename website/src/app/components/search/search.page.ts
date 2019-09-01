@@ -32,7 +32,7 @@ export class SearchPage implements OnInit {
    */
   constructor(
     private router: Router,
-    private dataModel: ModelService,
+    public dataModel: ModelService,
     private loadingCtrl: LoadingController,
     private ngZone: NgZone
   ) {

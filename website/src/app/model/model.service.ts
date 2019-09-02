@@ -4,7 +4,7 @@ import { Author, ExpandedAuthor } from './author.model';
 import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, from } from 'rxjs';
 import { SimplifiedPaper } from './simplified-paper.model';
 
 /**
@@ -27,6 +27,8 @@ export class ModelService {
   private _currentAbstract: string;
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
+
+  private _cacheExpirationHours = 24;
 
   /**
    * constructor
@@ -67,16 +69,50 @@ export class ModelService {
   }
 
   getAllTopics() {
+    if (window.localStorage) {
+      // Checks if it is supported by browser
+      if (
+        localStorage.getItem('lastDateMillis') !== null &&
+        localStorage.getItem('topicsCache') !== null
+      ) {
+        const lastDateMillis = JSON.parse(
+          localStorage.getItem('lastDateMillis')
+        ) as number;
+
+        if (Date.now() - lastDateMillis > 1000 * 60 * 60 * this._cacheExpirationHours) {
+          localStorage.setItem('lastDateMillis', JSON.stringify(Date.now()));
+          return this.fetchTopics();
+        } else {
+          this._allTopicsInGraph = JSON.parse(localStorage.getItem('topicsCache'));
+          this.canSearch = true;
+          return from([[{url: 'fake', label: 'fake'}]]);
+        }
+      } else {
+        localStorage.clear();
+        localStorage.setItem('lastDateMillis', JSON.stringify(Date.now()));
+        return this.fetchTopics();
+      }
+    } else {
+      return this.fetchTopics();
+    }
+  }
+
+  fetchTopics() {
     const url =
       'http://api.geranium.nexacenter.org/api?' +
       encodeURI(`type=topics&lines=100000&offset=0`);
     return this.http.get<{ url: string; label: string }[]>(url).pipe(
       tap(result => {
         this._allTopicsInGraph = [];
-        for (const topic of result.sort((a, b) => a.label.length - b.label.length)) {
+        for (const topic of result.sort(
+          (a, b) => a.label.length - b.label.length
+        )) {
           this._allTopicsInGraph.push(
             new TopicNoImg(topic.url, this.getWikiUrl(topic.url), topic.label)
           );
+        }
+        if (window.localStorage) {
+          localStorage.setItem('topicsCache', JSON.stringify(this._allTopicsInGraph));
         }
         this.canSearch = true;
       })
@@ -162,11 +198,11 @@ export class ModelService {
   }
 
   getAuthorDetails() {
-      return this._authorDetails;
+    return this._authorDetails;
   }
 
   setAuthorDetails(authorDetails: ExpandedAuthor) {
-      this._authorDetails = authorDetails;
+    this._authorDetails = authorDetails;
   }
 
   getPapersCount(): number {

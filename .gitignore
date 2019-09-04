@@ -1,0 +1,9 @@
+*.rdf
+*.txt
+*.json
+config.py
+process/__pycache__
+data/anni2013-17
+.vscode
+*.wsgi
+node_modules

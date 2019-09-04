@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Publication Details</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onIRISDetails()">
+        <ion-icon name="link" slot="start"></ion-icon>
+        Open on IRIS
+      </ion-button>
+      <ion-button (click)="onClose()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid *ngIf="isLoaded">
+    <ion-row no-margin no-padding>
+      <ion-col>
+        <ion-img
+          [src]="selectedPaper.imageUrl"
+          class="ion-hide-md-up"
+          style="max-height: 400px; overflow-y: hidden;"
+        ></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row padding>
+      <ion-col size="4" class="ion-hide-sm-down">
+        <ion-img
+          [src]="selectedPaper.imageUrl"
+          style="max-height: 400px; overflow-y: hidden;"
+        ></ion-img>
+      </ion-col>
+      <ion-col padding>
+        <ion-text color="primary">
+          <h2 no-margin><b>Title</b></h2>
+        </ion-text>
+        <div margin>
+          <h4>{{ selectedPaper.title }}</h4>
+        </div>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Authors</b></h3></ion-text
+        >
+        <div margin>
+          <ion-chip
+            *ngFor="let author of selectedPaper.authors"
+            (click)="onAuthorChipClick(author)"
+          >
+            <ion-icon name="person"></ion-icon>
+            <ion-label>{{ author.name }}</ion-label>
+          </ion-chip>
+        </div>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Publication Date</b></h3></ion-text
+        >
+        <div margin>
+          <p no-margin>
+            <i>{{ selectedPaper.submittedDate.toLocaleDateString() }}</i>
+          </p>
+        </div>
+        <ion-text color="primary"
+          ><h3 no-margin><b>Topics</b></h3></ion-text
+        >
+        <div margin>
+          <ion-chip
+            *ngFor="let topic of selectedPaper.topics"
+            (click)="onTopicChipClick(topic.label)"
+            color="primary"
+          >
+            <ion-icon name="bulb"></ion-icon>
+            <ion-label color="primary">{{ topic.label }}</ion-label>
+          </ion-chip>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row no-padding>
+      <ion-col offset-md="1" size-md="10">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-text color="primary"
+                ><h3 no-margin><b>Abstract</b></h3></ion-text
+              >
+            </ion-card-title>
+            <ion-card-subtitle>
+              <h5>{{ selectedPaper.abstract }}</h5>
+            </ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,10 +1,13 @@
 # Geranium
+Geranium is a system to empower the access to the Politecnico di Torino research activities (available within the [IRIS](https://iris.polito.it/) portal) using semantic technologies and deep learning techniques applied on graphs.
 
-## Install
+The system consists of two main components:
+1. A back-end component to produce the [Knowledge Graph](https://en.wikipedia.org/wiki/Ontology_(information_science)) of the Polito publications and to provide RESTful APIs to access data. 
+2. A front-end component to visualize and interactively explore data available within such Knowledge Graph.
 
-### Python back-end
+## Back-end
 
-Install Python back-end using conda environment
+Install Python backend using conda environment
 
 ```bash
 $ conda create -n geranium python=3.6
@@ -16,68 +19,103 @@ $ pip install config
 $ pip install langdetect
 ```
 
-## API
+### API
 
-### Start API
+#### Start API
 While in the conda environment:
 ```
 python app.py
 ```
 
-### Get publications on a specific topic
+#### Get publications on a specific topic
 
-#### Parameters:
+##### Parameters:
 * type: publications
 * topic: "Encoded label of topic"
 * limit: "Number of lines"
 * offset: "Offset within the response"
 
-#### Example:
+##### Example:
 http://localhost:5000/api?type=publications&topic=Carbon%20nanotube&lines=10000&offset=0
 
-### Get authors working on a specific topic
+#### Get authors working on a specific topic
 
-#### Parameters:
+##### Parameters:
 * type: authors
 * topic: "Encoded label of topic"
 * limit: "Number of lines"
 * offset: "Offset within the response"
 
-#### Example:
+##### Example:
 http://localhost:5000/api?type=authors&topic=Carbon%20nanotube&lines=10000&offset=0
 
-### Get details on a specific publication
+#### Get details on a specific publication
 
-#### Parameters:
+##### Parameters:
 * type: publication
 * limit: "Number of lines"
 * offset: "Offset within the response"
 * url: "Encoded url of a publication"
 
-#### Example:
+##### Example:
 http://localhost:5000/api?type=publication&lines=10000&offset=0&url=http://geranium-project.org/publications/11583/2647453
 
-### Get details on an author working on a specific topic
+#### Get details on an author working on a specific topic
 
-#### Parameters:
+##### Parameters:
 * type: author
 * topic: "Encoded label of topic"
 * limit: "Number of lines"
 * offset: "Offset within the response"
 * url: "Encoded url of a researcher"
 
-#### Example:
+##### Example:
 http://localhost:5000/api?type=author&topic=Carbon%20nanotube&lines=10000&offset=0&url=http://geranium-project.org/authors/rp07931
 
-### Get all topics
+#### Get all topics
 
-#### Parameters:
+##### Parameters:
 * type: topics
 * limit: "Number of lines"
 * offset: "Offset within the response"
 
-#### Example:
+##### Example:
 http://localhost:5000/api?type=topics&lines=100000&offset=0
+
+## Frontend
+The following commands are written for Debian 9.9, NodeJS v.12.6.0 and should be executed in sequence. 
+Skip those unnecessary for your working environment, if needed.
+
+### NodeJS and NPM
+
+```bash
+ $ sudo apt install nodejs
+```
+
+### Ionic framework
+
+```bash
+ $ sudo npm install -g ionic
+```
+
+## Installation
+
+### Node Modules
+
+ * Clone the repository
+ * Navigate to website folder
+ * Run ```$ npm i```
+
+### Starting Ionic development server
+
+ * Navigate to website folder
+ * Run ```$ ionic serve```
+
+ If compiling process is successful (```Compiled successfully``` in console) a browser window will be automatically opened at the address of the local server. If not try the following address in your browser: ```localhost:8100```
+
+ To stop the development server press Ctrl-C
+
+
 
 ### Get abstract of a single topic
 

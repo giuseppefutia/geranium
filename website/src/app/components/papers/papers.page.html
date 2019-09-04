@@ -1,0 +1,193 @@
+<ion-header *ngIf="!isRedirecting">
+  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="183px">
+    <ion-row no-padding>
+      <ion-col no-padding>
+        <div class="topView">
+          <ion-grid no-padding>
+            <ion-row justify-content-center align-items-center no-padding>
+              <ion-col size="2" size-lg="1" text-center>
+                <ion-button fill="clear" (click)="onBackClick()"
+                  ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
+                ></ion-button>
+              </ion-col>
+              <ion-col size-lg="7">
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 0.5em;"
+                  padding
+                  margin-top
+                ></ion-skeleton-text>
+                <h2
+                  no-padding
+                  style="text-transform: capitalize;"
+                  *ngIf="!isLoading && dataModel.getSearchStackLength() !== 0"
+                >
+                  <b>{{ dataModel.searchTopic.label }}</b>
+                </h2>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 1em; padding-bottom: 3em;"
+                ></ion-skeleton-text>
+                <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
+                  {{ dataModel.currentTopicAbstract }}
+                </p>
+                <a
+                  tappable
+                  [class]="isLoading ? 'disabled' : ''"
+                  (click)="openTopicUrl()"
+                >
+                  More on this topic
+                </a>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 0.8em;"
+                  padding
+                  margin-top
+                ></ion-skeleton-text>
+                <p *ngIf="!isLoading">
+                  {{ dataModel.getPapersCount() }} showed papers on this topic
+                  in the last {{ papersYears }} years
+                </p>
+              </ion-col>
+              <ion-col class="ion-hide-sm-down">
+                <ion-skeleton-text
+                  *ngIf="isLoading"
+                  style="width: 300px; height: 150px;"
+                ></ion-skeleton-text>
+                <div class="chart-container" *ngIf="!isLoading">
+                  <canvas #barCanvas class="barCanvasClass"></canvas>
+                </div>
+                <p
+                  class="ion-hide-sm-down"
+                  style="color: grey; font-size: small; text-align: center; max-width: 300px;"
+                  *ngIf="!isLoading"
+                  no-margin
+                  no-padding
+                >
+                  Click on chart bars to filter results
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
+
+<ion-content #scrollArea scrollEvents="true">
+  <ion-grid *ngIf="errorText !== null">
+    <ion-row>
+      <ion-col text-center>
+        <p>{{ errorText }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="filteredPapers.length <= 0 && !isRedirecting && !isLoading">
+    <ion-row>
+      <ion-col text-center>
+        <p>Sorry, there are no results for {{ dataModel.searchTopic.label }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="filteredPapers.length > 0 && !isRedirecting">
+    <ion-row wrap>
+      <ion-col
+        size="12"
+        size-sm="6"
+        size-lg="3"
+        *ngFor="let paper of filteredPapers"
+      >
+        <ion-card style="animation-name: fadeIn; animation-duration: 1s;">
+          <ion-skeleton-text
+            *ngIf="isLoading"
+            style="width:100%; height: 200px;"
+            no-padding
+            no-margin
+          ></ion-skeleton-text>
+          <div *ngIf="!isLoading" class="card-img">
+            <ion-img [src]="paper.imageUrl" alt="Loading image..."></ion-img>
+          </div>
+          <ion-card-header>
+            <ion-card-title *ngIf="isLoading">
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+              ></ion-skeleton-text>
+            </ion-card-title>
+            <ion-card-title *ngIf="!isLoading" class="card-title">{{
+              paper.title
+            }}</ion-card-title>
+            <ion-card-subtitle *ngIf="isLoading">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-card-subtitle>
+            <ion-card-subtitle *ngIf="!isLoading">
+              <ion-chip
+                *ngFor="let author of paper.authors; index as i"
+                (click)="onAuthorClick(author)"
+              >
+                <ion-icon name="person" *ngIf="i === 0"></ion-icon>
+                <ion-label color="primary">{{ author.name }}</ion-label>
+              </ion-chip>
+            </ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-item-divider no-padding no-margin padding-bottom>
+              <ion-skeleton-text
+                animated
+                style="height: 1em;"
+                *ngIf="isLoading"
+              ></ion-skeleton-text>
+              <div *ngIf="!isLoading">
+                <ion-chip
+                  *ngFor="let topic of paper.topics"
+                  color="primary"
+                  (click)="onTopicChipClick(topic)"
+                >
+                  <ion-icon name="bulb"></ion-icon>
+                  <ion-label color="primary">{{ topic.label }}</ion-label>
+                </ion-chip>
+              </div>
+            </ion-item-divider>
+          </ion-card-content>
+          <div padding-start padding-bottom>
+            <ion-button
+              fill="solid"
+              color="primary"
+              slot="start"
+              (click)="onPaperDetails(paper)"
+              >More</ion-button
+            >
+            <ion-button
+              fill="outline"
+              color="tertiary"
+              slot="end"
+              padding-start
+              (click)="onIRISDetails(paper)"
+              >IRIS</ion-button
+            >
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="addData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading papers..."
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

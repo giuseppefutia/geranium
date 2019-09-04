@@ -1,0 +1,332 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" class="ion-hide-sm-down">
+        <a href="search#home"><ion-button>Home</ion-button></a>
+      <a href="search#checosa"><ion-button>Che cosa è</ion-button></a>
+      <a href="search#come"><ion-button>Come funziona</ion-button></a>
+      <a href="search#team"><ion-button>Team</ion-button></a>
+      <a href="search#contatti"><ion-button>Contatti</ion-button></a>
+      <a href="https://forms.gle/bodTTkpXj64mVPVS8"
+        ><ion-button>Questionario</ion-button></a
+      >
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <a href="https://nexa.polito.it"
+        ><ion-button
+          ><img
+            style="height:100%;"
+            src="../../../assets/img/nexa-logo.png"/></ion-button
+      ></a>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section style="width: 100%; height: 100%;" id="home">
+    <div class="search-parent">
+      <div [class]="expand">
+        <ion-grid>
+          <ion-row>
+            <ion-col
+              size="8"
+              offset="2"
+              size-md="6"
+              offset-md="3"
+              size-lg="4"
+              offset-lg="4"
+            >
+              <ion-img src="assets/img/mainlogo-alpha.png"></ion-img>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-md="8" offset-md="2" size-lg="6" offset-lg="3">
+              <div class="autocomplete">
+                <ion-item>
+                  <ion-label
+                    position="floating"
+                    style="min-width: 100%; max-width: 0;"
+                    >{{ searchBarLabel }}</ion-label
+                  >
+                  <ion-input
+                    [(ngModel)]="searchTopicString"
+                    (ionChange)="displaySuggestions()"
+                    (ionFocus)="addFocus()"
+                    (ionBlur)="removeFocus()"
+                    debounce="300"
+                    [disabled]="!dataModel.canSearch"
+                    required
+                  ></ion-input>
+                </ion-item>
+                <ion-spinner *ngIf="backgroundProcessInPlace" padding margin>
+                </ion-spinner>
+                <ion-list *ngIf="!backgroundProcessInPlace">
+                  <ion-item
+                    *ngFor="let suggestion of searchSuggestions"
+                    (click)="navigate(suggestion)"
+                  >
+                    <ion-icon name="bulb" margin></ion-icon>
+                    {{ suggestion.label }}
+                    <p
+                      style="font-size: 0.8em; color: grey;"
+                      *ngIf="countInSuggestions(suggestion.label) > 1"
+                      padding-top
+                    >
+                      &nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ suggestion.wikiUrl }}
+                    </p>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANDING PAGE -->
+
+  <!-- Import needed JavaScript and CSS from assets -->
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="../../../assets/css/landing.css"
+  />
+  <link
+    href="../../../assets/vendor/bootstrap/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <section class="bg-primary" id="checosa">
+    <div class="container">
+      <!--Che cos'è-->
+      <div class="row">
+        <div
+          class="col-lg-8 mx-auto text-center"
+          style="max-width: 85%; flex: 85%;"
+        >
+          <h2 class="section-heading text-white">Che cos'è Geranium</h2>
+          <hr class="light" />
+          <p class="text-faded">
+            Geranium è un progetto di ricerca condotto dal
+            <a href="https://nexa.polito.it"
+              >Centro Nexa su Internet & Società</a
+            >
+            del Politecnico di Torino (DAUIN) che ha lo scopo di valorizzare le
+            pubblicazioni dei ricercatori del Politecnico di Torino, sfruttando
+            le tecnologie semantiche e dell’Intelligenza Artificiale.
+            <br /><br />
+            Attraverso la piattaforma Geranium, infatti, differenti stakeholder
+            (i ricercatori del Politecnico, le istituzioni, policy maker,
+            imprese e società civile) avranno a disposizione uno strumento
+            interattivo per esplorare le attività e i risultati di ricerca del
+            Politecnico, favorendo nel contempo nuove occasioni di
+            collaborazione con i ricercatori.
+            <br /><br />
+            Geranium è ancora in versione alpha, questo vuol dire che è
+            attualmente in fase di sviluppo e le sue funzionalità non sono
+            ancora state completamente implementate e testate. Se dovessi
+            incontrare dei malfunzionamenti, puoi contattarci attraverso la mail
+            <a href="mailto:geranium@nexacenter.org">geranium@nexacenter.org</a
+            >, oppure includere la segnalazione in
+            <a href="https://forms.gle/bodTTkpXj64mVPVS8"
+              >questo breve questionario</a
+            >.
+          </p>
+        </div>
+      </div>
+
+      <!-- Come funziona -->
+      <br /><br />
+      <div class="row" id="come">
+        <div
+          class="col-lg-8 mx-auto text-center"
+          style="max-width: 85%; flex: 85%;"
+        >
+          <h2 class="section-heading text-white">Come funziona</h2>
+          <hr class="light" />
+          <p class="text-faded">
+            La versione alpha di Geranium consente di esplorare le informazioni
+            sulle pubblicazioni, e i relativi autori (sfruttando un menu a piè
+            pagina), a partire da un argomento di ricerca. Gli argomenti, a
+            differenza di parole chiave o keyword che causano spesso ambiguità,
+            descrivono i temi trattati in una pubblicazione e sono univocamente
+            identificabili una
+            <a href="https://en.wikipedia.org/wiki/Knowledge_base"
+              >knowledge base</a
+            >. <br /><br />
+            Gli argomenti di ricerca sono estratti in automatico dagli abstract
+            delle pubblicazioni grazie a un tool open source sviluppato dal
+            Centro Nexa, <a href="http://tellmefirst.polito.it">TellMeFirst</a>,
+            che sfrutta algoritmi di Machine Learning e Wikipedia. Attraverso
+            TellMeFirst, e il collegamento in automatico delle pubblicazioni a
+            voci di Wikipedia, si otterrà nell’immediato una panoramica dei
+            principali argomenti trattati nelle pubblicazioni. <br /><br />
+            La sezione delle pubblicazioni fornisce i relativi metadati e un
+            grafico a barre in alto a destra che, oltre a mostrare la
+            distribuzione delle pubblicazioni per anno, consente anche di
+            filtrare le pubblicazioni per periodo. Da ciascuna pubblicazione è
+            possibile passare con facilità a una pagina con informazioni su ogni
+            singolo autore, oppure avviare una nuova ricerca cliccando su un
+            singolo argomento.
+            <br /><br />
+            Per ogni autore è possibile esplorare, oltre ai metadati di base
+            provenienti direttamente da IRIS, anche gli argomenti di ricerca di
+            cui l'autore si occupa, che sono affini all'argomento cercato.
+          </p>
+        </div>
+      </div>
+      <!-- Quali dati -->
+      <br /><br />
+      <div class="row">
+        <div
+          class="col-lg-8 mx-auto text-center"
+          style="max-width: 85%; flex: 85%;"
+        >
+          <h2 class="section-heading text-white">Quali dati utilizziamo</h2>
+          <hr class="light" />
+          <p class="text-faded">
+            La versione alpha di Geranium si avvale delle informazioni sulle
+            pubblicazioni del periodo compreso tra gli anni 2013 e 2018
+            pubblicate su <a href="https://iris.polito.it/">IRIS</a>.
+            <br /><br />
+            Come training set per l’estrazione automatica degli argomenti di
+            ricerca dagli abstract delle pubblicazioni, Geranium sfrutta il
+            corpus testuale multilinguistico Wikipedia e la Knowledge Base
+            <a href="https://wiki.dbpedia.org/">DBpedia</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h2 class="section-heading">Team</h2>
+          <hr class="primary" />
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          <div class="reviews-box">
+            <a href="https://nexa.polito.it/people/gfutia">
+              <img
+                src="../../../assets/img/team/futia.png"
+                class="profile-picture"
+                alt="Giuseppe Futia"
+              />
+            </a>
+            <h4>Giuseppe Futia</h4>
+            <p class="text-muted">Project Lead and Developer - PhD Student</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          <div class="reviews-box">
+            <a href="https://nexa.polito.it/people/ggarifo">
+              <img
+                src="../../../assets/img/team/garifo.png"
+                class="profile-picture"
+                alt="Giovanni Garifo"
+              />
+            </a>
+            <h4>Giovanni Garifo</h4>
+            <p class="text-muted">
+              Lead Software Developer - Student and collaborator
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          <div class="reviews-box">
+            <a href="">
+              <img
+                src="../../../assets/img/team/vergari.png"
+                class="profile-picture"
+                alt="Cosma"
+              />
+            </a>
+            <h4>Cosma Alex Vergari</h4>
+            <p class="text-muted">Frontend Developer - Part-time Intern</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          <div class="reviews-box">
+            <a href="">
+              <img
+                src="../../../assets/img/team/mehdi.png"
+                class="profile-picture"
+                alt="Mehdi"
+              />
+            </a>
+            <h4>Mehdi Khrichfa</h4>
+            <p class="text-muted">Backend Developer - Part-time Intern</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          <div class="reviews-box">
+            <a href="https://nexa.polito.it/people/avetro">
+              <img
+                src="../../../assets/img/team/vetro.png"
+                class="profile-picture"
+                alt="Antonio Vetro"
+              />
+            </a>
+            <h4>Antonio Vetrò</h4>
+            <p class="text-muted">
+              Scientific Advisor - Assistant Professor @ DAUIN
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          <div class="reviews-box">
+            <a href="https://nexa.polito.it/people/asantangelo">
+              <img
+                src="../../../assets/img/team/santangelo.png"
+                class="profile-picture"
+                alt="Antonio Santangelo"
+              />
+            </a>
+            <h4>Antonio Santangelo</h4>
+            <p class="text-muted">Executive Director Nexa Center</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-primary" id="contatti">
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-lg-8 mx-auto text-center"
+          style="max-width: 85%; flex: 85%;"
+        >
+          <h2 class="section-heading text-white">Contatti</h2>
+          <hr class="light" />
+          <p class="text-faded">
+            Per qualsiasi informazione, chiarimento, o segnalazione, potete
+            contattarci all’indirizzo mail:
+            <a href="mailto:geranium@nexacenter.org">geranium@nexacenter.org</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="call-to-action bg-dark">
+    <div class="container text-center">
+      <h2>Questionario</h2>
+      <h5>
+        Aiutaci a migliorare Geranium rispondendo al
+        <a href="https://forms.gle/bodTTkpXj64mVPVS8">questionario</a>
+      </h5>
+    </div>
+  </div>
+</ion-content>

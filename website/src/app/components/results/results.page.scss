@@ -1,0 +1,51 @@
+h3 {
+  line-height: 1em;
+  height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.two-lines-par {
+  line-height: 1em;
+  height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ion-card {
+  border-radius: 8px !important;
+}
+
+.topView {
+  background: #f0f0f0; 
+  overflow-y: hidden;
+  max-height: 0;
+}
+
+.showing {
+  max-height: 250px;
+  transition: max-height 1s ease;
+}
+
+.barCanvasClass {
+  max-width: 300px !important;
+  max-height: 150px !important;
+}
+
+@media screen and (max-width: 992px) {
+  .showing {
+    max-height: 400px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+

@@ -17,6 +17,7 @@ log.txt
 *.sublime-workspace
 .vscode/
 npm-debug.log*
+*.wsgi
 
 .idea/
 .ionic/

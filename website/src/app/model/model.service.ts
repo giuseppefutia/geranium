@@ -142,7 +142,6 @@ export class ModelService {
             s => s.label === topicString
           );
           this.searchTopic = topic;
-          console.log(topic);
           if (topic === undefined) {
             throw throwError('Invalid search topic');
           }

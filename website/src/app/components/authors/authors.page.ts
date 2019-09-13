@@ -115,6 +115,7 @@ export class AuthorsPage implements OnInit {
    */
   processTopics(topics: PapersPerTopics[], topicsLimit: number): PapersPerTopics[] {
     return topics
+     .sort((t1, t2) => t1.occ - t2.occ)
       .filter(
         topic =>
           topic.label.toLowerCase() !==

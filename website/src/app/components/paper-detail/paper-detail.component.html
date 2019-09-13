@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Publication Details</ion-title>
+    <ion-title>Details</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onIRISDetails()">
         <ion-icon name="link" slot="start"></ion-icon>
@@ -32,12 +32,11 @@
         ></ion-img>
       </ion-col>
       <ion-col padding>
-        <ion-text color="primary">
-          <h2 no-margin><b>Title</b></h2>
+        <ion-text>
+          <h1 no-margin style="font-size: x-large; padding-bottom: 20px;">
+            <b>{{ selectedPaper.title }}</b>
+          </h1>
         </ion-text>
-        <div margin>
-          <h4>{{ selectedPaper.title }}</h4>
-        </div>
         <ion-text color="primary"
           ><h3 no-margin><b>Authors</b></h3></ion-text
         >

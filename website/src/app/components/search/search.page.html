@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" class="ion-hide-sm-down">
-        <a href="search#home"><ion-button>Home</ion-button></a>
+      <a href="search#home"><ion-button>Home</ion-button></a>
       <a href="search#checosa"><ion-button>Che cosa è</ion-button></a>
       <a href="search#come"><ion-button>Come funziona</ion-button></a>
       <a href="search#team"><ion-button>Team</ion-button></a>
       <a href="search#contatti"><ion-button>Contatti</ion-button></a>
       <a href="https://forms.gle/bodTTkpXj64mVPVS8"
-        ><ion-button>Questionario</ion-button></a
+        ><ion-button color="tertiary" fill="solid">Questionario</ion-button></a
       >
     </ion-buttons>
     <ion-buttons slot="end">
@@ -22,6 +22,16 @@
 </ion-header>
 
 <ion-content>
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    class="ion-hide-md-up"
+  >
+    <a href="https://forms.gle/bodTTkpXj64mVPVS8">
+      <ion-fab-button> <ion-icon name="help-buoy"></ion-icon> </ion-fab-button
+    ></a>
+  </ion-fab>
   <section style="width: 100%; height: 100%;" id="home">
     <div class="search-parent">
       <div [class]="expand">
@@ -97,13 +107,9 @@
   />
 
   <section class="bg-primary" id="checosa">
-    <div class="container">
-      <!--Che cos'è-->
-      <div class="row">
-        <div
-          class="col-lg-8 mx-auto text-center"
-          style="max-width: 85%; flex: 85%;"
-        >
+    <ion-grid style="text-align: center;" padding>
+      <ion-row>
+        <ion-col size-lg="8" offset-lg="2">
           <h2 class="section-heading text-white">Che cos'è Geranium</h2>
           <hr class="light" />
           <p class="text-faded">
@@ -132,16 +138,13 @@
               >questo breve questionario</a
             >.
           </p>
-        </div>
-      </div>
+        </ion-col>
+      </ion-row>
 
       <!-- Come funziona -->
-      <br /><br />
-      <div class="row" id="come">
-        <div
-          class="col-lg-8 mx-auto text-center"
-          style="max-width: 85%; flex: 85%;"
-        >
+      <ion-row id="come">
+        <ion-col size-lg="8" offset-lg="2">
+          <br /><br /><br />
           <h2 class="section-heading text-white">Come funziona</h2>
           <hr class="light" />
           <p class="text-faded">
@@ -173,15 +176,11 @@
             provenienti direttamente da IRIS, anche gli argomenti di ricerca di
             cui l'autore si occupa, che sono affini all'argomento cercato.
           </p>
-        </div>
-      </div>
-      <!-- Quali dati -->
-      <br /><br />
-      <div class="row">
-        <div
-          class="col-lg-8 mx-auto text-center"
-          style="max-width: 85%; flex: 85%;"
-        >
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-lg="8" offset-lg="2">
+          <br /><br /><br />
           <h2 class="section-heading text-white">Quali dati utilizziamo</h2>
           <hr class="light" />
           <p class="text-faded">
@@ -194,23 +193,25 @@
             corpus testuale multilinguistico Wikipedia e la Knowledge Base
             <a href="https://wiki.dbpedia.org/">DBpedia</a>.
           </p>
-        </div>
-      </div>
-    </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </section>
 
-  <section id="team">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
+  <section>
+    <ion-grid>
+      <ion-row id="team">
+        <ion-col text-center>
+          <br /><br />
           <h2 class="section-heading">Team</h2>
           <hr class="primary" />
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 text-center" style="padding: 0px !important;">
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid padding>
+      <ion-row text-center>
+        <ion-col size="12" size-md="4" no-padding>
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/gfutia">
               <img
@@ -219,12 +220,11 @@
                 alt="Giuseppe Futia"
               />
             </a>
-            <h4>Giuseppe Futia</h4>
+            <h4 padding-top>Giuseppe Futia</h4>
             <p class="text-muted">Project Lead and Developer - PhD Student</p>
           </div>
-        </div>
-
-        <div class="col-md-4 text-center" style="padding: 0px !important;">
+        </ion-col>
+        <ion-col size="12" size-md="4" no-padding>
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/ggarifo">
               <img
@@ -233,14 +233,13 @@
                 alt="Giovanni Garifo"
               />
             </a>
-            <h4>Giovanni Garifo</h4>
+            <h4 padding-top>Giovanni Garifo</h4>
             <p class="text-muted">
               Lead Software Developer - Student and collaborator
             </p>
-          </div>
-        </div>
-
-        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          </div></ion-col
+        >
+        <ion-col size="12" size-md="4" no-padding>
           <div class="reviews-box">
             <a href="">
               <img
@@ -249,12 +248,11 @@
                 alt="Cosma"
               />
             </a>
-            <h4>Cosma Alex Vergari</h4>
+            <h4 padding-top>Cosma Alex Vergari</h4>
             <p class="text-muted">Frontend Developer - Part-time Intern</p>
           </div>
-        </div>
-
-        <div class="col-md-4 text-center" style="padding: 0px !important;">
+        </ion-col>
+        <ion-col size="12" size-md="4" no-padding>
           <div class="reviews-box">
             <a href="">
               <img
@@ -263,12 +261,11 @@
                 alt="Mehdi"
               />
             </a>
-            <h4>Mehdi Khrichfa</h4>
+            <h4 padding-top>Mehdi Khrichfa</h4>
             <p class="text-muted">Backend Developer - Part-time Intern</p>
-          </div>
-        </div>
-
-        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          </div></ion-col
+        >
+        <ion-col size="12" size-md="4" no-padding>
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/avetro">
               <img
@@ -277,14 +274,13 @@
                 alt="Antonio Vetro"
               />
             </a>
-            <h4>Antonio Vetrò</h4>
+            <h4 padding-top>Antonio Vetrò</h4>
             <p class="text-muted">
               Scientific Advisor - Assistant Professor @ DAUIN
             </p>
-          </div>
-        </div>
-
-        <div class="col-md-4 text-center" style="padding: 0px !important;">
+          </div></ion-col
+        >
+        <ion-col size="12" size-md="4" no-padding>
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/asantangelo">
               <img
@@ -293,21 +289,18 @@
                 alt="Antonio Santangelo"
               />
             </a>
-            <h4>Antonio Santangelo</h4>
+            <h4 padding-top>Antonio Santangelo</h4>
             <p class="text-muted">Executive Director Nexa Center</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </div></ion-col
+        >
+      </ion-row>
+    </ion-grid>
   </section>
 
   <section class="bg-primary" id="contatti">
-    <div class="container">
-      <div class="row">
-        <div
-          class="col-lg-8 mx-auto text-center"
-          style="max-width: 85%; flex: 85%;"
-        >
+    <ion-grid text-center padding>
+      <ion-row>
+        <ion-col size-lg="8" offset-lg="2">
           <h2 class="section-heading text-white">Contatti</h2>
           <hr class="light" />
           <p class="text-faded">
@@ -315,13 +308,13 @@
             contattarci all’indirizzo mail:
             <a href="mailto:geranium@nexacenter.org">geranium@nexacenter.org</a>
           </p>
-        </div>
-      </div>
-    </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </section>
 
   <div class="call-to-action bg-dark">
-    <div class="container text-center">
+    <div text-center>
       <h2>Questionario</h2>
       <h5>
         Aiutaci a migliorare Geranium rispondendo al

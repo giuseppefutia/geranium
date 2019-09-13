@@ -78,10 +78,12 @@ export class AuthorsService {
               allTopics.push({ url: topic.url, label: topic.label, occ: 1 });
             }
           }
+          console.log(author);
+          console.log(author.publications_on_topic.length);
 
           // Sort topics by number of occurences and convert to label
           const stringTopics: string[] = [];
-          allTopics = allTopics.sort((a, b) => b.occ - a.occ);
+          allTopics = allTopics.sort((a, b) => a.occ - b.occ);
           for (const topic of allTopics) {
             stringTopics.push(topic.label);
           }

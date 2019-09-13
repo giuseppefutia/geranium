@@ -74,43 +74,55 @@
         *ngFor="let author of filteredAuthors"
       >
         <ion-card style="animation-name: fadeIn; animation-duration: 1s;">
-          <ion-card-header>
-            <ion-card-title *ngIf="isLoading">
-              <ion-skeleton-text
-                animated
-                style="height: 1em;"
-              ></ion-skeleton-text>
-            </ion-card-title>
-            <ion-card-title *ngIf="!isLoading">
-              {{ author.name }}
-            </ion-card-title>
-            <ion-card-subtitle *ngIf="isLoading">
-              <ion-skeleton-text animated></ion-skeleton-text>
-            </ion-card-subtitle>
-            <ion-card-subtitle *ngIf="!isLoading">
-              {{ author.department }}
-            </ion-card-subtitle>
-          </ion-card-header>
-
           <ion-skeleton-text
             *ngIf="isLoading"
             style="width:100%; height: 220px;"
             no-padding
             no-margin
           ></ion-skeleton-text>
-          <div no-padding no-margin class="card-img" *ngIf="!isLoading">
+          <div
+            tappable
+            (click)="onAuthorDetails(author)"
+            no-padding
+            no-margin
+            class="card-img"
+            *ngIf="!isLoading"
+          >
             <ion-img [src]="author.imageUrl" alt="Loading image..."></ion-img>
           </div>
 
-          <ion-card-content>
-            <ion-skeleton-text
-              style="height: 1em;"
-              *ngIf="isLoading"
-            ></ion-skeleton-text>
-            <div *ngIf="!isLoading" padding>
-              <ion-label>Number of papers: </ion-label>
-              <ion-badge>{{ author.numberOfPapers }}</ion-badge>
-            </div>
+          <ion-grid>
+            <ion-row justify-content-center align-items-center>
+              <ion-col size="10">
+                <ion-card-header>
+                  <ion-card-title *ngIf="isLoading">
+                    <ion-skeleton-text
+                      animated
+                      style="height: 1em;"
+                    ></ion-skeleton-text>
+                  </ion-card-title>
+                  <ion-card-title
+                    *ngIf="!isLoading"
+                    tappable
+                    (click)="onAuthorDetails(author)"
+                  >
+                    <b>{{ author.name }}</b>
+                  </ion-card-title>
+                </ion-card-header>
+              </ion-col>
+              <ion-col>
+                <ion-skeleton-text
+                  style="height: 1em;"
+                  *ngIf="isLoading"
+                ></ion-skeleton-text>
+                <div *ngIf="!isLoading">
+                  <ion-badge mode="ios">{{ author.numberOfPapers }}</ion-badge>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-card-content no-padding padding-horizontal padding-bottom>
             <ion-skeleton-text
               style="height: 1em;"
               *ngIf="isLoading"

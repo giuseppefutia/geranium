@@ -313,13 +313,13 @@ def getDBpediaThumbnail(topic: str) -> str:
             return bindingsList[0]['thumbnail']['value']  # uri of thumbnail
 
 
-def buildDBpediaAbstractTriples():
+def buildDBpediaAbstractTriples(file):
     graph = Graph()
 
     # Read static file of topics
     topics = ""
-    with open('topics.json') as file:
-        topics = json.load(file)
+    with open(file) as f:
+        topics = json.load(f)
 
     for topic in topics:
         url = topic['url']
@@ -358,24 +358,29 @@ def update(dump,old_rdf):
 
     serialize(graph)
 
-def build(dump):
-    outputFilename = ""
+def build(dump,outputFilename):
     graph = Graph()
 
-    if os.path.isfile("publicationsGraphWithoutImages.rdf"):  # XXX Temporary
-        graph.parse("publicationsGraphWithoutImages.rdf", format=pref_format)
-        print("Adding images to graph...\n")
-        addImgURLtoTopics(graph)
-        outputFilename = "publicationsGraphWithImages.rdf"
-    elif os.path.isfile("topics.json"):  # XXX Temporary
-        graph = buildDBpediaAbstractTriples()
-        outputFilename = "topics.rdf"
-    else:
-        print("Loading dump: " + dump)
-        graph = buildGraphFromPublicationsDump(dump)
-        outputFilename = "publicationsGraphWithoutImages.rdf"
+    print("Loading dump: " + dump)
+    graph = buildGraphFromPublicationsDump(dump)
 
     serialize(graph,outputFilename)
+
+
+def add_images(input_file,output_file):
+    graph = Graph()
+    
+    graph.parse(input_file, format=pref_format)
+    print("Adding images to graph...\n")
+    addImgURLtoTopics(graph)
+    outputFilename = output_file
+        
+    serialize(graph,outputFilename)
+
+def add_abstracts(input_file,output_file):
+    if os.path.isfile(input_file):
+        graph = buildDBpediaAbstractTriples(input_file)
+        outputFilename = output_file
 
 def main():
     """
@@ -384,17 +389,26 @@ def main():
     #CLI setup
     parser = argparse.ArgumentParser(description='parse a json file and generate an rdf file out of its data')
     parser.add_argument('-j','--json',help='json file to be processed',default='../data/publications-sample.json',type=str)
+    parser.add_argument('-i','--images',help='get images for the rdf file')
+    parser.add_argument('-t','--topics',help='get abstracts for the topics\' json file')
     parser.add_argument('-u','--update',help='update previously generated rdf file',type=str)
+    parser.add_argument('-o','--output',help='output file filename',default='publicationsGraphWithoutImages.rdf',type=str)
     parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
     parser.add_argument('-f','--format',help='(TODO) specify rdf file format',default='xml',type=str)
     args = parser.parse_args()
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
+  
     if args.update:
         update(args.json,args.update)
     else:
-        build(args.json)
+        build(args.json,args.output)
+
+    if args.images:
+        add_images(args.images)
+    if args.topics:
+        add_abstracts(args.topics)
 
     return 0
 

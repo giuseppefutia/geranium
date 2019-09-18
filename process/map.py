@@ -3,6 +3,7 @@ import pprint
 import time
 import sys
 import logging
+import argparse
 import requests
 import threading
 from rdflib import URIRef, Literal, Namespace, Graph
@@ -13,7 +14,9 @@ import os.path
 import sparql as sparqlQueries
 from langdetect import detect
 
+#settings
 logging.basicConfig(level=logging.DEBUG)
+pref_format='xml'
 
 # define namespaces
 BASE_URL = 'http://geranium-project.org/'
@@ -31,18 +34,13 @@ GERANIUM_ONTOLOGY_JOU = URIRef(GERANIUM_ONTOLOGY + "Journal")
 GERANIUM_ONTOLOGY_TMF = URIRef(GERANIUM_ONTOLOGY + "TMFResource")
 GERANIUM_ONTOLOGY_KEY = URIRef(GERANIUM_ONTOLOGY + "AuthorKeyword")
 
-# create RDF graph
-graph = Graph()
-
-# authors and journals set
+# authors set
 authors = set()
-journals = set()
 
-#threading locks for the graph, the progress bar counter, the authors set and the journals set
+#threading locks for the graph, the progress bar counter and the authors set
 lock_graph = threading.Lock()
 lock_progress = threading.Lock()
 lock_authors = threading.Lock()
-lock_journals = threading.Lock()
 
 #Number of records
 num_records = 0
@@ -133,143 +131,143 @@ def add_author(author, authors, graph: Graph):
     logging.debug('Released author lock!')
     lock_authors.release()
 
-def process_record(record):
-    topics = []
-    abstract = None
-    json_topics = []
-    json_topics_clean = []
-    tmf_topics = []
-
-    logging.debug('Processing a record...')
-    lock_graph.acquire()
-    logging.debug('Acquired graph lock!')
-    try:
-        # publication type
-        graph.add((GERANIUM_PUB[str(record['handle'])],
-                    RDF.type,
-                    GERANIUM_ONTOLOGY_PUB))
-        # add publication abstract relationship
-        abstract = record['metadata']['dc.description.abstract'][0]['value']
-        graph.add((GERANIUM_PUB[str(record['handle'])],
-                    PURL.abstract,
-                    Literal(abstract)))
-
-    except Exception:
-        pass
-
-    try:
-        # add title as label property
-        title = record['metadata']['dc.title'][0]['value']
-        graph.add((GERANIUM_PUB[str(record['handle'])],
-                    RDFS.label,
-                    Literal(title)))
-    except:
-        pass
-    logging.debug('Released graph lock!')
-    lock_graph.release()
-
-    try:
-        # add topics to publication
-        json_topics = record['metadata']['dc.subject.keywords'][0]['value']
-
-        if json_topics:
-            json_topics = json_topics.replace('#', ';').replace('\t', ';').replace(
-                '\r\n', ';').replace(',', ';').replace('·', ';').split(';')
-            json_topics_clean = [str(quote(t.strip()))
-                                    for t in json_topics]
-            json_topics_clean = [GERANIUM_KEY[t]
-                                    for t in json_topics_clean if len(t) > 0]
-            assign_label_json(
-                dict(zip(json_topics_clean, json_topics)), graph)
-            assign_type(json_topics_clean, GERANIUM_ONTOLOGY_KEY, graph)
-    except Exception:
-        pass
-
-    try:
-        num_topics = 7
-        if detect(abstract) == 'it':
-            tmf_topics = get_topics(abstract, num_topics, 'italian')
-        else:
-            tmf_topics = get_topics(abstract, num_topics)
-
-        assign_label_tmf(tmf_topics, graph)
-        tmf_topics = [URIRef(uri) for uri in [*tmf_topics]]
-        assign_type(tmf_topics, GERANIUM_ONTOLOGY_TMF, graph)
-    except Exception:
-        pass
-
-
-    topics.extend(json_topics_clean)
-    topics.extend(tmf_topics)
-
-    lock_graph.acquire()
-    logging.debug('Acquired graph lock 2!')
-    if topics:
-        for topic in topics:
-            graph.add((GERANIUM_PUB[str(record['handle'])],
-                        PURL.subject,
-                        URIRef(topic)))
-
-    # add publication identifier relationship
-        graph.add((GERANIUM_PUB[str(record['handle'])],
-                    PURL.identifier,
-                    Literal(str(record['handle']))))
-    # add publication submission date relationship
-    graph.add((GERANIUM_PUB[str(record['handle'])],
-                PURL.dateSubmitted,
-                Literal(str(record['lookupValues']['subdate'])[:10], datatype=XSD.date)))
-
-    # control if the publication is associated with a journal
-    if record['lookupValues']['jissn']:
-        jissn = str(record['lookupValues']['jissn']).strip()
-        # journal type
-        graph.add((GERANIUM_JOU[jissn],
-                    RDF.type,
-                    GERANIUM_ONTOLOGY_JOU))
-        # add journal entity
-        graph.add((GERANIUM_JOU[jissn],
-                    PURL.identifier,
-                    Literal(jissn)))
-        # add journal title to journal as label
-        graph.add((GERANIUM_JOU[jissn],
-                    RDFS.label,
-                    Literal(str(record['lookupValues']['jtitle']))))
-        # add journal title to journal as title
-        graph.add((GERANIUM_JOU[jissn],
-                    PURL.title,
-                    Literal(str(record['lookupValues']['jtitle']))))
-        # add publication journal relationship
-        graph.add((GERANIUM_PUB[str(record['handle'])],
-                    PURL.publisher,
-                    GERANIUM_JOU[jissn]))
+def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> Graph:
     
-    # add publication creator relationship
-    author = record['internalAuthors'][0]
-    add_author(author, authors, graph)
-    if author['authority']:
-        graph.add((GERANIUM_PUB[str(record['handle'])],
-                    PURL.creator,
-                    GERANIUM_AUT[author['authority']]))
+    def process_record(record):
+        topics = []
+        abstract = None
+        json_topics = []
+        json_topics_clean = []
+        tmf_topics = []
 
-    # add publication contributor relationship
-    for author in record['internalAuthors'][1:]:
+        logging.debug('Processing a record...')
+        lock_graph.acquire()
+        logging.debug('Acquired graph lock!')
+        try:
+            # publication type
+            graph.add((GERANIUM_PUB[str(record['handle'])],
+                        RDF.type,
+                        GERANIUM_ONTOLOGY_PUB))
+            # add publication abstract relationship
+            abstract = record['metadata']['dc.description.abstract'][0]['value']
+            graph.add((GERANIUM_PUB[str(record['handle'])],
+                        PURL.abstract,
+                        Literal(abstract)))
+
+        except Exception:
+            pass
+
+        try:
+            # add title as label property
+            title = record['metadata']['dc.title'][0]['value']
+            graph.add((GERANIUM_PUB[str(record['handle'])],
+                        RDFS.label,
+                        Literal(title)))
+        except:
+            pass
+        logging.debug('Released graph lock!')
+        lock_graph.release()
+
+        try:
+            # add topics to publication
+            json_topics = record['metadata']['dc.subject.keywords'][0]['value']
+
+            if json_topics:
+                json_topics = json_topics.replace('#', ';').replace('\t', ';').replace(
+                    '\r\n', ';').replace(',', ';').replace('·', ';').split(';')
+                json_topics_clean = [str(quote(t.strip()))
+                                        for t in json_topics]
+                json_topics_clean = [GERANIUM_KEY[t]
+                                        for t in json_topics_clean if len(t) > 0]
+                assign_label_json(
+                    dict(zip(json_topics_clean, json_topics)), graph)
+                assign_type(json_topics_clean, GERANIUM_ONTOLOGY_KEY, graph)
+        except Exception:
+            pass
+
+        try:
+            num_topics = 7
+            if detect(abstract) == 'it':
+                tmf_topics = get_topics(abstract, num_topics, 'italian')
+            else:
+                tmf_topics = get_topics(abstract, num_topics)
+
+            assign_label_tmf(tmf_topics, graph)
+            tmf_topics = [URIRef(uri) for uri in [*tmf_topics]]
+            assign_type(tmf_topics, GERANIUM_ONTOLOGY_TMF, graph)
+        except Exception:
+            pass
+
+
+        topics.extend(json_topics_clean)
+        topics.extend(tmf_topics)
+
+        lock_graph.acquire()
+        logging.debug('Acquired graph lock 2!')
+        if topics:
+            for topic in topics:
+                graph.add((GERANIUM_PUB[str(record['handle'])],
+                            PURL.subject,
+                            URIRef(topic)))
+
+        # add publication identifier relationship
+            graph.add((GERANIUM_PUB[str(record['handle'])],
+                        PURL.identifier,
+                        Literal(str(record['handle']))))
+        # add publication submission date relationship
+        graph.add((GERANIUM_PUB[str(record['handle'])],
+                    PURL.dateSubmitted,
+                    Literal(str(record['lookupValues']['subdate'])[:10], datatype=XSD.date)))
+
+        # control if the publication is associated with a journal
+        if record['lookupValues']['jissn']:
+            jissn = str(record['lookupValues']['jissn']).strip()
+            # journal type
+            graph.add((GERANIUM_JOU[jissn],
+                        RDF.type,
+                        GERANIUM_ONTOLOGY_JOU))
+            # add journal entity
+            graph.add((GERANIUM_JOU[jissn],
+                        PURL.identifier,
+                        Literal(jissn)))
+            # add journal title to journal as label
+            graph.add((GERANIUM_JOU[jissn],
+                        RDFS.label,
+                        Literal(str(record['lookupValues']['jtitle']))))
+            # add journal title to journal as title
+            graph.add((GERANIUM_JOU[jissn],
+                        PURL.title,
+                        Literal(str(record['lookupValues']['jtitle']))))
+            # add publication journal relationship
+            graph.add((GERANIUM_PUB[str(record['handle'])],
+                        PURL.publisher,
+                        GERANIUM_JOU[jissn]))
+        
+        # add publication creator relationship
+        author = record['internalAuthors'][0]
         add_author(author, authors, graph)
         if author['authority']:
             graph.add((GERANIUM_PUB[str(record['handle'])],
-                        PURL.contributor,
+                        PURL.creator,
                         GERANIUM_AUT[author['authority']]))
-    logging.debug('Released graph lock 2!')
-    lock_graph.release()
 
-    lock_progress.acquire()
-    logging.debug('Acquired progress bar lock!')
-    global progress
-    progress+=1
-    progressBar(progress, num_records, bar_length=100)
-    logging.debug('Released progress bar lock!')
-    lock_progress.release()
+        # add publication contributor relationship
+        for author in record['internalAuthors'][1:]:
+            add_author(author, authors, graph)
+            if author['authority']:
+                graph.add((GERANIUM_PUB[str(record['handle'])],
+                            PURL.contributor,
+                            GERANIUM_AUT[author['authority']]))
+        logging.debug('Released graph lock 2!')
+        lock_graph.release()
 
-def buildGraphFromPublicationsDump(publicationsDumpPath: str) -> Graph:
+        lock_progress.acquire()
+        logging.debug('Acquired progress bar lock!')
+        global progress
+        progress+=1
+        progressBar(progress, num_records, bar_length=100)
+        logging.debug('Released progress bar lock!')
+        lock_progress.release()
 
     # read json file
     with open(publicationsDumpPath, 'r') as file:
@@ -346,24 +344,27 @@ def getDBpediaAbstract(topic):
         else:
             return bindingsList[0]['abstract']['value']  # uri of thumbnail
 
+def serialize(graph,outputFilename='publicationsGraphWithoutImages.rdf'):
+    serialized = graph.serialize(format=pref_format)
+    with open(outputFilename, 'wb') as file:
+        file.write(serialized)
 
-def main(argv):
-    '''
-    Execute the following script if not used as library
-    '''
-    if(len(argv) == 2):
-        publicationsDump = argv[1]
-    elif(len(argv) == 1):
-        publicationsDump = "../data/publications-sample.json"
-    else:
-        print("Wrong argument number: `python3 map.py <path/to/dump>`")
-        exit(0)
+def update(dump,old_rdf):
+    graph = Graph()
+    print('Parsing graph...')
+    graph.parse(old_rdf,pref_format)
+    print('Graph parsed!')
+    logging.debug('Got Here!')
+    graph = buildGraphFromPublicationsDump(dump,graph)
 
+    serialize(graph)
+
+def build(dump):
     outputFilename = ""
     graph = Graph()
 
     if os.path.isfile("publicationsGraphWithoutImages.rdf"):  # XXX Temporary
-        graph.parse("publicationsGraphWithoutImages.rdf", format="xml")
+        graph.parse("publicationsGraphWithoutImages.rdf", format=pref_format)
         print("Adding images to graph...\n")
         addImgURLtoTopics(graph)
         outputFilename = "publicationsGraphWithImages.rdf"
@@ -371,13 +372,26 @@ def main(argv):
         graph = buildDBpediaAbstractTriples()
         outputFilename = "topics.rdf"
     else:
-        print("Loading dump: " + publicationsDump)
-        graph = buildGraphFromPublicationsDump(publicationsDump)
+        print("Loading dump: " + dump)
+        graph = buildGraphFromPublicationsDump(dump)
         outputFilename = "publicationsGraphWithoutImages.rdf"
 
-    serialized = graph.serialize(format='xml')
-    with open(outputFilename, 'wb') as file:
-        file.write(serialized)
+    serialize(graph,outputFilename)
+
+def main():
+    '''
+    Execute the following script if not used as library
+    '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('dump')
+    parser.parse_args()
+    logging.debug('Number of args: '+str(len(argv)))
+    if(len(argv) == 2):
+        build(argv[1])
+    elif(len(argv) == 4 and argv[2]=='-u'):
+        update(argv[1],argv[3])
+    elif(len(argv) == 1):
+        build("../data/publications-sample.json")
 
     # end of main function
     return 0
@@ -388,6 +402,6 @@ def main(argv):
 #----------#
 if __name__ == "__main__":
     start_time = time.time()
-    main(sys.argv)
+    main()
     print("--- %s seconds ---" % (time.time() - start_time))
     

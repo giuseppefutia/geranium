@@ -15,7 +15,6 @@ import sparql as sparqlQueries
 from langdetect import detect
 
 #settings
-logging.basicConfig(level=logging.DEBUG)
 pref_format='xml'
 
 # define namespaces
@@ -387,9 +386,11 @@ def main():
     parser.add_argument('-j','--json',help='json file to be processed',default='../data/publications-sample.json',type=str)
     parser.add_argument('-u','--update',help='update previously generated rdf file',type=str)
     parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
-    parser.add_argument('-f','--format',help='(WIP) specify rdf file format',default='xml',type=str)
+    parser.add_argument('-f','--format',help='(TODO) specify rdf file format',default='xml',type=str)
     args = parser.parse_args()
 
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
     if args.update:
         update(args.json,args.update)
     else:

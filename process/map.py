@@ -379,21 +379,22 @@ def build(dump):
     serialize(graph,outputFilename)
 
 def main():
-    '''
+    """
     Execute the following script if not used as library
-    '''
-    parser = argparse.ArgumentParser()
-    parser.add_argument('dump')
-    parser.parse_args()
-    logging.debug('Number of args: '+str(len(argv)))
-    if(len(argv) == 2):
-        build(argv[1])
-    elif(len(argv) == 4 and argv[2]=='-u'):
-        update(argv[1],argv[3])
-    elif(len(argv) == 1):
-        build("../data/publications-sample.json")
+    """
+    #CLI setup
+    parser = argparse.ArgumentParser(description='parse a json file and generate an rdf file out of its data')
+    parser.add_argument('-j','--json',help='json file to be processed',default='../data/publications-sample.json',type=str)
+    parser.add_argument('-u','--update',help='update previously generated rdf file',type=str)
+    parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
+    parser.add_argument('-f','--format',help='(WIP) specify rdf file format',default='xml',type=str)
+    args = parser.parse_args()
 
-    # end of main function
+    if args.update:
+        update(args.json,args.update)
+    else:
+        build(args.json)
+
     return 0
 
 

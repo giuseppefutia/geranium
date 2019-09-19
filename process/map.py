@@ -381,34 +381,41 @@ def add_abstracts(input_file,output_file):
     if os.path.isfile(input_file):
         graph = buildDBpediaAbstractTriples(input_file)
         outputFilename = output_file
+        serialize(graph,outputFilename)
+    else:
+        print(input_file+" not found")
 
 def main():
     """
     Execute the following script if not used as library
     """
+    global pref_format
     #CLI setup
     parser = argparse.ArgumentParser(description='parse a json file and generate an rdf file out of its data')
-    parser.add_argument('-j','--json',help='json file to be processed',default='../data/publications-sample.json',type=str)
+    parser.add_argument('-b','--build',help='build rdf file starting from the json dump',type=str)
     parser.add_argument('-i','--images',help='get images for the rdf file')
     parser.add_argument('-t','--topics',help='get abstracts for the topics\' json file')
     parser.add_argument('-u','--update',help='update previously generated rdf file',type=str)
     parser.add_argument('-o','--output',help='output file filename',default='publicationsGraphWithoutImages.rdf',type=str)
     parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
-    parser.add_argument('-f','--format',help='(TODO) specify rdf file format',default='xml',type=str)
+    parser.add_argument('-f','--format',help='specify rdf file format (xml by default)',default=pref_format,type=str)
     args = parser.parse_args()
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
-  
+    if args.format != pref_format:
+        
+        pref_format = args.format
     if args.update:
-        update(args.json,args.update)
-    else:
-        build(args.json,args.output)
-
+        update(args.build,args.update)
+    if args.build and not args.update:
+        build(args.build,args.output)
     if args.images:
-        add_images(args.images)
+        add_images(args.images,args.output)
     if args.topics:
-        add_abstracts(args.topics)
+        add_abstracts(args.topics,args.output)
+    else:
+        print('No operation!')
 
     return 0
 

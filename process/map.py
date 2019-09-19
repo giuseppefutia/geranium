@@ -343,20 +343,21 @@ def getDBpediaAbstract(topic):
         else:
             return bindingsList[0]['abstract']['value']  # uri of thumbnail
 
-def serialize(graph,outputFilename='publicationsGraphWithoutImages.rdf'):
+def serialize(graph,outputFilename):
     serialized = graph.serialize(format=pref_format)
     with open(outputFilename, 'wb') as file:
         file.write(serialized)
 
-def update(dump,old_rdf):
-    graph = Graph()
-    print('Parsing graph...')
-    graph.parse(old_rdf,pref_format)
-    print('Graph parsed!')
-    logging.debug('Got Here!')
-    graph = buildGraphFromPublicationsDump(dump,graph)
-
-    serialize(graph)
+def update(dump,old_rdf,outputFilename):
+    old_graph = Graph()
+    print('Parsing old graph...')
+    old_graph.parse(old_rdf,pref_format)
+    print('Old graph parsed!')
+    new_graph = buildGraphFromPublicationsDump(dump)
+    
+    
+    graph = old_graph + new_graph
+    serialize(graph,outputFilename)
 
 def build(dump,outputFilename):
     graph = Graph()
@@ -395,8 +396,8 @@ def main():
     parser.add_argument('-b','--build',help='build rdf file starting from the json dump',type=str)
     parser.add_argument('-i','--images',help='get images for the rdf file')
     parser.add_argument('-t','--topics',help='get abstracts for the topics\' json file')
-    parser.add_argument('-u','--update',help='update previously generated rdf file',type=str)
-    parser.add_argument('-o','--output',help='output file filename',default='publicationsGraphWithoutImages.rdf',type=str)
+    parser.add_argument('-u','--update',help='update previously generated rdf file (updatedGraph = oldGraph UNION newGraph)',type=str)
+    parser.add_argument('-o','--output',help='output file filename',default='output_'+time.strftime('%Y%m%d_%H%M%S')+'.rdf',type=str)
     parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
     parser.add_argument('-f','--format',help='specify rdf file format (xml by default)',default=pref_format,type=str)
     args = parser.parse_args()
@@ -404,18 +405,15 @@ def main():
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
     if args.format != pref_format:
-        
         pref_format = args.format
     if args.update:
-        update(args.build,args.update)
+        update(args.build,args.update,args.output)
     if args.build and not args.update:
         build(args.build,args.output)
     if args.images:
         add_images(args.images,args.output)
     if args.topics:
         add_abstracts(args.topics,args.output)
-    else:
-        print('No operation!')
 
     return 0
 

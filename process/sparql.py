@@ -97,9 +97,11 @@ def set_author_details_query(topic, lines, offset, author_url):
         ?p purl:creator ?other_a .
         ?other_a purl:identifier ?other_a_id .
         ?other_a rdfs:label ?other_a_label .
-        ?p purl:contributor ?other_ca .
-        ?other_ca purl:identifier ?other_ca_id .
-        ?other_ca rdfs:label ?other_ca_label .
+        OPTIONAL{{
+            ?p purl:contributor ?other_ca .
+            ?other_ca purl:identifier ?other_ca_id .
+            ?other_ca rdfs:label ?other_ca_label .
+        }}
         FILTER (?property = purl:creator || ?property = purl:contributor)
     }} LIMIT {l} OFFSET {o}
     \

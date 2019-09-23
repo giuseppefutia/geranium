@@ -213,15 +213,16 @@ def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> G
             graph.add((GERANIUM_PUB[str(record['handle'])],
                         PURL.identifier,
                         Literal(str(record['handle']))))
-        # add publication submission date relationship
-        date = str(record['lookupValues']['subdate'])[:10]
+        # add publication issued date relationship
+        date = str(record['metadata']['dc.date.issued'][0]['value'])
+
         if date=='None':
-            date = str(record['metadata']['dc.date.issued'][0]['value'])
+            date = 'Missing'
             
         graph.add((GERANIUM_PUB[str(record['handle'])],
                     PURL.dateSubmitted,
                     Literal(date, datatype=XSD.date)))
-
+        
         # control if the publication is associated with a journal
         if record['lookupValues']['jissn']:
             jissn = str(record['lookupValues']['jissn']).strip()

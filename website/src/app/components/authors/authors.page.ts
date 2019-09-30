@@ -108,19 +108,67 @@ export class AuthorsPage implements OnInit {
       );
   }
 
+  private hue2rgb(p, q, t) {
+    if (t < 0) { t += 1; }
+    if (t > 1) { t -= 1; }
+    if (t < 1 / 6) { return p + (q - p) * 6 * t; }
+    if (t < 1 / 2) { return q; }
+    if (t < 2 / 3) { return p + (q - p) * (2 / 3 - t) * 6; }
+    return p;
+  }
+
+  hslToRgb(h, s, l) {
+    let r, g, b;
+
+    if (s === 0) {
+      r = g = b = l; // achromatic
+    } else {
+      const hue2rgb = this.hue2rgb;
+
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
   /**
    * Filter the topics of interest of each Author
    * @param topics array of the topic of interest
    * @param topicsLimit number of topic to be showed
    */
-  processTopics(topics: PapersPerTopics[], topicsLimit: number): PapersPerTopics[] {
+  processTopics(
+    topics: PapersPerTopics[],
+    topicsLimit: number
+  ): PapersPerTopics[] {
     return topics
-     .sort((t1, t2) => t1.occ - t2.occ)
-      .filter(
-        topic =>
+      .sort((t1, t2) => t1.occ - t2.occ)
+      .filter(topic => {
+        /*
+        background: rgba(var(--ion-color-base-rgb),.08);
+        color: var(--ion-color-shade);
+
+        ion-color-base-rgb = #3880ff = hsl(218, 100%, 61%)
+        ion-color-shade = #3171e0 = hsl(218, 74%, 54%)
+                  ^
+                  |
+        NOTE: Use Hue to vary color for number of papers
+        TODO: method to determine max number of papers per topic is needed?
+ */
+        const hueForTopic = ((topic.label.length * 20) % 360) / 360;
+        const rgb = this.hslToRgb(hueForTopic, 0.74, 0.54);
+        topic.style = {
+          color: 'hsl(' + hueForTopic * 360 + ', 100%, 61%)',
+          background: 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',.08)'
+        };
+        return (
           topic.label.toLowerCase() !==
           this.dataModel.searchTopicToString().toLowerCase()
-      )
+        );
+      })
       .slice(0, topicsLimit > topics.length ? topics.length : topicsLimit);
   }
 

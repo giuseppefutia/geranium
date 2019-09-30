@@ -75,11 +75,9 @@ export class AuthorsService {
                 t.occ++;
                 continue;
               }
-              allTopics.push({ url: topic.url, label: topic.label, occ: 1 });
+              allTopics.push({ url: topic.url, label: topic.label, occ: 1, style: {} });
             }
           }
-          console.log(author);
-          console.log(author.publications_on_topic.length);
 
           // Sort topics by number of occurences and convert to label
           const stringTopics: string[] = [];
@@ -130,7 +128,7 @@ export class AuthorsService {
                 t.occ++;
                 continue;
               }
-              allTopics.push({ url: topic.url, label: topic.label, occ: 1 });
+              allTopics.push({ url: topic.url, label: topic.label, occ: 1, style: {} });
             }
           }
 

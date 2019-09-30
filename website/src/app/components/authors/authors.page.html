@@ -132,10 +132,11 @@
                 *ngFor="let ppt of author.papersPerTopics"
                 (click)="onTopicChipClick(ppt.label)"
                 color="primary"
+                
               >
                 <ion-icon name="bulb"></ion-icon>
                 <ion-label color="primary">{{ ppt.label }}</ion-label>
-                <ion-badge style="margin-left: 5px;">{{ ppt.occ }}</ion-badge>
+                <!-- <ion-badge style="margin-left: 5px;" *ngIf="ppt.occ !== 1">{{ ppt.occ }}</ion-badge> -->
               </ion-chip>
             </div>
           </ion-card-content>

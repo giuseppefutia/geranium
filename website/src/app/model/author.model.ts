@@ -4,6 +4,7 @@ export interface PapersPerTopics {
     url: string;
     label: string;
     occ: number;
+    style: object;
 }
 
 export class Author {

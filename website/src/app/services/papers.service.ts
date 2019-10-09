@@ -7,6 +7,7 @@ import { Paper } from '../model/paper.model';
 import { Topic, TopicNoImg } from '../model/topic.model';
 import { SimplifiedAuthor } from '../model/simplified-author.model';
 import { ModelService } from '../model/model.service';
+import { ConfigService } from '../config/config.service';
 
 // Response interface
 export interface ResponsePaper {
@@ -23,7 +24,11 @@ export interface ResponsePaper {
   providedIn: 'root'
 })
 export class PapersService {
-  constructor(private http: HttpClient, private dataModel: ModelService) {}
+  constructor(
+    private http: HttpClient,
+    private dataModel: ModelService,
+    private config: ConfigService
+  ) {}
 
   /**
    * Send HTTP GET request for all the publications inherent a specific topic, passed as parameter.
@@ -35,11 +40,11 @@ export class PapersService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
-      'http://api.geranium.nexacenter.org/api?' +
+      'http://' +
+      this.config.baseURL +
+      '/api?' +
       encodeURI(
-        `type=publications&topic=${
-          topicQuery.label
-        }&lines=${linesPerQuery}&offset=${linesOffset}`
+        `type=publications&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
       );
 
     console.log('GET: ' + url);
@@ -85,7 +90,11 @@ export class PapersService {
           }
 
           let imgUrl: string;
-          if ((/\.(gif|jpe?g|tiff|png|svg)(\?width=300)?$/i).test(topics[topicImgChoosen].img)) {
+          if (
+            /\.(gif|jpe?g|tiff|png|svg)(\?width=300)?$/i.test(
+              topics[topicImgChoosen].img
+            )
+          ) {
             imgUrl = topics[topicImgChoosen].img;
           } else {
             imgUrl = 'assets/img/defaultPaper.jpg';

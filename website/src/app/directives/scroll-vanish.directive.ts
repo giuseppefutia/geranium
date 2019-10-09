@@ -63,6 +63,7 @@ export class ScrollVanishDirective implements OnInit {
       this.renderer.setStyle(this.element.nativeElement, 'height', '0px');
       this.renderer.setStyle(this.element.nativeElement, 'opacity', '0');
       this.renderer.setStyle(this.element.nativeElement, 'padding', '0px');
+      this.renderer.setStyle(this.element.nativeElement, 'pointer-events', 'none');
     });
 
     this.hidden = true;
@@ -78,6 +79,7 @@ export class ScrollVanishDirective implements OnInit {
       );
       this.renderer.removeStyle(this.element.nativeElement, 'opacity');
       this.renderer.removeStyle(this.element.nativeElement, 'padding');
+      this.renderer.removeStyle(this.element.nativeElement, 'pointer-events');
     });
 
     this.hidden = false;

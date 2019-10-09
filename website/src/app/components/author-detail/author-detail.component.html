@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Author Details
+      Details
     </ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onClose()">
@@ -39,17 +39,16 @@
         ></ion-img>
       </ion-col>
       <ion-col padding>
-        <ion-text color="primary">
-          <h2 no-margin><b>Name and surname</b></h2>
+        <ion-text>
+          <h1 no-margin style="font-size: xx-large; padding-bottom: 20px;">
+            <b>{{ selectedAuthor.name }}</b>
+          </h1>
         </ion-text>
-        <div margin>
-          <h4>{{ selectedAuthor.name }}</h4>
-        </div>
         <ion-text color="primary"
-          ><h3 no-margin><b>Interested Topics</b></h3></ion-text
+          ><h3 no-margin><b>Topics of interest</b></h3></ion-text
         >
         <div margin>
-            <ion-chip
+          <ion-chip
             *ngFor="let ppt of selectedAuthor.papersPerTopics"
             (click)="onTopicChipClick(ppt.label)"
             color="primary"

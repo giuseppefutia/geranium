@@ -108,7 +108,12 @@
             no-padding
             no-margin
           ></ion-skeleton-text>
-          <div *ngIf="!isLoading" class="card-img">
+          <div
+            *ngIf="!isLoading"
+            class="card-img"
+            tappable
+            (click)="onPaperDetails(paper)"
+          >
             <ion-img [src]="paper.imageUrl" alt="Loading image..."></ion-img>
           </div>
           <ion-card-header>
@@ -126,9 +131,13 @@
                 style="height: 1em;"
               ></ion-skeleton-text>
             </ion-card-title>
-            <ion-card-title *ngIf="!isLoading" class="card-title">{{
-              paper.title
-            }}</ion-card-title>
+            <ion-card-title
+              *ngIf="!isLoading"
+              class="card-title"
+              tappable
+              (click)="onPaperDetails(paper)"
+              >{{ paper.title }}</ion-card-title
+            >
             <ion-card-subtitle *ngIf="isLoading">
               <ion-skeleton-text animated></ion-skeleton-text>
             </ion-card-subtitle>

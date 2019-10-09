@@ -8,6 +8,7 @@ import { Author, ExpandedAuthor, PapersPerTopics } from '../model/author.model';
 import { Topic, TopicNoImg } from '../model/topic.model';
 import { ModelService } from '../model/model.service';
 import { SimplifiedPaper } from '../model/simplified-paper.model';
+import { ConfigService } from '../config/config.service';
 
 // Set interfaces to parse data
 interface Publication {
@@ -39,7 +40,11 @@ export interface ResponseAuthor {
   providedIn: 'root'
 })
 export class AuthorsService {
-  constructor(private http: HttpClient, private dataModel: ModelService) {}
+  constructor(
+    private http: HttpClient,
+    private dataModel: ModelService,
+    private config: ConfigService
+  ) {}
 
   /**
    * Send HTTP GET request for all the authors that have publications inherent the topic passed as argument
@@ -54,11 +59,11 @@ export class AuthorsService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
-      'http://api.geranium.nexacenter.org/api?' +
+      'http://' +
+      this.config.baseURL +
+      '/api?' +
       encodeURI(
-        `type=authors&topic=${
-          topicQuery.label
-        }&lines=${linesPerQuery}&offset=${linesOffset}`
+        `type=authors&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
       );
 
     console.log('GET: ' + url);
@@ -75,13 +80,18 @@ export class AuthorsService {
                 t.occ++;
                 continue;
               }
-              allTopics.push({ url: topic.url, label: topic.label, occ: 1 });
+              allTopics.push({
+                url: topic.url,
+                label: topic.label,
+                occ: 1,
+                style: {}
+              });
             }
           }
 
           // Sort topics by number of occurences and convert to label
           const stringTopics: string[] = [];
-          allTopics = allTopics.sort((a, b) => b.occ - a.occ);
+          allTopics = allTopics.sort((a, b) => a.occ - b.occ);
           for (const topic of allTopics) {
             stringTopics.push(topic.label);
           }
@@ -109,7 +119,9 @@ export class AuthorsService {
   ): Observable<ResponseAuthor[]> {
     // Get the author data using its URI and the topicLabel through the API
     const url =
-      'http://api.geranium.nexacenter.org/api?' +
+      'http://' +
+      this.config.baseURL +
+      '/api?' +
       encodeURI(
         `type=author&topic=${topicLabel}&lines=10000&offset=0&url=${authorURI}`
       );
@@ -128,7 +140,12 @@ export class AuthorsService {
                 t.occ++;
                 continue;
               }
-              allTopics.push({ url: topic.url, label: topic.label, occ: 1 });
+              allTopics.push({
+                url: topic.url,
+                label: topic.label,
+                occ: 1,
+                style: {}
+              });
             }
           }
 

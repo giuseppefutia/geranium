@@ -229,31 +229,34 @@ export class PapersPage implements OnInit {
     this.currentBlock = 0;
     this.resultsService
       .getSimplifiedPapersBlock(this.dataModel.searchTopic, this.currentBlock)
-      .subscribe(newPapers => {
-        this.filteredPapers = [];
-        this.isLoading = false;
-        if (newPapers.length === 0) {
-          // If there are no results
-          this.endOfResults = true;
-        } else {
-          this.currentBlock++;
+      .subscribe(
+        newPapers => {
+          this.filteredPapers = [];
+          this.isLoading = false;
+          if (newPapers.length === 0) {
+            // If there are no results
+            this.endOfResults = true;
+          } else {
+            this.currentBlock++;
 
-          this.updatePapersYears();
-          this.papersYears =
-            new Date().getFullYear() -
-            Number.parseInt(this.allPapersYears[0].year, 10);
+            this.updatePapersYears();
+            this.papersYears =
+              new Date().getFullYear() -
+              Number.parseInt(this.allPapersYears[0].year, 10);
 
-          this.filterPapers(false);
+            this.filterPapers(false);
 
-          // The timeout is needed for the component to be first drawn
-          setTimeout(() => {
-            this.createChart();
-          }, 300);
+            // The timeout is needed for the component to be first drawn
+            setTimeout(() => {
+              this.createChart();
+            }, 300);
+          }
+        },
+        () => {
+          this.isRedirecting = true;
+          this.errorText = 'An error occurred while fetching topics';
         }
-      }, () => {
-        this.isRedirecting = true;
-        this.errorText = 'An error occurred while fetching topics';
-      });
+      );
   }
 
   // Eliminates the searchKey topic from the list of topics and limits it to a specific number
@@ -428,8 +431,7 @@ export class PapersPage implements OnInit {
   }
 
   // Called when a bar on the chart is clicked
-  // It filters the year corresponding to the clicked bar from allPapers
-  // and puts result in filteredPapers
+  // It calls filterPapers for filtering based on the newly received filtering rules
   onChartClick(bar: BarData) {
     this.allPapersYears[bar.dataIndex].shown = !this.allPapersYears[
       bar.dataIndex
@@ -447,20 +449,37 @@ export class PapersPage implements OnInit {
     this.topicChart.update();
   }
 
-  // The allPapers array is filtered by the value of allPapersYears[i].shown
+  // The papers array in dataModel is filtered by the value of allPapersYears[i].shown
   // corresponding to each year. The result is stored in filteredPapers
   filterPapers(isAppending: boolean) {
     let toBePushed;
-    if (isAppending) {
+    const emptyExceptionHandling =
+      !isAppending && this.filteredPapers.length === 0;
+    if (isAppending || emptyExceptionHandling) {
       toBePushed = this.dataModel
         .getRetrievedPapers()
         .slice(this.filteredPapers.length);
+      for (const paper of toBePushed) {
+        if (
+          this.allPapersYears.find(y => {
+            const yearString = this.yearString(paper.submittedDate);
+            return yearString === y.year && y.shown === true;
+          }) !== undefined
+        ) {
+          this.filteredPapers.push(
+            new SimplifiedPaper(
+              paper.id,
+              paper.title,
+              this.processAuthorNames(paper.authors, this.maxAuthorsPerCard),
+              this.processTopics(paper.topics, this.maxTopicsPerCard),
+              paper.submittedDate,
+              paper.imageUrl
+            )
+          );
+        }
+      }
     } else {
-      toBePushed = this.dataModel.getRetrievedPapers().filter(newPaper => {
-        return !this.filteredPapers.some(
-          filtered => filtered.id === newPaper.id
-        );
-      });
+      // Filtering
       this.filteredPapers = this.filteredPapers.filter(paper => {
         return (
           this.allPapersYears.find(y => {
@@ -469,28 +488,61 @@ export class PapersPage implements OnInit {
           }) !== undefined
         );
       });
-    }
+      const allPapers = this.dataModel
+        .getRetrievedPapers()
+        .map(
+          paper =>
+            new SimplifiedPaper(
+              paper.id,
+              paper.title,
+              this.processAuthorNames(paper.authors, this.maxAuthorsPerCard),
+              this.processTopics(paper.topics, this.maxTopicsPerCard),
+              paper.submittedDate,
+              paper.imageUrl
+            )
+        )
+        .filter(paper => {
+          return (
+            this.allPapersYears.find(y => {
+              const yearString = this.yearString(paper.submittedDate);
+              return yearString === y.year && y.shown === true;
+            }) !== undefined
+          );
+        });
 
-    for (const paper of toBePushed) {
-      if (
-        this.allPapersYears.find(y => {
-          const yearString = this.yearString(paper.submittedDate);
-          return yearString === y.year && y.shown === true;
-        }) !== undefined
-      ) {
-        this.filteredPapers.push(
-          new SimplifiedPaper(
-            paper.id,
-            paper.title,
-            this.processAuthorNames(paper.authors, this.maxAuthorsPerCard),
-            this.processTopics(paper.topics, this.maxTopicsPerCard),
-            paper.submittedDate,
-            paper.imageUrl
-          )
-        );
-      }
+      // Merging (where the magic happens)
+      this.mergeArraysRightPriority(this.filteredPapers, allPapers);
     }
   }
+
+  private mergeArraysRightPriority(
+    l: Array<SimplifiedPaper>,
+    r: Array<SimplifiedPaper>
+  ) {
+    let i = 0,
+      j = 0,
+      cnt = 0;
+    const old = [...l];
+    while (i < old.length) {
+      const paper = r[j];
+      if (old[i].id !== paper.id) {
+        l.splice(cnt, 0, paper);
+        cnt++;
+      } else {
+        i++;
+        cnt++;
+      }
+      j++;
+    }
+    for (; j < r.length; j++) {
+      const paper = r[j];
+      l.splice(cnt, 0, paper);
+      cnt++;
+    }
+  }
+
+
+
 
   // Adds dummy slides while fetching data
   addDummySlides(howmany: number) {

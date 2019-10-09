@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, from } from 'rxjs';
 import { SimplifiedPaper } from './simplified-paper.model';
+import { ConfigService } from '../config/config.service';
 
 /**
  * This service describes and contains the **model** of the application
@@ -33,7 +34,7 @@ export class ModelService {
   /**
    * constructor
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private config: ConfigService) {
     this._retrievedAuthors = [];
     this._retrievedPapers = [];
     this._searchStack = [];
@@ -79,13 +80,18 @@ export class ModelService {
           localStorage.getItem('lastDateMillis')
         ) as number;
 
-        if (Date.now() - lastDateMillis > 1000 * 60 * 60 * this._cacheExpirationHours) {
+        if (
+          Date.now() - lastDateMillis >
+          1000 * 60 * 60 * this._cacheExpirationHours
+        ) {
           localStorage.setItem('lastDateMillis', JSON.stringify(Date.now()));
           return this.fetchTopics();
         } else {
-          this._allTopicsInGraph = JSON.parse(localStorage.getItem('topicsCache'));
+          this._allTopicsInGraph = JSON.parse(
+            localStorage.getItem('topicsCache')
+          );
           this.canSearch = true;
-          return from([[{url: 'fake', label: 'fake'}]]);
+          return from([[{ url: 'fake', label: 'fake' }]]);
         }
       } else {
         localStorage.clear();
@@ -99,7 +105,9 @@ export class ModelService {
 
   fetchTopics() {
     const url =
-      'http://api.geranium.nexacenter.org/api?' +
+      'http://' +
+      this.config.baseURL +
+      '/api?' +
       encodeURI(`type=topics&lines=100000&offset=0`);
     return this.http.get<{ url: string; label: string }[]>(url).pipe(
       tap(result => {
@@ -112,7 +120,10 @@ export class ModelService {
           );
         }
         if (window.localStorage) {
-          localStorage.setItem('topicsCache', JSON.stringify(this._allTopicsInGraph));
+          localStorage.setItem(
+            'topicsCache',
+            JSON.stringify(this._allTopicsInGraph)
+          );
         }
         this.canSearch = true;
       })
@@ -125,7 +136,9 @@ export class ModelService {
 
   getAbstract() {
     const url =
-      'http://api.geranium.nexacenter.org/api?' +
+      'http://' +
+      this.config.baseURL +
+      '/api?' +
       encodeURI(`type=abstract&topic=${this.searchTopic.url}`);
     return this.http.get<string>(url).pipe(
       tap(result => {
@@ -142,7 +155,6 @@ export class ModelService {
             s => s.label === topicString
           );
           this.searchTopic = topic;
-          console.log(topic);
           if (topic === undefined) {
             throw throwError('Invalid search topic');
           }

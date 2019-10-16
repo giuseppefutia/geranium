@@ -41,7 +41,7 @@ export class PapersService {
     const linesOffset = linesPerQuery * block;
     const url =
       'http://' +
-      this.config.baseURL +
+      this.config.apiDomain + ':' + this.config.apiPort +
       '/api?' +
       encodeURI(
         `type=publications&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`

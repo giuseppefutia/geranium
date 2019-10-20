@@ -16,6 +16,7 @@ from langdetect import detect
 
 #settings
 pref_format='xml'
+num_topics=7
 
 # define namespaces
 BASE_URL = 'http://geranium-project.org/'
@@ -76,7 +77,7 @@ def assign_type(topics, subject_type, graph: Graph):
                    subject_type))
 
 
-def get_topics(text, num_topics=7, lang="english"):
+def get_topics(text, lang="english"):
     """
     Sends a POST request to TellMeFirst and retrieves n topics (Where n is equal to num_topics).
     :return: List of strings containing the topic URIs extracted by TellMeFirst
@@ -185,11 +186,10 @@ def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> G
             pass
 
         try:
-            num_topics = 7
             if detect(abstract) == 'it':
-                tmf_topics = get_topics(abstract, num_topics, 'italian')
+                tmf_topics = get_topics(abstract, 'italian')
             else:
-                tmf_topics = get_topics(abstract, num_topics)
+                tmf_topics = get_topics(abstract)
 
             assign_label_tmf(tmf_topics, graph)
             tmf_topics = [URIRef(uri) for uri in [*tmf_topics]]
@@ -396,21 +396,24 @@ def main():
     Execute the following script if not used as library
     """
     global pref_format
+    global num_topics
     #CLI setup
     parser = argparse.ArgumentParser(description='parse a json file and generate an rdf file out of its data')
     parser.add_argument('-b','--build',help='build rdf file starting from the json dump',type=str)
     parser.add_argument('-i','--images',help='get images for the rdf file')
     parser.add_argument('-t','--topics',help='get abstracts for the topics\' json file')
+    parser.add_argument('-n','--ntopics',help='specify number of topics to extract with TellMeFirst',default=7)
     parser.add_argument('-u','--update',help='update previously generated rdf file (updatedGraph = oldGraph UNION newGraph)',type=str)
     parser.add_argument('-o','--output',help='output file filename',default='output_'+time.strftime('%Y%m%d_%H%M%S')+'.rdf',type=str)
     parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
     parser.add_argument('-f','--format',help='specify rdf file format (xml by default)',default=pref_format,type=str)
     args = parser.parse_args()
+    
+    num_topics = args.ntopics
+    pref_format = args.format
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
-    if args.format != pref_format:
-        pref_format = args.format
     if args.update:
         update(args.build,args.update,args.output)
     if args.build and not args.update:

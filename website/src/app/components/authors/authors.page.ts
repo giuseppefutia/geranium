@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
 import { Author, PapersPerTopics } from '../../model/author.model';
-import { ExpandedAuthor } from '../../model/author.model';
 import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsService } from '../../services/results.service';
 import { ModelService } from 'src/app/model/model.service';
@@ -109,11 +108,21 @@ export class AuthorsPage implements OnInit {
   }
 
   private hue2rgb(p, q, t) {
-    if (t < 0) { t += 1; }
-    if (t > 1) { t -= 1; }
-    if (t < 1 / 6) { return p + (q - p) * 6 * t; }
-    if (t < 1 / 2) { return q; }
-    if (t < 2 / 3) { return p + (q - p) * (2 / 3 - t) * 6; }
+    if (t < 0) {
+      t += 1;
+    }
+    if (t > 1) {
+      t -= 1;
+    }
+    if (t < 1 / 6) {
+      return p + (q - p) * 6 * t;
+    }
+    if (t < 1 / 2) {
+      return q;
+    }
+    if (t < 2 / 3) {
+      return p + (q - p) * (2 / 3 - t) * 6;
+    }
     return p;
   }
 
@@ -177,12 +186,14 @@ export class AuthorsPage implements OnInit {
       return new Author(
         author.id,
         author.name,
+        author.initials,
         author.url,
         author.department,
         author.topics,
         author.imageUrl,
         author.numberOfPapers,
-        this.processTopics(author.papersPerTopics, this.maxTopicsPerCard)
+        this.processTopics(author.papersPerTopics, this.maxTopicsPerCard),
+        author.style
       );
     });
   }
@@ -265,7 +276,7 @@ export class AuthorsPage implements OnInit {
   addDummySlides(howmany: number) {
     let i: number;
     for (i = 0; i < howmany; i++) {
-      this.filteredAuthors.push(new Author('', '', '', '', [], '', 0, []));
+      this.filteredAuthors.push(new Author('', '', '', '', '', [], '', 0, [], {}));
     }
   }
 }

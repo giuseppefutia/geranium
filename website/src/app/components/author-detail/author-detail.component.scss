@@ -1,3 +1,66 @@
 ion-card {
   border-radius: 8px !important;
 }
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
+  overflow: hidden;
+  position: relative;
+  line-height: $lineHeight;
+  max-height: $lineHeight * $lineCount;
+  padding-right: 1em;
+  &:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $bgColor;
+  }
+}
+
+.paperTitle {
+  color: black;
+  @include multiLineEllipsis($lineHeight: 1em, $lineCount: 5, $bgColor: white);  
+}
+
+.avatar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 75px;
+  height: 75px;
+  border-radius: 3px;
+}
+
+.avatar h1 {
+  color: white;
+  font-size: 2em;
+  position: relative;
+  float: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.more {
+  background-color: var(--ion-color-primary);
+  width: 100%;
+  height: 40px;
+  text-align: center;
+}
+
+.more p {
+  color: white;
+  position: relative;
+  float: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

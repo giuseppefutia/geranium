@@ -85,10 +85,11 @@
             (click)="onAuthorDetails(author)"
             no-padding
             no-margin
-            class="card-img"
+            class="card-head"
             *ngIf="!isLoading"
+            [ngStyle]="author.style"
           >
-            <ion-img [src]="author.imageUrl" alt="Loading image..."></ion-img>
+            <h1 no-padding no-margin><b>{{ author.initials }}</b></h1>
           </div>
 
           <ion-grid>

@@ -46,6 +46,32 @@ export class AuthorsService {
     private config: ConfigService
   ) {}
 
+  string2Number(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const chr = str.charCodeAt(i);
+      hash = (hash << 4) - hash + chr;
+      hash |= 0;
+    }
+    return hash < 0 ? -hash : hash;
+  }
+
+  name2ColorString(name: string): string {
+    const colorHue = this.string2Number(name) % 360;
+    const color0 = colorHue.toString() + ', 60%, 80%';
+    const color1 = colorHue.toString() + ', 60%, 50%';
+    const color2 = colorHue.toString() + ', 60%, 43%';
+    const colorString =
+      'linear-gradient(141deg, hsl(' +
+      color0 +
+      ') 0%, 10%, hsl(' +
+      color1 +
+      ') 41%, hsl(' +
+      color2 +
+      ') 90%)';
+    return colorString;
+  }
+
   /**
    * Send HTTP GET request for all the authors that have publications inherent the topic passed as argument
    *
@@ -60,7 +86,9 @@ export class AuthorsService {
     const linesOffset = linesPerQuery * block;
     const url =
       'http://' +
-      this.config.apiDomain + ':' + this.config.apiPort +
+      this.config.apiDomain +
+      ':' +
+      this.config.apiPort +
       '/api?' +
       encodeURI(
         `type=authors&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
@@ -96,16 +124,19 @@ export class AuthorsService {
             stringTopics.push(topic.label);
           }
 
+          const name = this.dataModel.normalizeAuthorName(author.name);
           this.dataModel.addAuthor(
             new Author(
               author.id,
-              this.dataModel.normalizeAuthorName(author.name),
+              name,
+              this.dataModel.getInitials(name),
               author.url,
               '',
               stringTopics,
               'assets/img/defaultAuthor.jpg',
               author.publications_on_topic.length,
-              allTopics
+              allTopics,
+              { 'background-image': this.name2ColorString(author.name) }
             )
           );
         }
@@ -120,7 +151,9 @@ export class AuthorsService {
     // Get the author data using its URI and the topicLabel through the API
     const url =
       'http://' +
-      this.config.apiDomain + ':' + this.config.apiPort +
+      this.config.apiDomain +
+      ':' +
+      this.config.apiPort +
       '/api?' +
       encodeURI(
         `type=author&topic=${topicLabel}&lines=10000&offset=0&url=${authorURI}`
@@ -174,17 +207,20 @@ export class AuthorsService {
             );
           }
 
+          const name = this.dataModel.normalizeAuthorName(author.name);
           this.dataModel.setAuthorDetails(
             new ExpandedAuthor(
               author.id,
-              this.dataModel.normalizeAuthorName(author.name),
+              name,
+              this.dataModel.getInitials(name),
               author.url,
               '',
               stringTopics,
               'assets/img/defaultAuthor.jpg',
               author.publications.length,
               allTopics,
-              papers
+              papers,
+              { 'background-image': this.name2ColorString(author.name) }
             )
           );
           console.log(this.dataModel.getAuthorDetails());

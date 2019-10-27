@@ -291,8 +291,6 @@ export class PapersPage implements OnInit {
     }
   }
 
-  processPaperTitle(title: string) {}
-
   // On click on topic chip start a new search
   onTopicChipClick(topic: Topic) {
     this.loadingCtrl
@@ -333,6 +331,7 @@ export class PapersPage implements OnInit {
 
   // Open modal when clicked on MORE in a card
   onPaperDetails(paper: SimplifiedPaper) {
+    console.log(paper.id);
     this.modalCtrl
       .create({
         component: PaperDetailComponent,
@@ -433,17 +432,33 @@ export class PapersPage implements OnInit {
   // Called when a bar on the chart is clicked
   // It calls filterPapers for filtering based on the newly received filtering rules
   onChartClick(bar: BarData) {
-    this.allPapersYears[bar.dataIndex].shown = !this.allPapersYears[
-      bar.dataIndex
-    ].shown;
-    this.chartData.datasets[bar.datasetIndex].backgroundColor[bar.dataIndex] =
-      this.allPapersYears[bar.dataIndex].shown === true
-        ? this.lightColor
-        : this.lightHiddenColor;
-    this.chartData.datasets[bar.datasetIndex].borderColor[bar.dataIndex] =
-      this.allPapersYears[bar.dataIndex].shown === true
-        ? this.primaryColor
-        : this.hiddenColor;
+    let cnt = 0;
+    for (const year of this.allPapersYears) {
+      if (year.shown) {
+        cnt++;
+      }
+    }
+    if (cnt === this.allPapersYears.length) {
+      for (let i = 0; i < this.allPapersYears.length; i++) {
+        if (i !== bar.dataIndex) {
+          this.allPapersYears[i].shown = false;
+          this.chartData.datasets[bar.datasetIndex].backgroundColor[i] = this.lightHiddenColor;
+          this.chartData.datasets[bar.datasetIndex].borderColor[i] = this.hiddenColor;
+        }
+      }
+    } else {
+      this.allPapersYears[bar.dataIndex].shown = !this.allPapersYears[
+        bar.dataIndex
+      ].shown;
+      this.chartData.datasets[bar.datasetIndex].backgroundColor[bar.dataIndex] =
+        this.allPapersYears[bar.dataIndex].shown === true
+          ? this.lightColor
+          : this.lightHiddenColor;
+      this.chartData.datasets[bar.datasetIndex].borderColor[bar.dataIndex] =
+        this.allPapersYears[bar.dataIndex].shown === true
+          ? this.primaryColor
+          : this.hiddenColor;
+    }
     this.filterPapers(false);
     // Update grid (is automatic)
     this.topicChart.update();
@@ -540,9 +555,6 @@ export class PapersPage implements OnInit {
       cnt++;
     }
   }
-
-
-
 
   // Adds dummy slides while fetching data
   addDummySlides(howmany: number) {

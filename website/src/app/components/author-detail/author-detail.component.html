@@ -14,84 +14,85 @@
 <ion-content>
   <ion-grid style="height: 100%" *ngIf="isLoading">
     <ion-row justify-content-center align-items-center style="height: 100%">
-      <ion-col>
+      <ion-col style="height: 100%">
         <div style="text-align: center; height: 100%;">
           <ion-spinner color="primary" style="margin: auto;"></ion-spinner>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
+
   <ion-grid *ngIf="!isLoading">
-    <ion-row no-margin no-padding>
+    <ion-row padding justify-content-center align-items-center>
       <ion-col>
-        <ion-img
-          [src]="selectedAuthor.imageUrl"
-          class="ion-hide-md-up"
-          style="max-height: 400px; overflow-y: hidden;"
-        ></ion-img>
-      </ion-col>
-    </ion-row>
-    <ion-row padding>
-      <ion-col size="4" class="ion-hide-sm-down">
-        <ion-img
-          [src]="selectedAuthor.imageUrl"
-          style="max-height: 300px; overflow-y: hidden;"
-        ></ion-img>
-      </ion-col>
-      <ion-col padding>
-        <ion-text>
-          <h1 no-margin style="font-size: xx-large; padding-bottom: 20px;">
-            <b>{{ selectedAuthor.name }}</b>
+        <div class="avatar" [ngStyle]="selectedAuthor.style">
+          <h1 no-margin no-padding>
+            <b>{{ selectedAuthor.initials }}</b>
           </h1>
-        </ion-text>
-        <ion-text color="primary"
-          ><h3 no-margin><b>Topics of interest</b></h3></ion-text
-        >
-        <div margin>
-          <ion-chip
-            *ngFor="let ppt of selectedAuthor.papersPerTopics"
-            (click)="onTopicChipClick(ppt.label)"
-            color="primary"
-          >
-            <ion-icon name="bulb"></ion-icon>
-            <ion-label color="primary">{{ ppt.label }}</ion-label>
-            <ion-badge style="margin-left: 5px;">{{ ppt.occ }}</ion-badge>
-          </ion-chip>
         </div>
+        <h1
+          no-margin
+          no-padding
+          padding-start
+          padding-vertical
+          style="font-size: xx-large; display: inline-block; vertical-align: middle;"
+        >
+          <b>{{ selectedAuthor.name }}</b>
+        </h1>
       </ion-col>
     </ion-row>
-    <ion-row no-padding>
-      <ion-col offset-md="1" size-md="10">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>
-              <ion-text color="primary"
-                ><h3 no-margin><b>Published Papers</b></h3></ion-text
+    <ion-row>
+      <ion-col>
+        <ion-text color="primary"
+          ><h3 padding-start padding-bottom>
+            <b>Published Papers</b>
+          </h3></ion-text
+        >
+        <ion-grid no-padding no-margin padding-vertical>
+          <ion-row no-padding no-margin>
+            <ion-col size="12" size-md="5" no-padding no-margin padding-start>
+              <ion-chip
+                *ngFor="let ppt of selectedAuthor.papersPerTopics"
+                (click)="onTopicChipClick(ppt.label)"
+                color="primary"
               >
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col
-                  size="12"
-                  size-sm="6"
-                  size-lg="3"
-                  *ngFor="let paper of selectedAuthor.papers"
-                >
-                  <ion-card tappable (click)="onPaperDetails(paper.id)">
-                    <ion-card-header>
-                      <ion-card-title>
-                        <h3>{{ paper.title }}</h3>
-                      </ion-card-title>
-                    </ion-card-header>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
+                <ion-icon name="bulb"></ion-icon>
+                <ion-label color="primary">{{ ppt.label }}</ion-label>
+                <!--<ion-badge style="margin-left: 5px;" *ngIf="ppt.occ !== 1">{{ ppt.occ }}</ion-badge>-->
+              </ion-chip>
+            </ion-col>
+            <ion-col>
+              <ion-grid no-padding no-margin>
+                <ion-row no-padding no-margin>
+                  <ion-col
+                    size="12"
+                    size-sm="6"
+                    size-xxl="4"
+                    no-padding
+                    no-margin
+                    *ngFor="let paper of selectedAuthor.papers"
+                  >
+                    <ion-card (click)="onPaperDetails(paper.id)">
+                      <ion-card-header no-padding no-margin padding>
+                        <ion-card-title class="paperTitle" tappable>
+                          {{ paper.title }}
+                        </ion-card-title>
+                      </ion-card-header>
+                      <ion-card-content no-padding no-margin>
+                        <div no-padding no-margin class="more" tappable>
+                          <p>MORE</p>
+                        </div>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-col>
     </ion-row>
   </ion-grid>
+  <div id="topicmapdiv" style="width: 100%; height: 320px">
+  </div>
 </ion-content>

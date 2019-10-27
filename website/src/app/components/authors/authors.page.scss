@@ -10,7 +10,7 @@ a.disabled {
 }
 
 /* mixin for multiline */
-@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
   overflow: hidden;
   position: relative;
   line-height: $lineHeight;
@@ -34,31 +34,28 @@ a.disabled {
   }
 }
 
-@mixin imgResponsiveHeight() {
+.card-head {
   width: 100%;
-  height: 270px;
-  @media screen and (min-width: 768px) {
-    height: 250px;
-  }
-  @media screen and (min-width: 992px) {
-    height: 200px;
-  }
+  height: 200px;
 }
 
-.card-img {
-  @include imgResponsiveHeight();
-  overflow: hidden;
+.card-head h1 {
+  color: white;
+  font-size: 4em;
   position: relative;
-}
-
-.card-img ion-img {
-  position: absolute;
-  width: 100%;
+  float: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .p-abstract {
   color: grey;
   font-size: small;
   width: 57%;
-  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
+  @include multiLineEllipsis(
+    $lineHeight: 1.2em,
+    $lineCount: 3,
+    $bgColor: white
+  );
 }

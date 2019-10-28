@@ -24,30 +24,31 @@ export class PaperDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.selectedPaper = this.resultsService.getPaperFromId(
-      this.selectedPaperId
-    );
-    this.isLoaded = true;
+    this.resultsService
+      .getPaperFromURI(this.dataModel.paperID2URI(this.selectedPaperId))
+      .subscribe(p => {
+        this.selectedPaper = this.dataModel.getPaperDetails();
+        this.isLoaded = true;
+      });
   }
 
   onAuthorChipClick(author: SimplifiedAuthor) {
     this.modalCtrl
       .create({
         component: AuthorDetailComponent,
-        componentProps: { selectedAuthorURI: author.url,
-                          selectedTopicLabel: this.dataModel.searchTopicToString()}
+        componentProps: {
+          selectedAuthorURI: author.url,
+          selectedTopicLabel: this.dataModel.searchTopicToString()
+        }
       })
       .then(modalEl => {
         modalEl.present();
-    });
+      });
   }
 
   onIRISDetails() {
     if (this.isLoaded) {
-      window.open(
-        this.dataModel.getIRISUrl(this.selectedPaper),
-        '_blank'
-      );
+      window.open(this.dataModel.getIRISUrl(this.selectedPaper), '_blank');
     }
   }
 

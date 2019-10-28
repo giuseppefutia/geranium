@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Details</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="onIRISDetails()">
+      <ion-button (click)="onIRISDetails()" [disabled]="!isLoaded">
         <ion-icon name="link" slot="start"></ion-icon>
         Open on IRIS
       </ion-button>

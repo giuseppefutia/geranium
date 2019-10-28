@@ -89,8 +89,9 @@ export class AuthorDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       // series.defaultState.transitionDuration = 3000;
 
       const bullet = series_.bullets.push(new am4core.Circle());
+      bullet.fill = am4core.color('rgba(49, 113, 224, 0.7)');
       bullet.tooltipText =
-        '{topic}, {year}: {papers}';
+        '{topic}, {year}: {papers} papers';
       bullet.strokeWidth = 3;
       bullet.stroke = am4core.color('#ffffff');
       bullet.strokeOpacity = 0;
@@ -131,7 +132,7 @@ export class AuthorDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       let found: boolean;
       for (const paper of this.selectedAuthor.papers) {
         const date: string =
-          paper.submittedDate === undefined
+        paper.submittedDate.getFullYear().toString() === 'NaN'
             ? 'No Date'
             : paper.submittedDate.getFullYear().toString();
         for (const topic of paper.topics) {

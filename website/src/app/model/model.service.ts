@@ -23,6 +23,7 @@ export class ModelService {
   private _retrievedPapers: Paper[] = [];
   private _retrievedAuthors: Author[] = [];
   private _authorDetails: ExpandedAuthor;
+  private _paperDetails: Paper;
 
   private _searchStack: TopicNoImg[];
   private _currentAbstract: string;
@@ -197,6 +198,8 @@ export class ModelService {
     return this._firstSearch;
   }
 
+
+  /* PAPERS */
   addPaper(newPaper: Paper) {
     this._retrievedPapers.push(newPaper);
   }
@@ -205,10 +208,27 @@ export class ModelService {
     this._retrievedPapers = this._retrievedPapers.concat(newPapers);
   }
 
-  findPaperFromId(id: string): Paper {
+  paperID2URI(id: string) {
+    return 'http://geranium-project.org/publications/' + id.replace('-', '/');
+  }
+
+  paperURI2ID(uri: string) {
+    return uri.split('publications/')[1];
+  }
+
+  findPaperFromID(id: string): Paper {
     return this._retrievedPapers.find(p => p.id === id);
   }
 
+  getPaperDetails() {
+    return this._paperDetails;
+  }
+
+  setPaperDetails(paper: Paper) {
+    this._paperDetails = paper;
+  }
+
+  /* AUTHORS */
   getAuthorDetails() {
     return this._authorDetails;
   }

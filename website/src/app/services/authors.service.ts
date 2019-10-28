@@ -17,7 +17,7 @@ interface Publication {
   author: Author;
   co_authors: Author[];
   topics: Topic[];
-  submittedDate: Date;
+  submitted_date: string;
 }
 
 export interface ResponseAuthors {
@@ -201,7 +201,7 @@ export class AuthorsService {
                 publication.title,
                 authors,
                 publication.topics,
-                publication.submittedDate,
+                new Date(publication.submitted_date),
                 ''
               )
             );
@@ -223,7 +223,6 @@ export class AuthorsService {
               { 'background-image': this.name2ColorString(author.name) }
             )
           );
-          console.log(this.dataModel.getAuthorDetails());
         }
       })
     );

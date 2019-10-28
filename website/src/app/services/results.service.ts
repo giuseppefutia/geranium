@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PapersService } from './papers.service';
+import { PapersService, ResponsePaper } from './papers.service';
 import { AuthorsService, ResponseAuthors } from './authors.service';
 import { JournalsService } from './journals.service';
 import { Journal } from '../model/journal.model';
 import { Observable } from 'rxjs';
 import { TopicNoImg} from '../model/topic.model';
+import { Paper } from '../model/paper.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,8 @@ export class ResultsService {
     return this.papersService.getSimplifiedPapersBlock(topic, block);
   }
 
-  getPaperFromId(paperId: string) {
-    return this.papersService.getPaperFromId(paperId);
+  getPaperFromURI(paperId: string): Observable<ResponsePaper[] | Paper> {
+    return this.papersService.getPaperFromURI(paperId);
   }
 
   // call service to request the author data
@@ -34,7 +35,7 @@ export class ResultsService {
     return this.authorsService.getAuthorsBlock(topic, block);
   }
 
-  getAuthorFromURIandTopic(authorURI: string, topicLabel:string) {
+  getAuthorFromURIandTopic(authorURI: string, topicLabel: string) {
     return this.authorsService.getAuthorFromURIandTopic(authorURI, topicLabel);
   }
 

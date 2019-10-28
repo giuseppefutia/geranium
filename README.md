@@ -125,3 +125,18 @@ Skip those unnecessary for your working environment, if needed.
 
 #### Example:
 http://localhost:5000/api?type=abstract&topic=http://dbpedia.org/resource/2D_computer_graphics
+
+## Mapping
+You can use the json to rdf mapper by running the map.py script.
+The script offers many options, which can be reviewed by using the help option
+
+```python map.py -h```
+
+The options are the following:
+```
+-b <json_file>        : builds a rdf file starting from a provided json file
+-o <output_file>      : used to specify the output filename. If not specified, one including the timestamp is automatically provided
+-n <number_of_topics> : used to specify the number of topics to extract with TellMeFirst from each abstract
+-d                    : turn on debug messages
+-f <file_format>      : used to specify the file format (XML by default)
+```

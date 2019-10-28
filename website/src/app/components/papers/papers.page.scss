@@ -1,0 +1,86 @@
+a.disabled {
+  color: grey;
+  pointer-events: none;
+}
+
+.topView {
+  background: var(--ion-color-primary-light);
+  overflow-y: hidden;
+  height: 183px; // If changed change also myHeaderMaxHeight in HTML
+}
+
+.barCanvasClass {
+  max-width: 300px !important;
+  max-height: 150px !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.sc-ion-item-divider-ios-h {
+  background-color: #ffffff;
+}
+
+@mixin imgResponsiveHeight() {
+  height: 270px;
+  @media screen and (min-width: 768px) {
+    height: 250px;
+  }
+  @media screen and (min-width: 992px) {
+    height: 200px;
+  }
+}
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
+  overflow: hidden;
+  position: relative;
+  line-height: $lineHeight;
+  max-height: $lineHeight * $lineCount;
+  text-align: justify;
+  padding-right: 1em;
+  &:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $bgColor;
+  }
+}
+
+.card-title {
+  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
+}
+
+.card-img {
+  overflow: hidden;
+  position: relative;
+  @include imgResponsiveHeight();
+}
+
+.card-img ion-img {
+  position: absolute;
+  width: 100%;
+}
+
+.p-abstract {
+  color: grey;
+  font-size: small;
+  width: 90%;
+  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
+}

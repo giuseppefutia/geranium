@@ -1,0 +1,161 @@
+<ion-header *ngIf="!isRedirecting">
+  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="143px">
+    <ion-row no-padding>
+      <ion-col no-padding>
+        <div class="topView">
+          <ion-grid no-padding>
+            <ion-row justify-content-center align-items-center no-padding>
+              <ion-col size="2" size-lg="1" text-center>
+                <ion-button fill="clear" (click)="onBackClick()"
+                  ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
+                ></ion-button>
+              </ion-col>
+              <ion-col padding-bottom>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 0.5em;"
+                  padding
+                  margin-top
+                ></ion-skeleton-text>
+                <h2
+                  no-padding
+                  style="text-transform: capitalize;"
+                  *ngIf="!isLoading && dataModel.getSearchStackLength() !== 0"
+                >
+                  <b>{{ dataModel.searchTopic.label }}</b>
+                </h2>
+                <ion-skeleton-text
+                  animated
+                  *ngIf="isLoading"
+                  style="width: 50%; height: 1em; padding-bottom: 3em;"
+                ></ion-skeleton-text>
+                <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
+                  {{ dataModel.currentTopicAbstract }}
+                </p>
+                <a
+                  tappable
+                  [class]="isLoading ? 'disabled' : ''"
+                  (click)="openTopicUrl()"
+                  margin-bottom
+                >
+                  More on this topic
+                </a>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
+
+<ion-content #scrollArea scrollEvents="true">
+  <ion-grid *ngIf="errorText !== null">
+    <ion-row>
+      <ion-col text-center>
+        <p>{{ errorText }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="filteredAuthors.length <= 0 && !isRedirecting && !isLoading">
+    <ion-row>
+      <ion-col text-center>
+        <p>Sorry, there are no results for {{ dataModel.searchTopic.label }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="filteredAuthors.length > 0 && !isRedirecting">
+    <ion-row wrap>
+      <ion-col
+        size="12"
+        size-sm="6"
+        size-lg="3"
+        *ngFor="let author of filteredAuthors"
+      >
+        <ion-card style="animation-name: fadeIn; animation-duration: 1s;">
+          <ion-skeleton-text
+            *ngIf="isLoading"
+            style="width:100%; height: 220px;"
+            no-padding
+            no-margin
+          ></ion-skeleton-text>
+          <div
+            tappable
+            (click)="onAuthorDetails(author)"
+            no-padding
+            no-margin
+            class="card-img"
+            *ngIf="!isLoading"
+          >
+            <ion-img [src]="author.imageUrl" alt="Loading image..."></ion-img>
+          </div>
+
+          <ion-grid>
+            <ion-row justify-content-center align-items-center>
+              <ion-col size="10">
+                <ion-card-header>
+                  <ion-card-title *ngIf="isLoading">
+                    <ion-skeleton-text
+                      animated
+                      style="height: 1em;"
+                    ></ion-skeleton-text>
+                  </ion-card-title>
+                  <ion-card-title
+                    *ngIf="!isLoading"
+                    tappable
+                    (click)="onAuthorDetails(author)"
+                  >
+                    <b>{{ author.name }}</b>
+                  </ion-card-title>
+                </ion-card-header>
+              </ion-col>
+              <ion-col>
+                <ion-skeleton-text
+                  style="height: 1em;"
+                  *ngIf="isLoading"
+                ></ion-skeleton-text>
+                <div *ngIf="!isLoading">
+                  <ion-badge mode="ios">{{ author.numberOfPapers }}</ion-badge>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-card-content no-padding padding-horizontal padding-bottom>
+            <ion-skeleton-text
+              style="height: 1em;"
+              *ngIf="isLoading"
+            ></ion-skeleton-text>
+            <div *ngIf="!isLoading">
+              <ion-chip
+                *ngFor="let ppt of author.papersPerTopics"
+                (click)="onTopicChipClick(ppt.label)"
+                color="primary"
+              >
+                <ion-icon name="bulb"></ion-icon>
+                <ion-label color="primary">{{ ppt.label }}</ion-label>
+                <!-- <ion-badge style="margin-left: 5px;" *ngIf="ppt.occ !== 1">{{ ppt.occ }}</ion-badge> -->
+              </ion-chip>
+            </div>
+          </ion-card-content>
+          <div padding-start padding-bottom>
+            <ion-button
+              fill="clear"
+              color="primary"
+              (click)="onAuthorDetails(author)"
+              >More</ion-button
+            >
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="onMoreAuthors($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading authors..."
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

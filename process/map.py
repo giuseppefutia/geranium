@@ -61,6 +61,11 @@ def assign_label_json(topics, graph: Graph):
         graph.add((uri,
                    RDFS.label,
                    Literal(topics[uri])))
+        split_uri=uri.split('/')
+        split_uri=[x for x in split_uri if x]
+        graph.add((uri,
+                   PURL.identifier,
+                   Literal(split_uri[-1])))
 
 
 def assign_label_tmf(topics, graph: Graph):
@@ -68,6 +73,11 @@ def assign_label_tmf(topics, graph: Graph):
         graph.add((URIRef(uri),
                    RDFS.label,
                    Literal(topics[uri])))
+        split_uri=uri.split('/')
+        split_uri=[x for x in split_uri if x]
+        graph.add((URIRef(uri),
+                   PURL.identifier,
+                   Literal(split_uri[-1])))
 
 
 def assign_type(topics, subject_type, graph: Graph):

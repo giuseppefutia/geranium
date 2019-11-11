@@ -3,7 +3,7 @@ ion-card {
 }
 
 /* mixin for multiline */
-@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
   overflow: hidden;
   position: relative;
   line-height: $lineHeight;
@@ -28,7 +28,7 @@ ion-card {
 
 .paperTitle {
   color: black;
-  @include multiLineEllipsis($lineHeight: 1em, $lineCount: 5, $bgColor: white);  
+  @include multiLineEllipsis($lineHeight: 1em, $lineCount: 5, $bgColor: white);
 }
 
 .avatar {

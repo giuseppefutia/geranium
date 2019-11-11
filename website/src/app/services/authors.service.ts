@@ -144,11 +144,12 @@ export class AuthorsService {
     );
   }
 
-  getAuthorFromURIandTopic(
-    authorURI: string,
+  getAuthorFromIDandTopic(
+    authorID: string,
     topicLabel: string
   ): Observable<ResponseAuthor[]> {
     // Get the author data using its URI and the topicLabel through the API
+    const authorURI = this.dataModel.getAuthorURLFromID(authorID);
     const url =
       'http://' +
       this.config.apiDomain +

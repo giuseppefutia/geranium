@@ -30,7 +30,7 @@ export class ModelService {
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
 
-  private _cacheExpirationHours = 24;
+  private _cacheExpirationHours = 0 ;
 
   /**
    * constructor
@@ -213,7 +213,7 @@ export class ModelService {
   }
 
   paperURI2ID(uri: string) {
-    return uri.split('publications/')[1];
+    return uri.split('publications/')[1].replace('/', '-');
   }
 
   findPaperFromID(id: string): Paper {
@@ -313,6 +313,10 @@ export class ModelService {
         ' ';
     }
     return builder;
+  }
+
+  getAuthorURLFromID(authorID: string) {
+    return 'http://geranium-project.org/authors/' + authorID;
   }
 
   getIRISUrl(paper: SimplifiedPaper): string {

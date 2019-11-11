@@ -141,11 +141,12 @@ export class PapersService {
     }
     return this.http.get<ResponsePaper[]>(url).pipe(
       tap(response => {
-        console.log(response);
-        const paper = response[0];
+        const paper: ResponsePaper = response[0];
+
         let authors: SimplifiedAuthor[] = [];
         authors.push(paper.author);
         authors = authors.concat(paper.co_authors);
+
         this.dataModel.setPaperDetails(
           new Paper(
             paper.id,

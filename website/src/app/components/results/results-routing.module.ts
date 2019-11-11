@@ -52,6 +52,34 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'author',
+    children: [
+      {
+        path: '',
+        redirectTo: '/search',
+        pathMatch: 'full'
+      },
+      {
+        path: ':authorID',
+        loadChildren: '../author-detail/author-detail.module#AuthorDetailPageModule'
+      }
+    ]
+  },
+  {
+    path: 'paper',
+    children: [
+      {
+        path: '',
+        redirectTo: '/search',
+        pathMatch: 'full'
+      },
+      {
+        path: ':paperID',
+        loadChildren: '../paper-detail/paper-detail.module#PaperDetailPageModule'
+      }
+    ]
+  },
+  {
     path: '',
     redirectTo: '/search',
     pathMatch: 'full'

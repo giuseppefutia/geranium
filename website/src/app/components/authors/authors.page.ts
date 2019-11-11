@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
 import { Author, PapersPerTopics } from '../../model/author.model';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 import { ResultsService } from '../../services/results.service';
 import { ModelService } from 'src/app/model/model.service';
 
@@ -27,7 +26,6 @@ export class AuthorsPage implements OnInit {
     private navCtrl: NavController,
     private resultsService: ResultsService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController,
     private dataModel: ModelService
   ) {
     this.firstTime = true;
@@ -230,17 +228,7 @@ export class AuthorsPage implements OnInit {
   // Open modal when clicked on MORE in a card
   // To get data of an author we need the author URI and the searched topic
   onAuthorDetails(author: Author) {
-    this.modalCtrl
-      .create({
-        component: AuthorDetailComponent,
-        componentProps: {
-          selectedAuthorURI: author.url,
-          selectedTopicLabel: this.dataModel.searchTopicToString()
-        }
-      })
-      .then(modalEl => {
-        modalEl.present();
-      });
+    this.navCtrl.navigateForward(['/', 'results', 'author', author.id]);
   }
 
   // On click on topic chip start a new search

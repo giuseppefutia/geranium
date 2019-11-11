@@ -1,20 +1,20 @@
 import {
   Component,
   OnInit,
-  Input,
   NgZone,
-  AfterContentInit,
-  OnDestroy,
-  AfterViewInit
+  AfterViewInit,
+  OnDestroy
 } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
+
+import { ModelService } from '../../model/model.service';
+import { ResultsService } from '../../services/results.service';
 import { ExpandedAuthor } from '../../model/author.model';
-import { ResultsService } from 'src/app/services/results.service';
-import { ModelService } from 'src/app/model/model.service';
-import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
+
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { ActivatedRoute } from '@angular/router';
 
 am4core.useTheme(am4themes_animated);
 
@@ -27,36 +27,49 @@ interface HeatMapData {
 
 @Component({
   selector: 'app-author-detail',
-  templateUrl: './author-detail.component.html',
-  styleUrls: ['./author-detail.component.scss']
+  templateUrl: './author-detail.page.html',
+  styleUrls: ['./author-detail.page.scss']
 })
-export class AuthorDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   // Input defined in authors.page.ts
-  @Input() selectedAuthorURI: string;
-  @Input() selectedTopicLabel: string;
   selectedAuthor: ExpandedAuthor; // This is read by the HTML page
   isLoading = false;
   private chart: am4charts.XYChart;
   private topicsInHeatMap = 4;
 
   constructor(
-    private modalCtrl: ModalController,
     private resultsService: ResultsService,
     private dataModel: ModelService,
     private navCtrl: NavController,
-    private zone: NgZone
+    private zone: NgZone,
+    private route: ActivatedRoute
   ) {
     this.isLoading = true;
   }
 
   ngOnInit() {
-    this.resultsService
-      .getAuthorFromURIandTopic(this.selectedAuthorURI, this.selectedTopicLabel)
-      .subscribe(author => {
-        this.isLoading = false;
-        this.selectedAuthor = this.dataModel.getAuthorDetails();
-        this.updateHeatMap();
-      });
+    this.route.paramMap.subscribe(paramMap => {
+      if (paramMap.has('authorID')) {
+        if (this.dataModel.getSearchStackLength() === 0) {
+          
+          // TODO: Show autyhor without topic filters
+          this.navCtrl.navigateRoot(['/', 'search']);
+        } else {
+          this.resultsService
+            .getAuthorFromIDandTopic(
+              paramMap.get('authorID'),
+              this.dataModel.searchTopic.label
+            )
+            .subscribe(author => {
+              this.isLoading = false;
+              this.selectedAuthor = this.dataModel.getAuthorDetails();
+              this.updateHeatMap();
+            });
+        }
+      } else {
+        this.navCtrl.navigateRoot(['/', 'search']);
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -90,8 +103,7 @@ export class AuthorDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const bullet = series_.bullets.push(new am4core.Circle());
       bullet.fill = am4core.color('rgba(49, 113, 224, 0.7)');
-      bullet.tooltipText =
-        '{topic}, {year}: {papers} papers';
+      bullet.tooltipText = '{topic}, {year}: {papers} papers';
       bullet.strokeWidth = 3;
       bullet.stroke = am4core.color('#ffffff');
       bullet.strokeOpacity = 0;
@@ -132,16 +144,13 @@ export class AuthorDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       let found: boolean;
       for (const paper of this.selectedAuthor.papers) {
         const date: string =
-        paper.submittedDate.getFullYear().toString() === 'NaN'
+          paper.submittedDate.getFullYear().toString() === 'NaN'
             ? 'No Date'
             : paper.submittedDate.getFullYear().toString();
         for (const topic of paper.topics) {
           found = false;
           for (const dataPoint of data) {
-            if (
-              dataPoint.year === date &&
-              dataPoint.topicUrl === topic.url
-            ) {
+            if (dataPoint.year === date && dataPoint.topicUrl === topic.url) {
               dataPoint.papers++;
               found = true;
               continue;
@@ -179,18 +188,10 @@ export class AuthorDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onPaperDetails(paperId: string) {
-    console.log(paperId);
-    this.modalCtrl
-      .create({
-        component: PaperDetailComponent,
-        componentProps: { selecedPaperId: paperId }
-      })
-      .then(modalEl => {
-        modalEl.present();
-      });
+    this.navCtrl.navigateForward(['/', 'results', 'paper', paperId]);
   }
 
   onClose() {
-    this.modalCtrl.dismiss();
+    this.navCtrl.back();
   }
 }

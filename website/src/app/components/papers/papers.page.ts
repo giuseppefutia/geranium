@@ -14,9 +14,7 @@ import { SimplifiedAuthor } from '../../model/simplified-author.model';
 import { Topic } from '../../model/topic.model';
 
 // Import components
-import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 import { ModelService } from 'src/app/model/model.service';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 class YearsData {
   constructor(
@@ -316,30 +314,12 @@ export class PapersPage implements OnInit {
     if (author.name === '...') {
       return;
     }
-    this.modalCtrl
-      .create({
-        component: AuthorDetailComponent,
-        componentProps: {
-          selectedAuthorURI: author.url,
-          selectedTopicLabel: this.dataModel.searchTopicToString()
-        }
-      })
-      .then(modalEl => {
-        modalEl.present();
-      });
+    this.navCtrl.navigateForward(['/', 'results', 'author', author.id]);
   }
 
   // Open modal when clicked on MORE in a card
   onPaperDetails(paper: SimplifiedPaper) {
-    console.log(paper.id);
-    this.modalCtrl
-      .create({
-        component: PaperDetailComponent,
-        componentProps: { selectedPaperId: paper.id }
-      })
-      .then(modalEl => {
-        modalEl.present();
-      });
+    this.navCtrl.navigateForward(['/', 'results', 'paper', paper.id]);
   }
 
   onIRISDetails(paper: SimplifiedPaper) {

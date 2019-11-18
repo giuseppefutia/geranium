@@ -3,8 +3,11 @@
 } */
 
 $paperTitleSize: 1.2em;
-$cardHeight: 8em;
+$cardHeight: 8.5em;
 $paperTitleLines: 2;
+$slideHeight: 12em;
+$slideTopicLabelSize: 1em;
+$slideTopicLines: 2;
 
 /* mixin for multiline */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
@@ -48,6 +51,29 @@ hr {
   background-color: #ddd;
 }
 
+
+
+// AUTHOR CARD
+.authorCard {
+  width: 100%;
+  height: $slideHeight;
+}
+
+.authorCard ion-img {
+  width: 100%;
+  height: calc(100% - 3em);
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.authorCard p {
+  text-align: left;
+  color: black;
+  @include multiLineEllipsis($lineHeight: $slideTopicLabelSize, $lineCount: $slideTopicLines, $bgColor: white);  
+}
+
+
+// PAPER CARD
 .paperCard {
   height: $cardHeight;
   animation-name: fadeIn;
@@ -74,11 +100,18 @@ hr {
 .paperCard p {
   position: absolute;
   left: calc(25% + 16px);
-  top: calc(14px + $paperTitleSize*$paperTitleLines + 14px);
+  top: calc(25px + 2.4em);
   color: lightgrey;
   width: 70%;
 }
 
+.paperCard ion-button {
+  position: absolute;
+  left: calc(25% + 16px);
+  top: calc(25px + 2.4em + 14px + 5px);
+}
+
+// AVATAR
 .avatar {
   display: inline-block;
   vertical-align: middle;

@@ -63,6 +63,26 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     this.isLoading = true;
     this.topicsList = [];
   }
+
+  slidesOptions = {
+    zoom: false,
+    slidesPerView: 10,
+    grabCursor: true,
+    spaceBetween: 10,
+    centeredSlides: false,
+    breakpoints: {
+      550: {
+        slidesPerView: 2
+      },
+      768: {
+        slidesPerView: 4
+      },
+      1200: {
+        slidesPerView: 6
+      }
+    }
+  };
+
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('authorID')) {
@@ -306,8 +326,12 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  onSuggestedTopicClick(topicLabel: string) {
+    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'authors', topicLabel]);
+  }
+
   onPaperDetails(paperId: string) {
-    this.navCtrl.navigateForward(['/', 'results', 'paper', paperId]);
+    this.navCtrl.navigateRoot(['/', 'results', 'paper', paperId]);
   }
 
   onClose() {

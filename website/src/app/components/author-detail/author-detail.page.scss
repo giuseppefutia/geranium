@@ -1,12 +1,17 @@
-ion-card {
+/* ion-card {
   border-radius: 8px !important;
-}
+} */
+
+$paperTitleSize: 1.2em;
+$cardHeight: 8em;
+$paperTitleLines: 2;
 
 /* mixin for multiline */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
   overflow: hidden;
   position: relative;
   line-height: $lineHeight;
+  font-size: $lineHeight;
   max-height: $lineHeight * $lineCount;
   padding-right: 1em;
   &:before {
@@ -26,9 +31,52 @@ ion-card {
   }
 }
 
-.paperTitle {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+hr {
+  width: 50%;
+  height: 1px;
+  border: none;
+  background-color: #ddd;
+}
+
+.paperCard {
+  height: $cardHeight;
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+}
+
+.paperCard ion-img {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  object-fit: cover;
+  left: 0; top: 0;
+}
+
+.paperCard h1 {
+  position: absolute;
+  left: calc(25% + 16px);
+  top: 14px;
   color: black;
-  @include multiLineEllipsis($lineHeight: 1em, $lineCount: 5, $bgColor: white);
+  @include multiLineEllipsis($lineHeight: $paperTitleSize, $lineCount: $paperTitleLines, $bgColor: white);  
+  width: 70%;
+}
+
+.paperCard p {
+  position: absolute;
+  left: calc(25% + 16px);
+  top: calc(14px + $paperTitleSize*$paperTitleLines + 14px);
+  color: lightgrey;
+  width: 70%;
 }
 
 .avatar {
@@ -42,22 +90,6 @@ ion-card {
 .avatar h1 {
   color: white;
   font-size: 2em;
-  position: relative;
-  float: left;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.more {
-  background-color: var(--ion-color-primary);
-  width: 100%;
-  height: 40px;
-  text-align: center;
-}
-
-.more p {
-  color: white;
   position: relative;
   float: left;
   top: 50%;

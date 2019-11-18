@@ -15,6 +15,8 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { ActivatedRoute } from '@angular/router';
+import { Topic } from '../../model/topic.model';
+import { SimplifiedPaper } from '../../model/simplified-paper.model';
 
 am4core.useTheme(am4themes_animated);
 
@@ -23,6 +25,18 @@ interface HeatMapData {
   topic: string;
   year: string;
   papers: number;
+}
+
+class StyledTopic {
+  topic: Topic;
+  activeOccurences: number;
+  selected: boolean;
+
+  constructor(topic: Topic, activeOccurences: number, selected: boolean) {
+    this.topic = topic;
+    this.activeOccurences = activeOccurences;
+    this.selected = selected;
+  }
 }
 
 @Component({
@@ -34,6 +48,8 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   // Input defined in authors.page.ts
   selectedAuthor: ExpandedAuthor; // This is read by the HTML page
   isLoading = false;
+  private topicsList: Array<StyledTopic>;
+  private filteredPapers: Array<SimplifiedPaper>;
   private chart: am4charts.XYChart;
   private topicsInHeatMap = 4;
 
@@ -45,15 +61,20 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute
   ) {
     this.isLoading = true;
+    this.topicsList = [];
   }
-
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap.has('authorID')) {
         if (this.dataModel.getSearchStackLength() === 0) {
-          
           // TODO: Show autyhor without topic filters
-          this.navCtrl.navigateRoot(['/', 'search']);
+          this.navCtrl.navigateRoot([
+            '/',
+            'results',
+            'tabs',
+            'papers',
+            'Carbon'
+          ]);
         } else {
           this.resultsService
             .getAuthorFromIDandTopic(
@@ -63,6 +84,7 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(author => {
               this.isLoading = false;
               this.selectedAuthor = this.dataModel.getAuthorDetails();
+              this.makeDataUseful();
               this.updateHeatMap();
             });
         }
@@ -73,6 +95,114 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.createGraph();
+  }
+
+  ngOnDestroy() {
+    this.destroyGraph();
+  }
+
+  private makeDataUseful() {
+    for (const paper of this.selectedAuthor.papers) {
+      for (const topic_ of paper.topics) {
+        if (
+          this.topicsList.find(t => t.topic.url === topic_.url) === undefined
+        ) {
+          this.topicsList.push(new StyledTopic(topic_, 1, true));
+        } else {
+          this.topicsList.find(t => t.topic.url === topic_.url)
+            .activeOccurences++;
+        }
+      }
+    }
+    const mainTopicIndex = this.topicsList.findIndex(t => t.topic.label === this.dataModel.searchTopic.label);
+    const mainTopic = this.topicsList.splice(mainTopicIndex, 1);
+    this.topicsList.splice(0, 0, mainTopic[0]);
+    this.filteredPapers = [...this.selectedAuthor.papers];
+  }
+
+  onTopicChipClick(topicUrl: string) {
+    const clickedTopic: StyledTopic = this.topicsList.find(
+      t => t.topic.url === topicUrl
+    );
+    clickedTopic.selected = !clickedTopic.selected;
+
+    // If I unselected a topic...
+    if (clickedTopic.selected === false) {
+      for (const paper of this.filteredPapers) {
+        if (paper.topics.find(t => t.url === topicUrl) !== undefined) {
+          for (const paperTopic of paper.topics) {
+            const listTopic = this.topicsList.find(
+              t => t.topic.url === paperTopic.url
+            );
+            listTopic.activeOccurences--;
+            if (listTopic.activeOccurences <= 0) {
+              listTopic.selected = false;
+            }
+          }
+        }
+      }
+    } else {
+      for (const paper of this.selectedAuthor.papers) {
+
+        // If it is not in the showed list of papers
+        if (this.filteredPapers.find(p => p.id === paper.id) === undefined) {
+          if (paper.topics.find(t => t.url === topicUrl) !== undefined) {
+            for (const paperTopic of paper.topics) {
+              const listTopic = this.topicsList.find(
+                t => t.topic.url === paperTopic.url
+              );
+              listTopic.activeOccurences++;
+              if (listTopic.activeOccurences > 0) {
+                listTopic.selected = true;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    this.filterPapers();
+  }
+
+  // The papers array in dataModel is filtered by the value of allPapersYears[i].shown
+  // corresponding to each year. The result is stored in filteredPapers
+  filterPapers() {
+    let toBePushed;
+    if (this.filteredPapers.length === 0) {
+      toBePushed = this.selectedAuthor.papers.filter(paper =>
+        paper.topics.every(
+          paperTopic =>
+            this.topicsList.find(t => t.topic.url === paperTopic.url)
+              .selected === true
+        )
+      );
+
+      this.filteredPapers = toBePushed;
+    } else {
+      // Filtering
+      this.filteredPapers = this.filteredPapers.filter(paper =>
+        paper.topics.every(
+          paperTopic =>
+            this.topicsList.find(t => t.topic.url === paperTopic.url)
+              .selected === true
+        )
+      );
+
+      const allPapers = this.selectedAuthor.papers.filter(paper =>
+        paper.topics.every(
+          paperTopic =>
+            this.topicsList.find(t => t.topic.url === paperTopic.url)
+              .selected === true
+        )
+      );
+
+      // Merging (where the magic happens)
+      this.dataModel.mergeArraysRightPriority(this.filteredPapers, allPapers);
+    }
+  }
+
+  private createGraph() {
     this.zone.runOutsideAngular(() => {
       const chart = am4core.create('topicmapdiv', am4charts.XYChart);
       chart.maskBullets = false;
@@ -130,7 +260,7 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnDestroy() {
+  private destroyGraph() {
     this.zone.runOutsideAngular(() => {
       if (this.chart) {
         this.chart.dispose();
@@ -138,7 +268,7 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  updateHeatMap() {
+  private updateHeatMap() {
     if (this.chart) {
       const data: HeatMapData[] = [];
       let found: boolean;
@@ -174,17 +304,6 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
         this.chart.data = data.splice(0, this.topicsInHeatMap);
       });
     }
-  }
-
-  onTopicChipClick(topicLabel: string) {
-    this.navCtrl.navigateForward([
-      '/',
-      'results',
-      'tabs',
-      'papers',
-      topicLabel
-    ]);
-    this.onClose();
   }
 
   onPaperDetails(paperId: string) {

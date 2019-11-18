@@ -49,7 +49,6 @@ export class PaperDetailPage implements OnInit {
 
   onTopicChipClick(topic: string) {
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);
-    this.onClose();
   }
 
   onClose() {

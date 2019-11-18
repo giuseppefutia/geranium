@@ -506,33 +506,7 @@ export class PapersPage implements OnInit {
         });
 
       // Merging (where the magic happens)
-      this.mergeArraysRightPriority(this.filteredPapers, allPapers);
-    }
-  }
-
-  private mergeArraysRightPriority(
-    l: Array<SimplifiedPaper>,
-    r: Array<SimplifiedPaper>
-  ) {
-    let i = 0,
-      j = 0,
-      cnt = 0;
-    const old = [...l];
-    while (i < old.length) {
-      const paper = r[j];
-      if (old[i].id !== paper.id) {
-        l.splice(cnt, 0, paper);
-        cnt++;
-      } else {
-        i++;
-        cnt++;
-      }
-      j++;
-    }
-    for (; j < r.length; j++) {
-      const paper = r[j];
-      l.splice(cnt, 0, paper);
-      cnt++;
+      this.dataModel.mergeArraysRightPriority(this.filteredPapers, allPapers);
     }
   }
 

@@ -52,7 +52,6 @@ def set_authors_query(topic, lines, offset):
         ?all_t rdfs:label ?all_t_label .
         ?p purl:identifier ?p_id .
         ?p rdfs:label ?p_label .
-        ?t rdfs:label "{t}" .
         ?p ?property ?a .
         ?a a gpo:Author .
         ?a rdfs:label ?a_label .

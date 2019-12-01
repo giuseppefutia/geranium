@@ -14,7 +14,7 @@ import os.path
 import sparql as sparqlQueries
 from langdetect import detect
 
-#settings
+# settings
 pref_format='xml'
 num_topics=7
 
@@ -33,6 +33,13 @@ GERANIUM_ONTOLOGY_AUT = URIRef(GERANIUM_ONTOLOGY + "Author")
 GERANIUM_ONTOLOGY_JOU = URIRef(GERANIUM_ONTOLOGY + "Journal")
 GERANIUM_ONTOLOGY_TMF = URIRef(GERANIUM_ONTOLOGY + "TMFResource")
 GERANIUM_ONTOLOGY_KEY = URIRef(GERANIUM_ONTOLOGY + "AuthorKeyword")
+
+# define predicates
+GERANIUM_SUG_TOP = URIRef(BASE_URL + "SuggestedTopic")
+GERANIUM_SUG_JOU = URIRef(BASE_URL + "SuggestedJournal")
+GERANIUM_SUG_CRE = URIRef(BASE_URL + "SuggestedCreator")
+GERANIUM_SUG_CON = URIRef(BASE_URL + "SuggestedContributor")
+
 
 # authors set
 authors = set()
@@ -370,7 +377,6 @@ def update(dump,old_rdf,outputFilename):
     print('Old graph parsed!')
     new_graph = buildGraphFromPublicationsDump(dump)
     
-    
     graph = old_graph + new_graph
     serialize(graph,outputFilename)
 
@@ -401,6 +407,43 @@ def add_abstracts(input_file,output_file):
     else:
         print(input_file+" not found")
 
+def buildGraphFromSuggestions(suggestionsFile: str,graph=Graph()) -> Graph:
+     # read json file
+    with open(suggestionsFile, 'r') as file:
+        content = file.read()
+
+    # create records list, every element is a dictionary
+    records = json.loads(content)
+
+    for publication in records:
+        for field in records[publication]:
+            if "creator" in field:
+                sug_field = GERANIUM_SUG_CRE
+            elif "contributor" in field:
+                sug_field = GERANIUM_SUG_CON
+            elif "publisher" in field:
+                sug_field = GERANIUM_SUG_JOU
+            elif "subject" in field:
+               sug_field = GERANIUM_SUG_TOP
+            for value in records[publication][field]:
+                for key in value:
+                    graph.add((URIRef(publication),
+                            URIRef(sug_field),
+                            URIRef(key)))
+
+    return graph
+    
+
+def suggestions(suggestionsFile,old_rdf,outputFilename):
+    old_graph = Graph()
+    print('Parsing old graph...')
+    old_graph.parse(old_rdf,pref_format)
+    print('Old graph parsed!')
+    new_graph = buildGraphFromSuggestions(suggestionsFile)
+
+    graph = old_graph + new_graph
+    serialize(graph,outputFilename)
+
 def main():
     """
     Execute the following script if not used as library
@@ -409,13 +452,14 @@ def main():
     global num_topics
     #CLI setup
     parser = argparse.ArgumentParser(description='parse a json file and generate an rdf file out of its data')
-    parser.add_argument('-b','--build',help='build rdf file starting from the json dump',type=str)
+    parser.add_argument('-b','--build',help='build rdf file starting from the json dump/suggestions json',type=str)
     parser.add_argument('-i','--images',help='get images for the rdf file')
     parser.add_argument('-t','--topics',help='get abstracts for the topics\' json file')
     parser.add_argument('-n','--ntopics',help='specify number of topics to extract with TellMeFirst',default=7)
     parser.add_argument('-u','--update',help='update previously generated rdf file (updatedGraph = oldGraph UNION newGraph)',type=str)
     parser.add_argument('-o','--output',help='output file filename',default='output_'+time.strftime('%Y%m%d_%H%M%S')+'.rdf',type=str)
     parser.add_argument('-d','--debug',help='display debug messages',action='store_true')
+    parser.add_argument('-s','--suggestions',help='load suggestions on previously created rdf file',type=str)
     parser.add_argument('-f','--format',help='specify rdf file format (xml by default)',default=pref_format,type=str)
     args = parser.parse_args()
     
@@ -424,9 +468,11 @@ def main():
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
+    if args.suggestions:
+        suggestions(args.build,args.suggestions,args.output)
     if args.update:
         update(args.build,args.update,args.output)
-    if args.build and not args.update:
+    if args.build and not args.update and not args.suggestions:
         build(args.build,args.output)
     if args.images:
         add_images(args.images,args.output)

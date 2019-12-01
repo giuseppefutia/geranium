@@ -35,10 +35,10 @@ GERANIUM_ONTOLOGY_TMF = URIRef(GERANIUM_ONTOLOGY + "TMFResource")
 GERANIUM_ONTOLOGY_KEY = URIRef(GERANIUM_ONTOLOGY + "AuthorKeyword")
 
 # define predicates
-GERANIUM_SUG_TOP = URIRef(BASE_URL + "SuggestedTopic")
-GERANIUM_SUG_JOU = URIRef(BASE_URL + "SuggestedJournal")
-GERANIUM_SUG_CRE = URIRef(BASE_URL + "SuggestedCreator")
-GERANIUM_SUG_CON = URIRef(BASE_URL + "SuggestedContributor")
+GERANIUM_SUG_TOP = URIRef(GERANIUM_ONTOLOGY + "SuggestedTopic")
+GERANIUM_SUG_JOU = URIRef(GERANIUM_ONTOLOGY + "SuggestedJournal")
+GERANIUM_SUG_CRE = URIRef(GERANIUM_ONTOLOGY + "SuggestedCreator")
+GERANIUM_SUG_CON = URIRef(GERANIUM_ONTOLOGY + "SuggestedContributor")
 
 
 # authors set

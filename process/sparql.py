@@ -113,7 +113,8 @@ def set_publication_details_query(lines, offset, publication_url):
     PREFIX purl:<http://purl.org/dc/terms/>
     PREFIX gpo:<http://geranium-project.org/ontology/>
     SELECT DISTINCT ?p ?p_id ?p_label ?p_date ?t ?t_label ?a ?a_id ?a_label
-                    ?ca ?ca_id ?ca_label ?abstract
+                    ?ca ?ca_id ?ca_label ?abstract ?s_t ?s_t_label ?s_a ?s_a_label
+                    ?s_ca ?s_ca_label ?s_j ?s_j_label
     WHERE {{
         <{p}> purl:identifier ?p_id .
         ?p purl:identifier ?p_id .
@@ -132,6 +133,22 @@ def set_publication_details_query(lines, offset, publication_url):
         }}
         OPTIONAL {{
             <{p}> purl:abstract ?abstract .
+        }}
+        OPTIONAL {{
+            <{p}> gpo:SuggestedTopic ?s_t .
+            ?s_t rdfs:label ?s_t_label .
+        }}
+        OPTIONAL {{
+            <{p}> gpo:SuggestedCreator ?s_a .
+            ?s_a rdfs:label ?s_a_label .
+        }}
+        OPTIONAL {{
+            <{p}> gpo:SuggestedContributor ?s_ca .
+            ?s_ca rdfs:label ?s_ca_label .
+        }}
+        OPTIONAL {{
+            <{p}> gpo:SuggestedJournal ?s_j .
+            ?s_j rdfs:label ?s_j_label .
         }}
     }} LIMIT {l} OFFSET {o}
     \

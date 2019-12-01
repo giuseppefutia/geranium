@@ -65,7 +65,7 @@ def set_authors_query(topic, lines, offset):
             ?other_ca purl:identifier ?other_ca_id .
             ?other_ca rdfs:label ?other_ca_label .
         }}
-    }} ORDER BY ASC(UCASE(str(?p_label))) LIMIT {l} OFFSET {o} \
+    }} ORDER BY ASC(UCASE(str(?a_label))) LIMIT {l} OFFSET {o} \
     """.format(t=topic, l=lines, o=offset)
     return query
 

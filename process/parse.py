@@ -98,7 +98,8 @@ def get_publication_details(data):
         publication = row['p_id']['value']
         author_fields = {'url': 'a', 'id': 'a_id', 'name': 'a_label'}
         publication_fields = {'id': 'p_id', 'title': 'p_label',
-                              'url': 'p', 'submitted_date': 'p_date'}
+                              'url': 'p', 'submitted_date': 'p_date',
+                              'abstract': 'p_abstract'}
         final[publication] = set_publication_data(row,
                                                   publication_fields,
                                                   author_fields)
@@ -108,7 +109,7 @@ def get_publication_details(data):
         publication = next((i for i in list(final.values())
                             if i['id'] == publication_id), None)
         if publication is not None:
-            topic_fields = {'url': 't', 'label': 't_label'}
+            topic_fields = {'url': 't', 'label': 't_label', 'img': 't_img'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if topic is not None:
                 publication['topics'].append(topic)
@@ -158,7 +159,7 @@ def get_author_details(data):
         if publication is not None:
             # Add topics
             topic_id = row['other_t']['value']
-            topic_fields = {'url': 'other_t', 'label': 'other_t_label'}
+            topic_fields = {'url': 'other_t', 'label': 'other_t_label', 'img': 'other_t_img'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if topic is not None:
                 publication['topics'].append(topic)

@@ -77,7 +77,8 @@ def set_author_details_query(topic, lines, offset, author_url):
     SELECT DISTINCT ?a ?a_id ?a_label ?p ?p_id ?p_label ?p_date
                     ?other_t ?other_t_label
                     ?other_a ?other_a_id ?other_a_label
-                    ?other_ca ?other_ca_id ?other_ca_label
+                    ?other_ca ?other_ca_id ?other_ca_label 
+                    ?t_img ?other_t_img
     WHERE {{
         <{a}> purl:identifier ?a_id .
         <{a}> rdfs:label ?a_label .
@@ -97,6 +98,12 @@ def set_author_details_query(topic, lines, offset, author_url):
         ?other_a purl:identifier ?other_a_id .
         ?other_a rdfs:label ?other_a_label .
         OPTIONAL{{
+            ?t foaf:img ?t_img .
+        }}
+        OPTIONAL{{
+            ?other_t foaf:img ?other_t_img .
+        }}
+        OPTIONAL{{
             ?p purl:contributor ?other_ca .
             ?other_ca purl:identifier ?other_ca_id .
             ?other_ca rdfs:label ?other_ca_label .
@@ -114,7 +121,7 @@ def set_publication_details_query(lines, offset, publication_url):
     PREFIX gpo:<http://geranium-project.org/ontology/>
     SELECT DISTINCT ?p ?p_id ?p_label ?p_date ?t ?t_label ?a ?a_id ?a_label
                     ?ca ?ca_id ?ca_label ?abstract ?s_t ?s_t_label ?s_a ?s_a_label
-                    ?s_ca ?s_ca_label ?s_j ?s_j_label
+                    ?s_ca ?s_ca_label ?s_j ?s_j_label ?t_img
     WHERE {{
         <{p}> purl:identifier ?p_id .
         ?p purl:identifier ?p_id .
@@ -133,6 +140,9 @@ def set_publication_details_query(lines, offset, publication_url):
         }}
         OPTIONAL {{
             <{p}> purl:abstract ?abstract .
+        }}
+        OPTIONAL{{
+            ?t foaf:img ?t_img .
         }}
         OPTIONAL {{
             <{p}> gpo:SuggestedTopic ?s_t .

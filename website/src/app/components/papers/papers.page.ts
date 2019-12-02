@@ -4,7 +4,7 @@ import {
   ModalController,
   LoadingController
 } from '@ionic/angular';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 
@@ -65,6 +65,7 @@ export class PapersPage implements OnInit {
       {
         label: '', // Must be configured with appropriate data
         data: [],
+        barPercentage: 1,
         backgroundColor: [],
         borderColor: [],
         borderWidth: 1
@@ -91,23 +92,15 @@ export class PapersPage implements OnInit {
               }
             }
           }
-        ],
-        xAxes: [
-          {
-            barPercentage: 1
-          }
         ]
       },
       onClick: (v, e) => {
         if (e[0] !== undefined) {
-          this.onChartClick.call(
-            this,
-            new BarData(e[0]._datasetIndex, e[0]._index)
-          );
+          this.onChartClick.call(this, e);
         }
       },
-      onHover: (event, chartEl) => {
-        event.target.style.cursor = chartEl[0] ? 'pointer' : 'default';
+      onHover: (mouse, chartEl) => {
+        mouse.target.style.cursor = chartEl[0] ? 'pointer' : 'default';
       }
     }
   };
@@ -116,7 +109,6 @@ export class PapersPage implements OnInit {
     private navCtrl: NavController,
     private resultsService: ResultsService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController,
     private dataModel: ModelService,
     private loadingCtrl: LoadingController
   ) {
@@ -310,8 +302,9 @@ export class PapersPage implements OnInit {
   }
 
   // Open modal to get authors information -- XXX duplicated function in paper details
-  onAuthorClick(author: SimplifiedAuthor) {
+  onAuthorClick(author: SimplifiedAuthor, paper: SimplifiedPaper) {
     if (author.name === '...') {
+      this.onPaperDetails(paper);
       return;
     }
     this.navCtrl.navigateForward(['/', 'results', 'author', author.id]);
@@ -411,7 +404,10 @@ export class PapersPage implements OnInit {
 
   // Called when a bar on the chart is clicked
   // It calls filterPapers for filtering based on the newly received filtering rules
-  onChartClick(bar: BarData) {
+  onChartClick(e) {
+    const bar = new BarData(e[0]._datasetIndex, e[0]._index);
+    console.log(bar);
+
     let cnt = 0;
     for (const year of this.allPapersYears) {
       if (year.shown) {
@@ -422,8 +418,12 @@ export class PapersPage implements OnInit {
       for (let i = 0; i < this.allPapersYears.length; i++) {
         if (i !== bar.dataIndex) {
           this.allPapersYears[i].shown = false;
-          this.chartData.datasets[bar.datasetIndex].backgroundColor[i] = this.lightHiddenColor;
-          this.chartData.datasets[bar.datasetIndex].borderColor[i] = this.hiddenColor;
+          this.chartData.datasets[bar.datasetIndex].backgroundColor[
+            i
+          ] = this.lightHiddenColor;
+          this.chartData.datasets[bar.datasetIndex].borderColor[
+            i
+          ] = this.hiddenColor;
         }
       }
     } else {

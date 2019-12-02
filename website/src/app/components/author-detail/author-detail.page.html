@@ -13,7 +13,7 @@
 
 <ion-content>
   <ion-grid style="height: 100%" *ngIf="isLoading">
-    <ion-row justify-content-center align-items-center style="height: 100%">
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
       <ion-col style="height: 100%">
         <div style="text-align: center; height: 100%;">
           <ion-spinner color="primary" style="margin: auto;"></ion-spinner>
@@ -23,78 +23,75 @@
   </ion-grid>
 
   <div
-    padding-top
-    padding-horizontal
-    justify-content-center
-    align-items-center
+    class="ion-padding-top ion-padding-horizontal ion-justify-content-center ion-align-items-center"
     style="height: auto; width: 100%"
     *ngIf="!isLoading"
   >
-    <div padding>
+    <div class="ion-padding">
       <div class="avatar" [ngStyle]="selectedAuthor.style">
-        <h1 no-margin no-padding>
+        <h1 class="ion-no-margin ion-no-padding">
           <b>{{ selectedAuthor.initials }}</b>
         </h1>
       </div>
       <h1
-        no-margin
-        no-padding
-        padding-start
-        padding-vertical
+        class="ion-no-margin ion-no-padding ion-padding-start ion-padding-vertical"
         style="font-size: xx-large; display: inline-block; vertical-align: middle;"
       >
         <b>{{ selectedAuthor.name }}</b>
       </h1>
     </div>
 
-    <h3 padding-start padding-top>
+    <h3 class="ion-adding-start ion-padding-top">
       Topics of interest
     </h3>
-    <div padding-start padding-end padding-bottom>
+    <div class="ion-padding-start ion-padding-end ion-padding-bottom">
       <ion-chip
         *ngFor="let topic of topicsList; let i = index"
         (click)="onTopicChipClick(topic.topic.url)"
         [color]="(topic.selected) ? ((i === 0) ? 'success' : 'primary') : 'medium'"
       >
-        <ion-icon name="bulb" *ngIf="!topic.selected"></ion-icon>
-        <ion-icon name="checkmark" *ngIf="topic.selected"></ion-icon>
+        <ion-icon name="bulb"></ion-icon>
         <ion-label>{{ topic.topic.label }}</ion-label>
       </ion-chip>
     </div>
     <hr />
-    <h3 padding-start>
+    <h3 class="ion-padding-start">
       Publications on these topics
     </h3>
-    <ion-grid padding-start padding-end padding-bottom no-margin>
-      <ion-row no-padding no-margin>
+    <ion-grid class="ion-padding-start ion-padding-end ion-padding-bottom ion-no-margin">
+      <ion-row class="ion-no-padding ion-no-margin">
         <ion-col
           size="12"
           size-sm="6"
           size-xxl="4"
-          no-padding
-          no-margin
+          class="ion-no-padding ion-no-margin"
           *ngFor="let paper of filteredPapers"
         >
           <ion-card class="paperCard">
             <ion-img src="assets/img/defaultPaper.jpg"></ion-img>
-            <h1 no-padding no-margin>{{ paper.title }}</h1>
-            <p no-padding no-margin>{{ paper.authors[0].name }}</p>
-            <ion-button fill="clear" no-padding no-margin (click)="onPaperDetails(paper.id)">MORE</ion-button>
+            <h1 class="ion-no-padding ion-no-margin">{{ paper.title }}</h1>
+            <p class="ion-no-padding ion-no-margin">{{ paper.authors[0].name }}</p>
+            <ion-button
+              fill="clear"
+              class="ion-no-padding ion-no-margin"
+              (click)="onPaperDetails(paper.id)"
+              >MORE</ion-button
+            >
           </ion-card>
         </ion-col>
       </ion-row>
     </ion-grid>
     <hr />
-    <h3 padding-start margin-top>
+    <h3 class="ion-padding-start ion-margin-top">
       Heat Map
     </h3>
   </div>
   <div id="topicmapdiv" style="width: 100%; height: 320px;"></div>
   <hr />
-  <h3 padding-start margin-top margin-start>
+  <h3 class="ion-padding-start ion-margin-top ion-margin-start">
     Suggested topics
   </h3>
-  <div padding-start padding-end padding-bottom margin-start>
+  <div class="ion-padding-start ion-padding-end ion-padding-bottom ion-margin-start">
     <ion-chip
       *ngFor="let topic of topicsList"
       (click)="onSuggestedTopicClick(topic.topic.label)"
@@ -105,18 +102,33 @@
     </ion-chip>
   </div>
   <hr />
-  <h3 padding-start margin-top margin-start>
+  <h3 class="ion-padding-start ion-margin-top ion-margin-start">
     Suggested authors
   </h3>
-  <ion-slides [options]="slidesOptions" padding margin-start>
+  <ion-slides [options]="slidesOptions" class="ion-padding ion-margin-start">
     <ion-slide *ngFor="let paper of filteredPapers">
-      <ion-card no-margin no-padding tappable class="authorCard">
+      <ion-card class="authorCard ion-no-margin ion-no-padding">
         <ion-img
           src="assets/img/defaultPaper.jpg"
-          no-margin
-          padding-bottom
+          class="ion-no-margin ion-padding-bottom"
         ></ion-img>
-        <p padding-start no-margin>{{ paper.title }}</p>
+        <p class="ion-padding-start ion-no-margin ion-padding-bottom">{{ paper.title }}</p>
+        <ion-button
+          shape="round"
+          size="small"
+          fill="clear"
+          color="success"
+        >
+          <ion-icon slot="icon-only" name="thumbs-up"></ion-icon>
+        </ion-button>
+        <ion-button
+          shape="round"
+          size="small"
+          fill="clear"
+          color="danger"
+        >
+          <ion-icon slot="icon-only" name="thumbs-down"></ion-icon>
+        </ion-button>
       </ion-card>
     </ion-slide>
   </ion-slides>

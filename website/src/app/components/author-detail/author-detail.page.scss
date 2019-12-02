@@ -5,7 +5,7 @@
 $paperTitleSize: 1.2em;
 $cardHeight: 8.5em;
 $paperTitleLines: 2;
-$slideHeight: 12em;
+$slideHeight: 14em;
 $slideTopicLabelSize: 1em;
 $slideTopicLines: 2;
 
@@ -57,19 +57,25 @@ hr {
 .authorCard {
   width: 100%;
   height: $slideHeight;
+  pointer-events: none;
 }
 
 .authorCard ion-img {
   width: 100%;
-  height: calc(100% - 3em);
+  height: calc(100% - 5em);
   object-fit: cover;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .authorCard p {
   text-align: left;
   color: black;
   @include multiLineEllipsis($lineHeight: $slideTopicLabelSize, $lineCount: $slideTopicLines, $bgColor: white);  
+}
+
+.authorCard ion-button {
+  width: 37%;
+  padding-top: 10px;
 }
 
 

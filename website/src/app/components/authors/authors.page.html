@@ -1,25 +1,30 @@
 <ion-header *ngIf="!isRedirecting">
-  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="143px">
-    <ion-row no-padding>
-      <ion-col no-padding>
+  <ion-grid
+    class="ion-no-padding"
+    [myScrollVanish]="scrollArea"
+    myHeaderMaxHeight="143px"
+  >
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding">
         <div class="topView">
-          <ion-grid no-padding>
-            <ion-row justify-content-center align-items-center no-padding>
-              <ion-col size="2" size-lg="1" text-center>
+          <ion-grid class="ion-no-padding">
+            <ion-row
+              class="ion-no-padding ion-justify-content-center ion-align-items-center"
+            >
+              <ion-col size="2" size-lg="1" class="ion-text-center">
                 <ion-button fill="clear" (click)="onBackClick()"
                   ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
                 ></ion-button>
               </ion-col>
-              <ion-col padding-bottom>
+              <ion-col class="ion-padding-bottom">
                 <ion-skeleton-text
                   animated
                   *ngIf="isLoading"
                   style="width: 50%; height: 0.5em;"
-                  padding
-                  margin-top
+                  class="ion-padding ion-margin-top"
                 ></ion-skeleton-text>
                 <h2
-                  no-padding
+                  class="ion-no-padding"
                   style="text-transform: capitalize;"
                   *ngIf="!isLoading && dataModel.getSearchStackLength() !== 0"
                 >
@@ -37,7 +42,7 @@
                   tappable
                   [class]="isLoading ? 'disabled' : ''"
                   (click)="openTopicUrl()"
-                  margin-bottom
+                  class="ion-margin-bottom"
                 >
                   More on this topic
                 </a>
@@ -53,14 +58,14 @@
 <ion-content #scrollArea scrollEvents="true">
   <ion-grid *ngIf="errorText !== null">
     <ion-row>
-      <ion-col text-center>
+      <ion-col class="ion-text-center">
         <p>{{ errorText }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-grid *ngIf="filteredAuthors.length <= 0 && !isRedirecting && !isLoading">
     <ion-row>
-      <ion-col text-center>
+      <ion-col class="ion-text-center">
         <p>Sorry, there are no results for {{ dataModel.searchTopic.label }}</p>
       </ion-col>
     </ion-row>
@@ -77,23 +82,20 @@
           <ion-skeleton-text
             *ngIf="isLoading"
             style="width:100%; height: 220px;"
-            no-padding
-            no-margin
+            class="ion-no-padding ion-no-margin"
           ></ion-skeleton-text>
           <div
             tappable
             (click)="onAuthorDetails(author)"
-            no-padding
-            no-margin
-            class="card-head"
+            class="card-head ion-no-padding ion-no-margin"
             *ngIf="!isLoading"
             [ngStyle]="author.style"
           >
-            <h1 no-padding no-margin><b>{{ author.initials }}</b></h1>
+            <h1 class="ion-no-padding ion-no-margin"><b>{{ author.initials }}</b></h1>
           </div>
 
           <ion-grid>
-            <ion-row justify-content-center align-items-center>
+            <ion-row class="ion-justify-content-center ion-align-items-center">
               <ion-col size="10">
                 <ion-card-header>
                   <ion-card-title *ngIf="isLoading">
@@ -123,7 +125,7 @@
             </ion-row>
           </ion-grid>
 
-          <ion-card-content no-padding padding-horizontal padding-bottom>
+          <ion-card-content class="ion-no-padding ion-padding-horizontal ion-padding-bottom">
             <ion-skeleton-text
               style="height: 1em;"
               *ngIf="isLoading"
@@ -140,7 +142,7 @@
               </ion-chip>
             </div>
           </ion-card-content>
-          <div padding-start padding-bottom>
+          <div class="ion-padding-start ion-padding-bottom">
             <ion-button
               fill="clear"
               color="primary"

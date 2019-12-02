@@ -15,7 +15,7 @@
 
 <ion-content>
   <ion-grid *ngIf="isLoaded">
-    <ion-row no-margin no-padding>
+    <ion-row class="ion-no-margin ion-no-padding">
       <ion-col>
         <ion-img
           [src]="selectedPaper.imageUrl"
@@ -24,23 +24,23 @@
         ></ion-img>
       </ion-col>
     </ion-row>
-    <ion-row padding>
+    <ion-row class="ion-padding">
       <ion-col size="4" class="ion-hide-sm-down">
         <ion-img
           [src]="selectedPaper.imageUrl"
           style="max-height: 400px; overflow-y: hidden;"
         ></ion-img>
       </ion-col>
-      <ion-col padding>
+      <ion-col class="ion-padding">
         <ion-text>
-          <h1 no-margin style="font-size: x-large; padding-bottom: 20px;">
+          <h1 class="ion-no-margin" style="font-size: x-large; padding-bottom: 20px;">
             <b>{{ selectedPaper.title }}</b>
           </h1>
         </ion-text>
         <ion-text color="primary"
-          ><h3 no-margin><b>Authors</b></h3></ion-text
+          ><h3 class="ion-no-margin"><b>Authors</b></h3></ion-text
         >
-        <div margin>
+        <div class="ion-margin">
           <ion-chip
             *ngFor="let author of selectedPaper.authors"
             (click)="onAuthorChipClick(author)"
@@ -50,17 +50,17 @@
           </ion-chip>
         </div>
         <ion-text color="primary"
-          ><h3 no-margin><b>Publication Date</b></h3></ion-text
+          ><h3 class="ion-no-margin"><b>Publication Date</b></h3></ion-text
         >
-        <div margin>
-          <p no-margin>
+        <div class="ion-margin">
+          <p class="ion-no-margin">
             <i>{{ selectedPaper.submittedDate.toLocaleDateString() }}</i>
           </p>
         </div>
         <ion-text color="primary"
-          ><h3 no-margin><b>Topics</b></h3></ion-text
+          ><h3 class="ion-no-margin"><b>Topics</b></h3></ion-text
         >
-        <div margin>
+        <div class="ion-margin">
           <ion-chip
             *ngFor="let topic of selectedPaper.topics"
             (click)="onTopicChipClick(topic.label)"
@@ -72,13 +72,13 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row no-padding>
+    <ion-row class="ion-no-padding">
       <ion-col offset-md="1" size-md="10">
         <ion-card>
           <ion-card-header>
             <ion-card-title>
               <ion-text color="primary"
-                ><h3 no-margin><b>Abstract</b></h3></ion-text
+                ><h3 class="ion-no-margin"><b>Abstract</b></h3></ion-text
               >
             </ion-card-title>
             <ion-card-subtitle>

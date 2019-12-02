@@ -67,7 +67,7 @@ export class JournalsPage implements OnInit, AfterContentInit {
     setTimeout(() => {
       this.isLoading = false;
       this.allJournals = [];
-      this.addToShowedJournals(10);
+      // this.addToShowedJournals(10);
     }, 2000);
   }
 
@@ -125,7 +125,7 @@ export class JournalsPage implements OnInit, AfterContentInit {
   // Called by infinite scroll to load more data
   onMoreJournals(event) {
     setTimeout(() => {
-      this.addToShowedJournals(10);
+      // this.addToShowedJournals(10);
       event.target.complete();
 
       // disable the infinite scroll

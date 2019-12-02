@@ -14,6 +14,6 @@ export class ConfigService {
 
     /* Change the following port number if you want to change the
     port used to connect to the API (suggested 80 for production) */
-    this.apiPort = 80;
+    this.apiPort = 443;
   }
 }

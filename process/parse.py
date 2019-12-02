@@ -212,7 +212,8 @@ def set_author_data(row, author_fields):
 def set_publication_data(row, pub_fields, auth_fields):
     publication_data = dict()
     for field, value in pub_fields.items():
-        publication_data[field] = row[value]['value']
+        if value in row:
+            publication_data[field] = row[value]['value']
     # Include information on the author within the publication
     publication_data['author'] = set_author_data(row, auth_fields)
     # Prepare list of co-authors and topics

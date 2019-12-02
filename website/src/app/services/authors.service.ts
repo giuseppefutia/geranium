@@ -59,7 +59,7 @@ export class AuthorsService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
-      'http://' +
+      'https://' +
       this.config.apiDomain + ':' + this.config.apiPort +
       '/api?' +
       encodeURI(
@@ -119,7 +119,7 @@ export class AuthorsService {
   ): Observable<ResponseAuthor[]> {
     // Get the author data using its URI and the topicLabel through the API
     const url =
-      'http://' +
+      'https://' +
       this.config.apiDomain + ':' + this.config.apiPort +
       '/api?' +
       encodeURI(

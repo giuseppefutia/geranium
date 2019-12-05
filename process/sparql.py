@@ -121,7 +121,7 @@ def set_publication_details_query(lines, offset, publication_url):
     PREFIX gpo:<http://geranium-project.org/ontology/>
     SELECT DISTINCT ?p ?p_id ?p_label ?p_date ?t ?t_label ?a ?a_id ?a_label
                     ?ca ?ca_id ?ca_label ?p_abstract ?s_t ?s_t_label ?s_a ?s_a_label
-                    ?s_ca ?s_ca_label ?s_j ?s_j_label ?t_img
+                    ?s_ca ?s_ca_label ?s_j ?s_j_label ?t_img ?s_t_img
     WHERE {{
         <{p}> purl:identifier ?p_id .
         ?p purl:identifier ?p_id .
@@ -139,25 +139,28 @@ def set_publication_details_query(lines, offset, publication_url):
             ?ca rdfs:label ?ca_label .
         }}
         OPTIONAL {{
-            <{p}> purl:abstract ?abstract .
+            <{p}> purl:abstract ?p_abstract .
         }}
         OPTIONAL{{
             ?t foaf:img ?t_img .
         }}
         OPTIONAL {{
-            <{p}> gpo:SuggestedTopic ?s_t .
+            <{p}> gpo:suggestedTopic ?s_t .
             ?s_t rdfs:label ?s_t_label .
+            OPTIONAL{{
+                ?s_t foaf:img ?s_t_img .
+            }}
         }}
         OPTIONAL {{
-            <{p}> gpo:SuggestedCreator ?s_a .
+            <{p}> gpo:suggestedCreator ?s_a .
             ?s_a rdfs:label ?s_a_label .
         }}
         OPTIONAL {{
-            <{p}> gpo:SuggestedContributor ?s_ca .
+            <{p}> gpo:suggestedContributor ?s_ca .
             ?s_ca rdfs:label ?s_ca_label .
         }}
         OPTIONAL {{
-            <{p}> gpo:SuggestedJournal ?s_j .
+            <{p}> gpo:suggestedJournal ?s_j .
             ?s_j rdfs:label ?s_j_label .
         }}
     }} LIMIT {l} OFFSET {o}

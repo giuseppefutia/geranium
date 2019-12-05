@@ -143,13 +143,13 @@ def add_author(author, authors, graph: Graph):
         graph.add((GERANIUM_AUT[author['authority']],
                    RDFS.label,
                    Literal(author['author'])))
-        
+
         authors.add(author['authority'])
     logging.debug('Released author lock!')
     lock_authors.release()
 
 def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> Graph:
-    
+
     def process_record(record):
         topics = []
         abstract = None
@@ -235,11 +235,11 @@ def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> G
 
         if date=='None':
             date = 'Missing'
-            
+
         graph.add((GERANIUM_PUB[str(record['handle'])],
                     PURL.dateSubmitted,
                     Literal(date, datatype=XSD.date)))
-        
+
         # control if the publication is associated with a journal
         if record['lookupValues']['jissn']:
             jissn = str(record['lookupValues']['jissn']).strip()
@@ -263,7 +263,7 @@ def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> G
             graph.add((GERANIUM_PUB[str(record['handle'])],
                         PURL.publisher,
                         GERANIUM_JOU[jissn]))
-        
+
         # add publication creator relationship
         author = record['internalAuthors'][0]
         add_author(author, authors, graph)
@@ -302,7 +302,7 @@ def buildGraphFromPublicationsDump(publicationsDumpPath: str,graph=Graph()) -> G
     # list for publications URIs
     with ThreadPoolExecutor(max_workers = 10) as executor:
         executor.map(process_record, records)
-    
+
     return graph
 
 
@@ -332,7 +332,7 @@ def getDBpediaThumbnail(topic: str) -> str:
         if len(bindingsList) == 0:
             return ""  # no thumbnail available from dbpedia
         else:
-            return bindingsList[0]['thumbnail']['value']  # uri of thumbnail
+            return bindingsList[0]['thumbnail']['value'].replace("http://", "https://")  # uri of thumbnail
 
 
 def buildDBpediaAbstractTriples(file):
@@ -376,7 +376,7 @@ def update(dump,old_rdf,outputFilename):
     old_graph.parse(old_rdf,pref_format)
     print('Old graph parsed!')
     new_graph = buildGraphFromPublicationsDump(dump)
-    
+
     graph = old_graph + new_graph
     serialize(graph,outputFilename)
 
@@ -391,12 +391,12 @@ def build(dump,outputFilename):
 
 def add_images(input_file,output_file):
     graph = Graph()
-    
+
     graph.parse(input_file, format=pref_format)
     print("Adding images to graph...\n")
     addImgURLtoTopics(graph)
     outputFilename = output_file
-        
+
     serialize(graph,outputFilename)
 
 def add_abstracts(input_file,output_file):
@@ -432,7 +432,7 @@ def buildGraphFromSuggestions(suggestionsFile: str,graph=Graph()) -> Graph:
                             URIRef(key)))
 
     return graph
-    
+
 
 def suggestions(suggestionsFile,old_rdf,outputFilename):
     old_graph = Graph()
@@ -462,7 +462,7 @@ def main():
     parser.add_argument('-s','--suggestions',help='load suggestions on previously created rdf file',type=str)
     parser.add_argument('-f','--format',help='specify rdf file format (xml by default)',default=pref_format,type=str)
     args = parser.parse_args()
-    
+
     num_topics = args.ntopics
     pref_format = args.format
 
@@ -489,4 +489,3 @@ if __name__ == "__main__":
     start_time = time.time()
     main()
     print("--- %s seconds ---" % (time.time() - start_time))
-    

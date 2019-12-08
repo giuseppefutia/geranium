@@ -47,6 +47,7 @@ def set_authors_query(topic, lines, offset):
         ?p a gpo:Publication .
         ?p purl:subject ?t .
         ?t rdf:type gpo:TMFResource .
+        ?t rdfs:label "{t}" .
         ?p purl:subject ?all_t .
         ?all_t rdf:type gpo:TMFResource .
         ?all_t rdfs:label ?all_t_label .

@@ -424,7 +424,7 @@ def buildGraphFromSuggestions(suggestionsFile: str,graph=Graph()) -> Graph:
             elif "publisher" in field:
                 sug_field = GERANIUM_SUG_JOU
             elif "subject" in field:
-               sug_field = GERANIUM_SUG_TOP
+                sug_field = GERANIUM_SUG_TOP
             for value in records[publication][field]:
                 for key in value:
                     graph.add((URIRef(publication),

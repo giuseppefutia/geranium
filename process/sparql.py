@@ -81,7 +81,8 @@ def set_author_details_query(topic, lines, offset, author_url):
                     ?other_t ?other_t_label
                     ?other_a ?other_a_id ?other_a_label
                     ?other_ca ?other_ca_id ?other_ca_label 
-                    ?t_img ?other_t_img ?s_ca ?s_ca_label ?s_ca_id
+                    ?other_t_img ?s_t ?s_t_label ?s_a ?s_a_label ?s_a_id
+                    ?s_ca ?s_ca_id ?s_ca_label ?s_j ?s_j_label ?s_j_id ?t_img ?s_t_img
     WHERE {{
         <{a}> purl:identifier ?a_id .
         <{a}> rdfs:label ?a_label .
@@ -112,9 +113,26 @@ def set_author_details_query(topic, lines, offset, author_url):
             ?other_ca rdfs:label ?other_ca_label .
         }}
         OPTIONAL {{
+            ?p gpo:suggestedTopic ?s_t .
+            ?s_t rdfs:label ?s_t_label .
+            OPTIONAL{{
+                ?s_t foaf:img ?s_t_img .
+            }}
+        }}
+        OPTIONAL {{
+            ?p gpo:suggestedCreator ?s_a .
+            ?s_a rdfs:label ?s_a_label .
+            ?s_a purl:identifier ?s_a_id .
+        }}
+        OPTIONAL {{
             ?p gpo:suggestedContributor ?s_ca .
             ?s_ca rdfs:label ?s_ca_label .
             ?s_ca purl:identifier ?s_ca_id .
+        }}
+        OPTIONAL {{
+            ?p gpo:suggestedJournal ?s_j .
+            ?s_j purl:identifier ?s_j_id .
+            ?s_j rdfs:label ?s_j_label .
         }}
         FILTER (?property = purl:creator || ?property = purl:contributor)
     }} LIMIT {l} OFFSET {o}

@@ -174,7 +174,6 @@ def get_author_details(data):
     final = {}
     new_list = list()
     for row in data:
-        print(str(row), file=sys.stderr)
         # Author details
         author = row['a_id']['value']
         if not author in final:
@@ -227,6 +226,33 @@ def get_author_details(data):
                                       suggested_co_auth_fields)
             if suggested_co_author is not None:
                 publication['suggested_co_authors'].append(suggested_co_author)
+
+            #suggested topics
+            suggested_topic_fields = {'url': 's_t', 'label': 's_t_label', 'img': 's_t_img'}
+            suggested_topic = set_suggested_topic(row, publication['suggested_topics'], suggested_topic_fields)
+
+            if suggested_topic is not None:
+                publication['suggested_topics'].append(suggested_topic)
+
+            #suggested journals
+            suggested_journal_fields = {'id': 's_j_id',
+                              'name': 's_j_label',
+                              'url': 's_j'}
+            suggested_journal = set_co_author(row,
+                                      publication['suggested_journal'],
+                                      suggested_journal_fields)
+            if suggested_journal is not None:
+                publication['suggested_journal'].append(suggested_journal)
+
+            #suggested authors
+            suggested_auth_fields = {'id': 's_a_id',
+                              'name': 's_a_label',
+                              'url': 's_a'}
+            suggested_author = set_co_author(row,
+                                      publication['suggested_authors'],
+                                      suggested_auth_fields)
+            if suggested_author is not None:
+                publication['suggested_authors'].append(suggested_author)
 
 
     final = list(final.values())

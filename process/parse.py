@@ -1,5 +1,5 @@
 from flask import jsonify
-
+import sys
 
 def get_publications(data):
     final = {}
@@ -135,6 +135,16 @@ def get_publication_details(data):
             if co_author is not None:
                 publication['co_authors'].append(co_author)
 
+            #suggested journals
+            suggested_journal_fields = {'id': 's_j_id',
+                              'name': 's_j_label',
+                              'url': 's_j'}
+            suggested_journal = set_co_author(row,
+                                      publication['suggested_journal'],
+                                      suggested_journal_fields)
+            if suggested_journal is not None:
+                publication['suggested_journal'].append(suggested_journal)
+
             #suggested co-authors
             suggested_co_auth_fields = {'id': 's_ca_id',
                               'name': 's_ca_label',
@@ -164,6 +174,7 @@ def get_author_details(data):
     final = {}
     new_list = list()
     for row in data:
+        print(str(row), file=sys.stderr)
         # Author details
         author = row['a_id']['value']
         if not author in final:
@@ -184,7 +195,7 @@ def get_author_details(data):
         if publication is not None:
             publications.append(publication)
 
-    # Add topics and co-authors
+    # Add topics, co-authors and suggestions
     for row in data:
         author = row['a_id']['value']
         publications = final[author]['publications']
@@ -206,6 +217,17 @@ def get_author_details(data):
                                       co_auth_fields)
             if co_author is not None:
                 publication['co_authors'].append(co_author)
+            
+            #suggested co-authors
+            suggested_co_auth_fields = {'id': 's_ca_id',
+                              'name': 's_ca_label',
+                              'url': 's_ca'}
+            suggested_co_author = set_co_author(row,
+                                      publication['suggested_co_authors'],
+                                      suggested_co_auth_fields)
+            if suggested_co_author is not None:
+                publication['suggested_co_authors'].append(suggested_co_author)
+
 
     final = list(final.values())
     return jsonify(final)
@@ -257,6 +279,8 @@ def set_publication_data(row, pub_fields, auth_fields):
     publication_data['suggested_authors'] = list()
     publication_data['suggested_co_authors'] = list()
     publication_data['suggested_topics'] = list()
+    publication_data['suggested_journal'] = list()
+
     return publication_data
 
 

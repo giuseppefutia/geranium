@@ -51,7 +51,11 @@ export class PaperDetailPage implements OnInit {
     this.navCtrl.navigateForward(['/', 'results', 'tabs', 'papers', topic]);
   }
 
-  onClose() {
+  onBackClick() {
     this.navCtrl.back();
+  }
+
+  onCloseClick() {
+    this.navCtrl.navigateRoot(['/', 'results', 'tabs', 'papers', this.dataModel.searchTopic.label]);
   }
 }

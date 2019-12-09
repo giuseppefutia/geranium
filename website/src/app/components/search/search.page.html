@@ -62,6 +62,7 @@
                     (ionChange)="displaySuggestions()"
                     (ionFocus)="addFocus()"
                     (ionBlur)="removeFocus()"
+                    (keyup.enter)="onInputEnterPress()"
                     debounce="300"
                     [disabled]="!dataModel.canSearch"
                     required

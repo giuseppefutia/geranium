@@ -5,7 +5,7 @@ import {
   AfterViewInit,
   OnDestroy
 } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 
 import { ModelService } from '../../model/model.service';
 import { ResultsService } from '../../services/results.service';
@@ -29,12 +29,10 @@ interface HeatMapData {
 
 class StyledTopic {
   topic: Topic;
-  activeOccurences: number;
   selected: boolean;
 
-  constructor(topic: Topic, activeOccurences: number, selected: boolean) {
+  constructor(topic: Topic, selected: boolean) {
     this.topic = topic;
-    this.activeOccurences = activeOccurences;
     this.selected = selected;
   }
 }
@@ -58,7 +56,8 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     private dataModel: ModelService,
     private navCtrl: NavController,
     private zone: NgZone,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private alertCtrl: AlertController
   ) {
     this.isLoading = true;
     this.topicsList = [];
@@ -128,16 +127,16 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
         if (
           this.topicsList.find(t => t.topic.url === topic_.url) === undefined
         ) {
-          this.topicsList.push(new StyledTopic(topic_, 1, true));
-        } else {
-          this.topicsList.find(t => t.topic.url === topic_.url)
-            .activeOccurences++;
+          this.topicsList.push(new StyledTopic(topic_, false));
         }
       }
     }
-    const mainTopicIndex = this.topicsList.findIndex(t => t.topic.label === this.dataModel.searchTopic.label);
-    const mainTopic = this.topicsList.splice(mainTopicIndex, 1);
-    this.topicsList.splice(0, 0, mainTopic[0]);
+    const mainTopicIndex = this.topicsList.findIndex(
+      t => t.topic.label === this.dataModel.searchTopic.label
+    );
+    const mainTopic = this.topicsList.splice(mainTopicIndex, 1)[0];
+    mainTopic.selected = true;
+    this.topicsList.splice(0, 0, mainTopic);
     this.filteredPapers = [...this.selectedAuthor.papers];
   }
 
@@ -145,42 +144,9 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     const clickedTopic: StyledTopic = this.topicsList.find(
       t => t.topic.url === topicUrl
     );
+
+    // Valid if coming from a topic search
     clickedTopic.selected = !clickedTopic.selected;
-
-    // If I unselected a topic...
-    if (clickedTopic.selected === false) {
-      for (const paper of this.filteredPapers) {
-        if (paper.topics.find(t => t.url === topicUrl) !== undefined) {
-          for (const paperTopic of paper.topics) {
-            const listTopic = this.topicsList.find(
-              t => t.topic.url === paperTopic.url
-            );
-            listTopic.activeOccurences--;
-            if (listTopic.activeOccurences <= 0) {
-              listTopic.selected = false;
-            }
-          }
-        }
-      }
-    } else {
-      for (const paper of this.selectedAuthor.papers) {
-
-        // If it is not in the showed list of papers
-        if (this.filteredPapers.find(p => p.id === paper.id) === undefined) {
-          if (paper.topics.find(t => t.url === topicUrl) !== undefined) {
-            for (const paperTopic of paper.topics) {
-              const listTopic = this.topicsList.find(
-                t => t.topic.url === paperTopic.url
-              );
-              listTopic.activeOccurences++;
-              if (listTopic.activeOccurences > 0) {
-                listTopic.selected = true;
-              }
-            }
-          }
-        }
-      }
-    }
 
     this.filterPapers();
   }
@@ -190,31 +156,34 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   filterPapers() {
     let toBePushed;
     if (this.filteredPapers.length === 0) {
-      toBePushed = this.selectedAuthor.papers.filter(paper =>
-        paper.topics.every(
-          paperTopic =>
-            this.topicsList.find(t => t.topic.url === paperTopic.url)
-              .selected === true
-        )
+      toBePushed = this.selectedAuthor.papers.filter(
+        paper =>
+          paper.topics.find(
+            paperTopic =>
+              this.topicsList.find(t => t.topic.url === paperTopic.url)
+                .selected === true
+          ) !== undefined
       );
 
       this.filteredPapers = toBePushed;
     } else {
       // Filtering
-      this.filteredPapers = this.filteredPapers.filter(paper =>
-        paper.topics.every(
-          paperTopic =>
-            this.topicsList.find(t => t.topic.url === paperTopic.url)
-              .selected === true
-        )
+      this.filteredPapers = this.filteredPapers.filter(
+        paper =>
+          paper.topics.find(
+            paperTopic =>
+              this.topicsList.find(t => t.topic.url === paperTopic.url)
+                .selected === true
+          ) !== undefined
       );
 
-      const allPapers = this.selectedAuthor.papers.filter(paper =>
-        paper.topics.every(
-          paperTopic =>
-            this.topicsList.find(t => t.topic.url === paperTopic.url)
-              .selected === true
-        )
+      const allPapers = this.selectedAuthor.papers.filter(
+        paper =>
+          paper.topics.find(
+            paperTopic =>
+              this.topicsList.find(t => t.topic.url === paperTopic.url)
+                .selected === true
+          ) !== undefined
       );
 
       // Merging (where the magic happens)
@@ -326,15 +295,61 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  onAuthorThumbsDown(authorName: string) {
+    const alert = this.alertCtrl
+      .create({
+        header: 'Prediction Feedback',
+        message:
+          'Are you sure you want to dislike the suggestion for <strong>' +
+          authorName +
+          '</strong>?<br/>This feedback will count in future predictions',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Canceled');
+            }
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+              console.log('Sent');
+            }
+          }
+        ]
+      })
+      .then(alertEl => {
+        alertEl.present().then();
+      });
+  }
+
+  onBackClick() {
+    this.navCtrl.back();
+  }
+
   onSuggestedTopicClick(topicLabel: string) {
-    this.navCtrl.navigateForward(['/', 'results', 'tabs', 'authors', topicLabel]);
+    this.navCtrl.navigateForward([
+      '/',
+      'results',
+      'tabs',
+      'authors',
+      topicLabel
+    ]);
   }
 
   onPaperDetails(paperId: string) {
     this.navCtrl.navigateRoot(['/', 'results', 'paper', paperId]);
   }
 
-  onClose() {
-    this.navCtrl.back();
+  onCloseClick() {
+    this.navCtrl.navigateForward([
+      '/',
+      'results',
+      'tabs',
+      'authors',
+      this.dataModel.searchTopic.label
+    ]);
   }
 }

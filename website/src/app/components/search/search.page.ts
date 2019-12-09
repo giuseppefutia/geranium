@@ -69,6 +69,12 @@ export class SearchPage implements OnInit {
       });
   }
 
+  onInputEnterPress() {
+    if (this.backgroundProcessInPlace === false && this.searchSuggestions.length > 0) {
+      this.navigate(this.searchSuggestions[0]);
+    }
+  }
+
   /**
    * Display hints on possible search queries to the user
    */

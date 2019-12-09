@@ -307,6 +307,7 @@ export class PapersPage implements OnInit {
       this.onPaperDetails(paper);
       return;
     }
+    console.log("redirecting");
     this.navCtrl.navigateForward(['/', 'results', 'author', author.id]);
   }
 

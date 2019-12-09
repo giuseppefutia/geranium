@@ -110,8 +110,8 @@ def get_publication_details(data):
                             if i['id'] == publication_id), None)
         if publication is not None:
             #topics
-            with open('test.json','w') as file:
-                file.write(str(publication))
+            #with open('test.json','w') as file:
+            #    file.write(str(publication))
             topic_fields = {'url': 't', 'label': 't_label', 'img': 't_img'}
             topic = set_topic(row, publication['topics'], topic_fields)
 

@@ -1,9 +1,28 @@
 # Geranium
 Geranium is a system to empower the access to the Politecnico di Torino research activities (available within the [IRIS](https://iris.polito.it/) portal) using semantic technologies and deep learning techniques applied on graphs.
 
-The system consists of two main components:
-1. A back-end component to produce the [Knowledge Graph](https://en.wikipedia.org/wiki/Ontology_(information_science)) of the Polito publications and to provide RESTful APIs to access data. 
-2. A front-end component to visualize and interactively explore data available within such Knowledge Graph.
+The system consists of three main components:
+1. *KG Generator*: the goal of this component is to produce a KG from the JSON representation of IRIS data.
+2. *Back-end*: the goal of this component is to provide RESTful APIs to access data within the KG.
+3. *Front-end*: the goal of this component is to visualize and enable an interactive exploration of the results obtained from the back-end.
+
+## KG Generator
+To generate the KG from the JSON representation of IRIS data, you can run the ```map.py``` script.
+The script offers many options, which can be reviewed by using the help option:
+
+```
+$ cd process
+$ python map.py -h
+```
+
+The options for this script are the the following:
+```
+-b <json_file>        : builds a rdf file starting from a provided json file
+-o <output_file>      : used to specify the output filename. If not specified, one including the timestamp is automatically provided
+-n <number_of_topics> : used to specify the number of topics to extract with TellMeFirst from each abstract
+-d                    : turn on debug messages
+-f <file_format>      : used to specify the file format (XML by default)
+```
 
 ## Back-end
 
@@ -82,8 +101,17 @@ http://localhost:5000/api?type=author&topic=Carbon%20nanotube&lines=10000&offset
 ##### Example:
 http://localhost:5000/api?type=topics&lines=100000&offset=0
 
+#### Get abstract of a single topic
+
+##### Parameters:
+* type: abstract
+* topic: DBpedia URI of the topic
+
+##### Example:
+http://localhost:5000/api?type=abstract&topic=http://dbpedia.org/resource/2D_computer_graphics
+
 ## Frontend
-The following commands are written for Debian 9.9, NodeJS v.12.6.0 and should be executed in sequence. 
+The following commands are written for Debian 9.9, NodeJS v.12.6.0 and should be executed in sequence.
 Skip those unnecessary for your working environment, if needed.
 
 ### NodeJS and NPM
@@ -111,17 +139,6 @@ Skip those unnecessary for your working environment, if needed.
  * Navigate to website folder
  * Run ```$ ionic serve```
 
- If compiling process is successful (```Compiled successfully``` in console) a browser window will be automatically opened at the address of the local server. If not try the following address in your browser: ```localhost:8100```
+ If compiling process is successful (```Compiled successfully``` in console) a browser window will be automatically opened at the address of the local server. If not try the following address in your browser: ```localhost:8100```.
 
- To stop the development server press Ctrl-C
-
-
-
-### Get abstract of a single topic
-
-#### Parameters:
-* type: abstract
-* topic: DBpedia URI of the topic
-
-#### Example:
-http://localhost:5000/api?type=abstract&topic=http://dbpedia.org/resource/2D_computer_graphics
+ To stop the development server press Ctrl-C.

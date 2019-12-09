@@ -227,16 +227,20 @@ def set_topic(row, topics, topic_fields):
     if len(n) == 0:
         topic = dict()
         for field, value in topic_fields.items():
-            topic[field] = row[value]['value']
+            if value in row:
+                topic[field] = row[value]['value']
+            else:
+                topic[field] = ''
     return topic
 
 
 def set_co_author(row, co_authors, co_author_fields):
     co_author = None
-    co_author_id = row[co_author_fields['id']]['value']
-    n = list(filter(lambda x: x.get('id') == co_author_id, co_authors))
-    if len(n) == 0:
-        co_author = set_author_data(row, co_author_fields)
+    if co_author_fields['id'] in row: #check if there is a co-author
+        co_author_id = row[co_author_fields['id']]['value']
+        n = list(filter(lambda x: x.get('id') == co_author_id, co_authors))
+        if len(n) == 0:
+            co_author = set_author_data(row, co_author_fields)
     return co_author
 
 

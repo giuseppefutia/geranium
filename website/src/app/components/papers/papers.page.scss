@@ -64,6 +64,7 @@ a.disabled {
 }
 
 .card-title {
+  font-size: 1.3em;
   @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);  
 }
 

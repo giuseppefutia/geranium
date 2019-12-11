@@ -8,6 +8,7 @@ import { Topic, TopicNoImg } from '../model/topic.model';
 import { SimplifiedAuthor } from '../model/simplified-author.model';
 import { ModelService } from '../model/model.service';
 import { ConfigService } from '../config/config.service';
+import { Observable, of } from 'rxjs';
 
 // Response interface
 export interface ResponsePaper {
@@ -40,8 +41,10 @@ export class PapersService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
-      'https://' +
-      this.config.apiDomain + ':' + this.config.apiPort +
+      'http://' +
+      this.config.apiDomain +
+      ':' +
+      this.config.apiPort +
       '/api?' +
       encodeURI(
         `type=publications&topic=${topicQuery.label}&lines=${linesPerQuery}&offset=${linesOffset}`
@@ -116,12 +119,47 @@ export class PapersService {
     );
   }
 
-  getPaperFromId(paperId: string) {
-    const res = this.dataModel.findPaperFromId(paperId);
-    if (res === undefined) {
-      // TODO: Query to server
+  getPaperFromURI(paperURI: string): Observable<ResponsePaper[] | Paper> {
+    const url =
+      'http://' +
+      this.config.apiDomain +
+      ':' +
+      this.config.apiPort +
+      '/api?' +
+      encodeURI(`type=publication&url=${paperURI}&lines=10000&offset=0`);
+
+    console.log('GET: ' + url);
+
+    if (
+      this.dataModel.findPaperFromID(this.dataModel.paperURI2ID(paperURI)) !==
+      undefined
+    ) {
+      this.dataModel.setPaperDetails(
+        this.dataModel.findPaperFromID(this.dataModel.paperURI2ID(paperURI))
+      );
+      return of([]);
     }
-    return res;
+    return this.http.get<ResponsePaper[]>(url).pipe(
+      tap(response => {
+        const paper: ResponsePaper = response[0];
+
+        let authors: SimplifiedAuthor[] = [];
+        authors.push(paper.author);
+        authors = authors.concat(paper.co_authors);
+
+        this.dataModel.setPaperDetails(
+          new Paper(
+            paper.id,
+            paper.title,
+            paper.abstract,
+            authors,
+            paper.topics,
+            new Date(paper.submitted_date),
+            ''
+          )
+        );
+      })
+    );
   }
 
   private cleanID(dirty: string) {

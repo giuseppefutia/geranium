@@ -61,12 +61,18 @@ export class SearchPage implements OnInit {
           () => {
             loadingEl.dismiss();
           },
-          () => {
+          (e) => {
             loadingEl.dismiss();
             this.searchBarLabel = 'An error occured while fetching suggestions';
           }
         );
       });
+  }
+
+  onInputEnterPress() {
+    if (this.backgroundProcessInPlace === false && this.searchSuggestions.length > 0) {
+      this.navigate(this.searchSuggestions[0]);
+    }
   }
 
   /**

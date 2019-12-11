@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="onBackClick()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      Details
+    </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button shape="round" (click)="onCloseClick()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid style="height: 100%" *ngIf="isLoading">
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
+      <ion-col style="height: 100%">
+        <div style="text-align: center; height: 100%;">
+          <ion-spinner color="primary" style="margin: auto;"></ion-spinner>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div
+    class="ion-padding-top ion-padding-horizontal ion-justify-content-center ion-align-items-center"
+    style="height: auto; width: 100%"
+    *ngIf="!isLoading"
+  >
+    <div class="ion-padding">
+      <div class="avatar" [ngStyle]="selectedAuthor.style">
+        <h1 class="ion-no-margin ion-no-padding">
+          <b>{{ selectedAuthor.initials }}</b>
+        </h1>
+      </div>
+      <h1
+        class="ion-no-margin ion-no-padding ion-padding-start ion-padding-vertical"
+        style="font-size: xx-large; display: inline-block; vertical-align: middle;"
+      >
+        <b>{{ selectedAuthor.name }}</b>
+      </h1>
+    </div>
+
+    <h3 class="ion-adding-start ion-padding-top">
+      Topics of interest
+    </h3>
+    <div class="ion-padding-start ion-padding-end ion-padding-bottom">
+      <ion-chip
+        *ngFor="let topic of topicsList; let i = index"
+        (click)="onTopicChipClick(topic.topic.url)"
+        [color]="(topic.selected) ? ((i === 0) ? 'success' : 'primary') : 'medium'"
+      >
+        <ion-icon [color]="(i === 0) ? 'success' : 'primary'" name="bulb"></ion-icon>
+        <ion-label >{{ topic.topic.label }}</ion-label>
+      </ion-chip>
+    </div>
+    <hr />
+    <h3 class="ion-padding-start">
+      Publications on these topics
+    </h3>
+    <ion-grid class="ion-padding-start ion-padding-end ion-padding-bottom ion-no-margin">
+      <ion-row class="ion-no-padding ion-no-margin">
+        <ion-col
+          size="12"
+          size-sm="6"
+          size-xxl="4"
+          class="ion-no-padding ion-no-margin"
+          *ngFor="let paper of filteredPapers"
+        >
+          <ion-card class="paperCard">
+            <ion-img src="assets/img/defaultPaper.jpg"></ion-img>
+            <h1 class="ion-no-padding ion-no-margin">{{ paper.title }}</h1>
+            <p class="ion-no-padding ion-no-margin">{{ paper.authors[0].name }}</p>
+            <ion-button
+              fill="clear"
+              class="ion-no-padding ion-no-margin"
+              (click)="onPaperDetails(paper.id)"
+              >MORE</ion-button
+            >
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <hr />
+    <h3 class="ion-padding-start ion-margin-top">
+      Heat Map
+    </h3>
+  </div>
+  <div id="topicmapdiv" style="width: 100%; height: 320px;"></div>
+
+</ion-content>

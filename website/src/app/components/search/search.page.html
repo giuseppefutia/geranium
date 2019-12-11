@@ -62,24 +62,25 @@
                     (ionChange)="displaySuggestions()"
                     (ionFocus)="addFocus()"
                     (ionBlur)="removeFocus()"
+                    (keyup.enter)="onInputEnterPress()"
                     debounce="300"
                     [disabled]="!dataModel.canSearch"
                     required
                   ></ion-input>
                 </ion-item>
-                <ion-spinner *ngIf="backgroundProcessInPlace" padding margin>
+                <ion-spinner *ngIf="backgroundProcessInPlace" class="ion-padding ion-margin">
                 </ion-spinner>
-                <ion-list *ngIf="!backgroundProcessInPlace">
+                <ion-list *ngIf="!backgroundProcessInPlace && searchSuggestions.length > 0">
                   <ion-item
                     *ngFor="let suggestion of searchSuggestions"
                     (click)="navigate(suggestion)"
                   >
-                    <ion-icon name="bulb" margin></ion-icon>
+                    <ion-icon name="bulb" class="ion-margin"></ion-icon>
                     {{ suggestion.label }}
                     <p
                       style="font-size: 0.8em; color: grey;"
                       *ngIf="countInSuggestions(suggestion.label) > 1"
-                      padding-top
+                      class="ion-padding-top"
                     >
                       &nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ suggestion.wikiUrl }}
                     </p>
@@ -107,7 +108,7 @@
   />
 
   <section class="bg-primary" id="checosa">
-    <ion-grid style="text-align: center;" padding>
+    <ion-grid style="text-align: center;" class="ion-padding">
       <ion-row>
         <ion-col size-lg="8" offset-lg="2">
           <h2 class="section-heading text-white">Che cos'è Geranium</h2>
@@ -201,7 +202,7 @@
   <section>
     <ion-grid>
       <ion-row id="team">
-        <ion-col text-center>
+        <ion-col class="ion-text-center">
           <br /><br />
           <h2 class="section-heading">Team</h2>
           <hr class="primary" />
@@ -209,9 +210,9 @@
       </ion-row>
     </ion-grid>
 
-    <ion-grid padding>
-      <ion-row text-center>
-        <ion-col size="12" size-md="4" no-padding>
+    <ion-grid class="ion-padding">
+      <ion-row class="ion-text-center">
+        <ion-col size="12" size-md="4" class="ion-no-padding">
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/gfutia">
               <img
@@ -220,11 +221,11 @@
                 alt="Giuseppe Futia"
               />
             </a>
-            <h4 padding-top>Giuseppe Futia</h4>
+            <h4 class="ion-padding-top">Giuseppe Futia</h4>
             <p class="text-muted">Project Lead and Developer - PhD Student</p>
           </div>
         </ion-col>
-        <ion-col size="12" size-md="4" no-padding>
+        <ion-col size="12" size-md="4" class="ion-no-padding">
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/ggarifo">
               <img
@@ -233,13 +234,13 @@
                 alt="Giovanni Garifo"
               />
             </a>
-            <h4 padding-top>Giovanni Garifo</h4>
+            <h4 class="ion-padding-top">Giovanni Garifo</h4>
             <p class="text-muted">
               Lead Software Developer - Student and collaborator
             </p>
           </div></ion-col
         >
-        <ion-col size="12" size-md="4" no-padding>
+        <ion-col size="12" size-md="4" class="ion-no-padding">
           <div class="reviews-box">
             <a href="">
               <img
@@ -248,11 +249,11 @@
                 alt="Cosma"
               />
             </a>
-            <h4 padding-top>Cosma Alex Vergari</h4>
+            <h4 class="ion-padding-top">Cosma Alex Vergari</h4>
             <p class="text-muted">Frontend Developer - Part-time Intern</p>
           </div>
         </ion-col>
-        <ion-col size="12" size-md="4" no-padding>
+        <ion-col size="12" size-md="4" class="ion-no-padding">
           <div class="reviews-box">
             <a href="">
               <img
@@ -261,11 +262,11 @@
                 alt="Mehdi"
               />
             </a>
-            <h4 padding-top>Mehdi Khrichfa</h4>
+            <h4 class="ion-padding-top">Mehdi Khrichfa</h4>
             <p class="text-muted">Backend Developer - Part-time Intern</p>
           </div></ion-col
         >
-        <ion-col size="12" size-md="4" no-padding>
+        <ion-col size="12" size-md="4" class="ion-no-padding">
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/avetro">
               <img
@@ -274,13 +275,13 @@
                 alt="Antonio Vetro"
               />
             </a>
-            <h4 padding-top>Antonio Vetrò</h4>
+            <h4 class="ion-padding-top">Antonio Vetrò</h4>
             <p class="text-muted">
               Scientific Advisor - Assistant Professor @ DAUIN
             </p>
           </div></ion-col
         >
-        <ion-col size="12" size-md="4" no-padding>
+        <ion-col size="12" size-md="4" class="ion-no-padding">
           <div class="reviews-box">
             <a href="https://nexa.polito.it/people/asantangelo">
               <img
@@ -289,7 +290,7 @@
                 alt="Antonio Santangelo"
               />
             </a>
-            <h4 padding-top>Antonio Santangelo</h4>
+            <h4 class="ion-padding-top">Antonio Santangelo</h4>
             <p class="text-muted">Executive Director Nexa Center</p>
           </div></ion-col
         >
@@ -298,7 +299,7 @@
   </section>
 
   <section class="bg-primary" id="contatti">
-    <ion-grid text-center padding>
+    <ion-grid class="ion-text-center ion-padding">
       <ion-row>
         <ion-col size-lg="8" offset-lg="2">
           <h2 class="section-heading text-white">Contatti</h2>
@@ -314,7 +315,7 @@
   </section>
 
   <div class="call-to-action bg-dark">
-    <div text-center>
+    <div class="ion-text-center">
       <h2>Questionario</h2>
       <h5>
         Aiutaci a migliorare Geranium rispondendo al

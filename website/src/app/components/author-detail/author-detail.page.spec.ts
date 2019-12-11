@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaperDetailComponent } from './paper-detail.component';
+import { AuthorDetailPage } from './author-detail.page';
 
-describe('PaperDetailComponent', () => {
-  let component: PaperDetailComponent;
-  let fixture: ComponentFixture<PaperDetailComponent>;
+describe('AuthorDetailPage', () => {
+  let component: AuthorDetailPage;
+  let fixture: ComponentFixture<AuthorDetailPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaperDetailComponent ],
+      declarations: [ AuthorDetailPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PaperDetailComponent);
+    fixture = TestBed.createComponent(AuthorDetailPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

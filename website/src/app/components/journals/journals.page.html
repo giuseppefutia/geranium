@@ -1,27 +1,23 @@
 <ion-header *ngIf="!isRedirecting">
-  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="143px">
-    <ion-row no-padding>
-      <ion-col no-padding>
+  <ion-grid class="ion-no-padding" [myScrollVanish]="scrollArea" myHeaderMaxHeight="143px">
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding">
         <div class="topView">
-          <ion-grid no-padding>
-            <ion-row justify-content-center align-items-center no-padding>
-              <ion-col size="2" size-lg="1" text-center>
+          <ion-grid class="ion-no-padding">
+            <ion-row class="ion-justify-content-center ion-align-items-center ion-no-padding">
+              <ion-col size="2" size-lg="1" class="ion-text-center">
                 <ion-button fill="clear" (click)="onBackClick()"
                   ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
                 ></ion-button>
               </ion-col>
-              <ion-col padding-bottom>
-                <h2 no-padding style="text-transform: capitalize;" *ngIf="!IsLoading">
+              <ion-col class="ion-padding-bottom">
+                <h2 class="ion-no-padding" style="text-transform: capitalize;" *ngIf="!IsLoading">
                   <b>{{ dataModel.searchTopic.label }}</b>
                 </h2>
-                <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
+                <p *ngIf="!isLoading" class="p-abstract" class="ion-no-padding ion-no-margin">
                   {{ dataModel.currentTopicAbstract }}
                 </p>
                 <a
-                  tappable
-                  (click)="
-                    openNewTab('https://en.wikipedia.org/wiki/Deep_learning')
-                  "
                   margin-bottom
                 >
                   More on this topic
@@ -38,14 +34,14 @@
 <ion-content #scrollArea scrollEvents="true">
   <ion-grid>
     <ion-row>
-      <ion-col text-center>
+      <ion-col class="ion-text-center">
         <p>Coming soon!</p>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-grid *ngIf="false && allJournals.length <= 0 && !isRedirecting">
     <ion-row>
-      <ion-col text-center>
+      <ion-col class="ion-text-center">
         <p>Sorry, there are no results for {{ searchKey }}</p>
       </ion-col>
     </ion-row>
@@ -74,10 +70,9 @@
           <ion-skeleton-text
             *ngIf="isLoading"
             style="width:100%; height: 200px;"
-            no-padding
-            no-margin
+            class="ion-no-padding ion-no-margin"
           ></ion-skeleton-text>
-          <div no-padding no-margin class="card-img" *ngIf="!isLoading">
+          <div class="ion-no-padding ion-no-margin card-img" *ngIf="!isLoading">
             <ion-img [src]="journal.imageUrl" alt="Loading image..."></ion-img>
           </div>
 
@@ -97,7 +92,7 @@
               <ion-badge slot="end">{{ journal.ISSN }}</ion-badge>
             </div>
           </ion-card-content>
-          <div padding-start padding-bottom>
+          <div class="ion-padding-start ion-padding-bottom">
             <ion-button
               fill="clear"
               color="primary"

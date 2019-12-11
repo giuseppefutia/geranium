@@ -1,11 +1,11 @@
 <ion-header *ngIf="!isRedirecting">
-  <ion-grid no-padding [myScrollVanish]="scrollArea" myHeaderMaxHeight="183px">
-    <ion-row no-padding>
-      <ion-col no-padding>
+  <ion-grid class="ion-no-padding" [myScrollVanish]="scrollArea" myHeaderMaxHeight="183px">
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-no-padding">
         <div class="topView">
-          <ion-grid no-padding>
-            <ion-row justify-content-center align-items-center no-padding>
-              <ion-col size="2" size-lg="1" text-center>
+          <ion-grid class="ion-no-padding">
+            <ion-row class="ion-justify-content-center ion-align-items-center ion-no-padding">
+              <ion-col size="2" size-lg="1" class="ion-text-center">
                 <ion-button fill="clear" (click)="onBackClick()"
                   ><ion-icon name="arrow-back" slot="icon-only"></ion-icon
                 ></ion-button>
@@ -15,11 +15,10 @@
                   animated
                   *ngIf="isLoading"
                   style="width: 50%; height: 0.5em;"
-                  padding
-                  margin-top
+                  class="ion-padding ion-margin-top"
                 ></ion-skeleton-text>
                 <h2
-                  no-padding
+                  class="ion-no-padding"
                   style="text-transform: capitalize;"
                   *ngIf="!isLoading && dataModel.getSearchStackLength() !== 0"
                 >
@@ -30,7 +29,7 @@
                   *ngIf="isLoading"
                   style="width: 50%; height: 1em; padding-bottom: 3em;"
                 ></ion-skeleton-text>
-                <p *ngIf="!isLoading" class="p-abstract" no-padding no-margin>
+                <p *ngIf="!isLoading" class="p-abstract ion-no-padding ion-no-margin">
                   {{ dataModel.currentTopicAbstract }}
                 </p>
                 <a
@@ -44,8 +43,7 @@
                   animated
                   *ngIf="isLoading"
                   style="width: 50%; height: 0.8em;"
-                  padding
-                  margin-top
+                  class="ion-padding ion-margin-top"
                 ></ion-skeleton-text>
                 <p *ngIf="!isLoading">
                   {{ dataModel.getPapersCount() }} showed papers on this topic
@@ -61,11 +59,10 @@
                   <canvas #barCanvas class="barCanvasClass"></canvas>
                 </div>
                 <p
-                  class="ion-hide-sm-down"
+                  class="ion-hide-sm-down ion-no-margin ion-no-padding"
                   style="color: grey; font-size: small; text-align: center; max-width: 300px;"
                   *ngIf="!isLoading"
-                  no-margin
-                  no-padding
+                  
                 >
                   Click on chart bars to filter results
                 </p>
@@ -81,14 +78,14 @@
 <ion-content #scrollArea scrollEvents="true">
   <ion-grid *ngIf="errorText !== null">
     <ion-row>
-      <ion-col text-center>
+      <ion-col class="ion-text-center">
         <p>{{ errorText }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-grid *ngIf="filteredPapers.length <= 0 && !isRedirecting && !isLoading">
     <ion-row>
-      <ion-col text-center>
+      <ion-col class="ion-text-center">
         <p>Sorry, there are no results for {{ dataModel.searchTopic.label }}</p>
       </ion-col>
     </ion-row>
@@ -105,8 +102,7 @@
           <ion-skeleton-text
             *ngIf="isLoading"
             style="width:100%; height: 200px;"
-            no-padding
-            no-margin
+            class="ion-no-padding ion-no-margin"
           ></ion-skeleton-text>
           <div
             *ngIf="!isLoading"
@@ -144,7 +140,7 @@
             <ion-card-subtitle *ngIf="!isLoading">
               <ion-chip
                 *ngFor="let author of paper.authors; index as i"
-                (click)="onAuthorClick(author)"
+                (click)="onAuthorClick(author, paper)"
               >
                 <ion-icon name="person" *ngIf="i === 0"></ion-icon>
                 <ion-label color="primary">{{ author.name }}</ion-label>
@@ -153,7 +149,7 @@
           </ion-card-header>
 
           <ion-card-content>
-            <ion-item-divider no-padding no-margin padding-bottom>
+            <ion-item-divider class="ion-no-padding ion-no-margin ion-padding-bottom">
               <ion-skeleton-text
                 animated
                 style="height: 1em;"
@@ -171,7 +167,7 @@
               </div>
             </ion-item-divider>
           </ion-card-content>
-          <div padding-start padding-bottom>
+          <div class="ion-padding-start ion-padding-bottom">
             <ion-button
               fill="solid"
               color="primary"
@@ -183,7 +179,7 @@
               fill="outline"
               color="tertiary"
               slot="end"
-              padding-start
+              class="ion-padding-start"
               (click)="onIRISDetails(paper)"
               >IRIS</ion-button
             >

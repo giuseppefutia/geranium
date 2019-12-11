@@ -1,0 +1,137 @@
+/* ion-card {
+  border-radius: 8px !important;
+} */
+
+$paperTitleSize: 1.2em;
+$cardHeight: 8.5em;
+$paperTitleLines: 2;
+$slideHeight: 14em;
+$slideTopicLabelSize: 1em;
+$slideTopicLines: 2;
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
+  overflow: hidden;
+  position: relative;
+  line-height: $lineHeight;
+  font-size: $lineHeight;
+  max-height: $lineHeight * $lineCount;
+  padding-right: 1em;
+  &:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $bgColor;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+hr {
+  width: 50%;
+  height: 1px;
+  border: none;
+  background-color: #ddd;
+}
+
+
+
+// AUTHOR CARD
+.authorCard {
+  width: 100%;
+  height: $slideHeight;
+  pointer-events: none;
+}
+
+.authorCard ion-img {
+  width: 100%;
+  height: calc(100% - 5em);
+  object-fit: cover;
+  pointer-events: auto;
+}
+
+.authorCard p {
+  text-align: left;
+  color: black;
+  @include multiLineEllipsis($lineHeight: $slideTopicLabelSize, $lineCount: $slideTopicLines, $bgColor: white);  
+}
+
+.authorCard ion-button {
+  width: 37%;
+  padding-top: 10px;
+}
+
+
+// PAPER CARD
+.paperCard {
+  height: $cardHeight;
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+}
+
+.paperCard ion-img {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  object-fit: cover;
+  left: 0; top: 0;
+}
+
+.paperCard h1 {
+  position: absolute;
+  left: calc(25% + 16px);
+  top: 14px;
+  color: black;
+  @include multiLineEllipsis($lineHeight: $paperTitleSize, $lineCount: $paperTitleLines, $bgColor: white);  
+  width: 70%;
+}
+
+.paperCard p {
+  position: absolute;
+  left: calc(25% + 16px);
+  top: calc(25px + 2.4em);
+  color: lightgrey;
+  width: 70%;
+}
+
+.paperCard ion-button {
+  position: absolute;
+  left: calc(25% + 16px);
+  top: calc(25px + 2.4em + 14px + 5px);
+}
+
+// AVATAR
+.avatar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 75px;
+  height: 75px;
+  border-radius: 3px;
+}
+
+.avatar h1 {
+  color: white;
+  font-size: 2em;
+  position: relative;
+  float: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

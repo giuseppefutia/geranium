@@ -4,7 +4,7 @@ import {
   ModalController,
   LoadingController
 } from '@ionic/angular';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 
@@ -14,9 +14,7 @@ import { SimplifiedAuthor } from '../../model/simplified-author.model';
 import { Topic } from '../../model/topic.model';
 
 // Import components
-import { PaperDetailComponent } from '../paper-detail/paper-detail.component';
 import { ModelService } from 'src/app/model/model.service';
-import { AuthorDetailComponent } from '../author-detail/author-detail.component';
 
 class YearsData {
   constructor(
@@ -67,6 +65,7 @@ export class PapersPage implements OnInit {
       {
         label: '', // Must be configured with appropriate data
         data: [],
+        barPercentage: 1,
         backgroundColor: [],
         borderColor: [],
         borderWidth: 1
@@ -93,23 +92,15 @@ export class PapersPage implements OnInit {
               }
             }
           }
-        ],
-        xAxes: [
-          {
-            barPercentage: 1
-          }
         ]
       },
       onClick: (v, e) => {
         if (e[0] !== undefined) {
-          this.onChartClick.call(
-            this,
-            new BarData(e[0]._datasetIndex, e[0]._index)
-          );
+          this.onChartClick.call(this, e);
         }
       },
-      onHover: (event, chartEl) => {
-        event.target.style.cursor = chartEl[0] ? 'pointer' : 'default';
+      onHover: (mouse, chartEl) => {
+        mouse.target.style.cursor = chartEl[0] ? 'pointer' : 'default';
       }
     }
   };
@@ -118,7 +109,6 @@ export class PapersPage implements OnInit {
     private navCtrl: NavController,
     private resultsService: ResultsService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController,
     private dataModel: ModelService,
     private loadingCtrl: LoadingController
   ) {
@@ -291,8 +281,6 @@ export class PapersPage implements OnInit {
     }
   }
 
-  processPaperTitle(title: string) {}
-
   // On click on topic chip start a new search
   onTopicChipClick(topic: Topic) {
     this.loadingCtrl
@@ -314,33 +302,18 @@ export class PapersPage implements OnInit {
   }
 
   // Open modal to get authors information -- XXX duplicated function in paper details
-  onAuthorClick(author: SimplifiedAuthor) {
+  onAuthorClick(author: SimplifiedAuthor, paper: SimplifiedPaper) {
     if (author.name === '...') {
+      this.onPaperDetails(paper);
       return;
     }
-    this.modalCtrl
-      .create({
-        component: AuthorDetailComponent,
-        componentProps: {
-          selectedAuthorURI: author.url,
-          selectedTopicLabel: this.dataModel.searchTopicToString()
-        }
-      })
-      .then(modalEl => {
-        modalEl.present();
-      });
+    console.log("redirecting");
+    this.navCtrl.navigateForward(['/', 'results', 'author', author.id]);
   }
 
   // Open modal when clicked on MORE in a card
   onPaperDetails(paper: SimplifiedPaper) {
-    this.modalCtrl
-      .create({
-        component: PaperDetailComponent,
-        componentProps: { selectedPaperId: paper.id }
-      })
-      .then(modalEl => {
-        modalEl.present();
-      });
+    this.navCtrl.navigateForward(['/', 'results', 'paper', paper.id]);
   }
 
   onIRISDetails(paper: SimplifiedPaper) {
@@ -432,18 +405,41 @@ export class PapersPage implements OnInit {
 
   // Called when a bar on the chart is clicked
   // It calls filterPapers for filtering based on the newly received filtering rules
-  onChartClick(bar: BarData) {
-    this.allPapersYears[bar.dataIndex].shown = !this.allPapersYears[
-      bar.dataIndex
-    ].shown;
-    this.chartData.datasets[bar.datasetIndex].backgroundColor[bar.dataIndex] =
-      this.allPapersYears[bar.dataIndex].shown === true
-        ? this.lightColor
-        : this.lightHiddenColor;
-    this.chartData.datasets[bar.datasetIndex].borderColor[bar.dataIndex] =
-      this.allPapersYears[bar.dataIndex].shown === true
-        ? this.primaryColor
-        : this.hiddenColor;
+  onChartClick(e) {
+    const bar = new BarData(e[0]._datasetIndex, e[0]._index);
+    console.log(bar);
+
+    let cnt = 0;
+    for (const year of this.allPapersYears) {
+      if (year.shown) {
+        cnt++;
+      }
+    }
+    if (cnt === this.allPapersYears.length) {
+      for (let i = 0; i < this.allPapersYears.length; i++) {
+        if (i !== bar.dataIndex) {
+          this.allPapersYears[i].shown = false;
+          this.chartData.datasets[bar.datasetIndex].backgroundColor[
+            i
+          ] = this.lightHiddenColor;
+          this.chartData.datasets[bar.datasetIndex].borderColor[
+            i
+          ] = this.hiddenColor;
+        }
+      }
+    } else {
+      this.allPapersYears[bar.dataIndex].shown = !this.allPapersYears[
+        bar.dataIndex
+      ].shown;
+      this.chartData.datasets[bar.datasetIndex].backgroundColor[bar.dataIndex] =
+        this.allPapersYears[bar.dataIndex].shown === true
+          ? this.lightColor
+          : this.lightHiddenColor;
+      this.chartData.datasets[bar.datasetIndex].borderColor[bar.dataIndex] =
+        this.allPapersYears[bar.dataIndex].shown === true
+          ? this.primaryColor
+          : this.hiddenColor;
+    }
     this.filterPapers(false);
     // Update grid (is automatic)
     this.topicChart.update();
@@ -511,38 +507,9 @@ export class PapersPage implements OnInit {
         });
 
       // Merging (where the magic happens)
-      this.mergeArraysRightPriority(this.filteredPapers, allPapers);
+      this.dataModel.mergeArraysRightPriority(this.filteredPapers, allPapers);
     }
   }
-
-  private mergeArraysRightPriority(
-    l: Array<SimplifiedPaper>,
-    r: Array<SimplifiedPaper>
-  ) {
-    let i = 0,
-      j = 0,
-      cnt = 0;
-    const old = [...l];
-    while (i < old.length) {
-      const paper = r[j];
-      if (old[i].id !== paper.id) {
-        l.splice(cnt, 0, paper);
-        cnt++;
-      } else {
-        i++;
-        cnt++;
-      }
-      j++;
-    }
-    for (; j < r.length; j++) {
-      const paper = r[j];
-      l.splice(cnt, 0, paper);
-      cnt++;
-    }
-  }
-
-
-
 
   // Adds dummy slides while fetching data
   addDummySlides(howmany: number) {

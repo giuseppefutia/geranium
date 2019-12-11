@@ -4,7 +4,7 @@ import { Author, ExpandedAuthor } from './author.model';
 import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError, from } from 'rxjs';
+import { of, throwError, from } from 'rxjs';
 import { SimplifiedPaper } from './simplified-paper.model';
 import { ConfigService } from '../config/config.service';
 
@@ -23,13 +23,14 @@ export class ModelService {
   private _retrievedPapers: Paper[] = [];
   private _retrievedAuthors: Author[] = [];
   private _authorDetails: ExpandedAuthor;
+  private _paperDetails: Paper;
 
   private _searchStack: TopicNoImg[];
   private _currentAbstract: string;
   private _canSearch: boolean; // status flag: true if the user can perform a search
   private _firstSearch: boolean;
 
-  private _cacheExpirationHours = 24;
+  private _cacheExpirationHours = 0 ;
 
   /**
    * constructor
@@ -197,6 +198,8 @@ export class ModelService {
     return this._firstSearch;
   }
 
+
+  /* PAPERS */
   addPaper(newPaper: Paper) {
     this._retrievedPapers.push(newPaper);
   }
@@ -205,10 +208,27 @@ export class ModelService {
     this._retrievedPapers = this._retrievedPapers.concat(newPapers);
   }
 
-  findPaperFromId(id: string): Paper {
+  paperID2URI(id: string) {
+    return 'http://geranium-project.org/publications/' + id.replace('-', '/');
+  }
+
+  paperURI2ID(uri: string) {
+    return uri.split('publications/')[1].replace('/', '-');
+  }
+
+  findPaperFromID(id: string): Paper {
     return this._retrievedPapers.find(p => p.id === id);
   }
 
+  getPaperDetails() {
+    return this._paperDetails;
+  }
+
+  setPaperDetails(paper: Paper) {
+    this._paperDetails = paper;
+  }
+
+  /* AUTHORS */
   getAuthorDetails() {
     return this._authorDetails;
   }
@@ -244,6 +264,11 @@ export class ModelService {
   emptyPrevResults() {
     this.emptyAuthors();
     this._retrievedPapers = [];
+  }
+
+  getInitials(name: string): string {
+    const names = name.split(' ');
+    return names[0].charAt(0) + names[names.length - 2].charAt(0);
   }
 
   shortenAuthorName(name: string): string {
@@ -290,6 +315,10 @@ export class ModelService {
     return builder;
   }
 
+  getAuthorURLFromID(authorID: string) {
+    return 'http://geranium-project.org/authors/' + authorID;
+  }
+
   getIRISUrl(paper: SimplifiedPaper): string {
     return 'https://iris.polito.it/handle/' + paper.id.replace('-', '/');
   }
@@ -297,4 +326,31 @@ export class ModelService {
   cleanID(dirty: string) {
     return dirty.replace('/', '-');
   }
+
+  mergeArraysRightPriority(
+    l: Array<SimplifiedPaper>,
+    r: Array<SimplifiedPaper>
+  ) {
+    let i = 0,
+      j = 0,
+      cnt = 0;
+    const old = [...l];
+    while (i < old.length) {
+      const paper = r[j];
+      if (old[i].id !== paper.id) {
+        l.splice(cnt, 0, paper);
+        cnt++;
+      } else {
+        i++;
+        cnt++;
+      }
+      j++;
+    }
+    for (; j < r.length; j++) {
+      const paper = r[j];
+      l.splice(cnt, 0, paper);
+      cnt++;
+    }
+  }
 }
+

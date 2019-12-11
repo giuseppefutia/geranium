@@ -13,7 +13,7 @@ import config
 
 app = Flask(__name__)
 
-
+@app.route('/', methods=['GET'])
 @app.route('/api', methods=['GET'])
 def api():
     query = ''
@@ -45,6 +45,8 @@ def api():
             offset = flask.request.args.get('offset')
             url = flask.request.args.get('url')
             query = set_author_details_query(topic, lines, offset, url)
+            print(query, file=sys.stderr)
+
         # Manage all topics request
         elif request_type == 'topics':
             lines = flask.request.args.get('lines')

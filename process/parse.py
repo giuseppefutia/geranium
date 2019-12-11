@@ -1,5 +1,5 @@
 from flask import jsonify
-
+import sys
 
 def get_publications(data):
     final = {}
@@ -98,20 +98,34 @@ def get_publication_details(data):
         publication = row['p_id']['value']
         author_fields = {'url': 'a', 'id': 'a_id', 'name': 'a_label'}
         publication_fields = {'id': 'p_id', 'title': 'p_label',
-                              'url': 'p', 'submitted_date': 'p_date'}
+                              'url': 'p', 'submitted_date': 'p_date',
+                              'abstract': 'p_abstract'}
         final[publication] = set_publication_data(row,
                                                   publication_fields,
                                                   author_fields)
-    # Add topics and co-authors
+    # Add topics, suggested topics and co-authors
     for row in data:
         publication_id = row['p_id']['value']
         publication = next((i for i in list(final.values())
                             if i['id'] == publication_id), None)
         if publication is not None:
-            topic_fields = {'url': 't', 'label': 't_label'}
+            #topics
+            #with open('test.json','w') as file:
+            #    file.write(str(publication))
+            topic_fields = {'url': 't', 'label': 't_label', 'img': 't_img'}
             topic = set_topic(row, publication['topics'], topic_fields)
+
             if topic is not None:
                 publication['topics'].append(topic)
+
+            #suggested topics
+            suggested_topic_fields = {'url': 's_t', 'label': 's_t_label', 'img': 's_t_img'}
+            suggested_topic = set_suggested_topic(row, publication['suggested_topics'], suggested_topic_fields)
+
+            if suggested_topic is not None:
+                publication['suggested_topics'].append(suggested_topic)
+
+            #co-authors
             co_auth_fields = {'id': 'ca_id',
                               'name': 'ca_label',
                               'url': 'ca'}
@@ -120,6 +134,38 @@ def get_publication_details(data):
                                       co_auth_fields)
             if co_author is not None:
                 publication['co_authors'].append(co_author)
+
+            #suggested journals
+            suggested_journal_fields = {'id': 's_j_id',
+                              'name': 's_j_label',
+                              'url': 's_j'}
+            suggested_journal = set_co_author(row,
+                                      publication['suggested_journal'],
+                                      suggested_journal_fields)
+            if suggested_journal is not None:
+                publication['suggested_journal'].append(suggested_journal)
+
+            #suggested co-authors
+            suggested_co_auth_fields = {'id': 's_ca_id',
+                              'name': 's_ca_label',
+                              'url': 's_ca'}
+            suggested_co_author = set_co_author(row,
+                                      publication['suggested_co_authors'],
+                                      suggested_co_auth_fields)
+            if suggested_co_author is not None:
+                publication['suggested_co_authors'].append(suggested_co_author)
+
+            #suggested authors
+            suggested_auth_fields = {'id': 's_a_id',
+                              'name': 's_a_label',
+                              'url': 's_a'}
+            suggested_author = set_co_author(row,
+                                      publication['suggested_authors'],
+                                      suggested_auth_fields)
+            if suggested_author is not None:
+                publication['suggested_authors'].append(suggested_author)
+
+            
     final = list(final.values())
     return jsonify(final)
 
@@ -148,7 +194,7 @@ def get_author_details(data):
         if publication is not None:
             publications.append(publication)
 
-    # Add topics and co-authors
+    # Add topics, co-authors and suggestions
     for row in data:
         author = row['a_id']['value']
         publications = final[author]['publications']
@@ -158,7 +204,7 @@ def get_author_details(data):
         if publication is not None:
             # Add topics
             topic_id = row['other_t']['value']
-            topic_fields = {'url': 'other_t', 'label': 'other_t_label'}
+            topic_fields = {'url': 'other_t', 'label': 'other_t_label', 'img': 'other_t_img'}
             topic = set_topic(row, publication['topics'], topic_fields)
             if topic is not None:
                 publication['topics'].append(topic)
@@ -170,6 +216,44 @@ def get_author_details(data):
                                       co_auth_fields)
             if co_author is not None:
                 publication['co_authors'].append(co_author)
+            
+            #suggested co-authors
+            suggested_co_auth_fields = {'id': 's_ca_id',
+                              'name': 's_ca_label',
+                              'url': 's_ca'}
+            suggested_co_author = set_co_author(row,
+                                      publication['suggested_co_authors'],
+                                      suggested_co_auth_fields)
+            if suggested_co_author is not None:
+                publication['suggested_co_authors'].append(suggested_co_author)
+
+            #suggested topics
+            suggested_topic_fields = {'url': 's_t', 'label': 's_t_label', 'img': 's_t_img'}
+            suggested_topic = set_suggested_topic(row, publication['suggested_topics'], suggested_topic_fields)
+
+            if suggested_topic is not None:
+                publication['suggested_topics'].append(suggested_topic)
+
+            #suggested journals
+            suggested_journal_fields = {'id': 's_j_id',
+                              'name': 's_j_label',
+                              'url': 's_j'}
+            suggested_journal = set_co_author(row,
+                                      publication['suggested_journal'],
+                                      suggested_journal_fields)
+            if suggested_journal is not None:
+                publication['suggested_journal'].append(suggested_journal)
+
+            #suggested authors
+            suggested_auth_fields = {'id': 's_a_id',
+                              'name': 's_a_label',
+                              'url': 's_a'}
+            suggested_author = set_co_author(row,
+                                      publication['suggested_authors'],
+                                      suggested_auth_fields)
+            if suggested_author is not None:
+                publication['suggested_authors'].append(suggested_author)
+
 
     final = list(final.values())
     return jsonify(final)
@@ -211,12 +295,18 @@ def set_author_data(row, author_fields):
 def set_publication_data(row, pub_fields, auth_fields):
     publication_data = dict()
     for field, value in pub_fields.items():
-        publication_data[field] = row[value]['value']
+        if value in row:
+            publication_data[field] = row[value]['value']
     # Include information on the author within the publication
     publication_data['author'] = set_author_data(row, auth_fields)
-    # Prepare list of co-authors and topics
+    # Prepare list of co-authors, topics, suggested authors, suggested topics and suggested co-authors
     publication_data['co_authors'] = list()
     publication_data['topics'] = list()
+    publication_data['suggested_authors'] = list()
+    publication_data['suggested_co_authors'] = list()
+    publication_data['suggested_topics'] = list()
+    publication_data['suggested_journal'] = list()
+
     return publication_data
 
 
@@ -231,6 +321,20 @@ def set_topic(row, topics, topic_fields):
                 topic[field] = row[value]['value']
             else:
                 topic[field] = ''
+    return topic
+
+def set_suggested_topic(row, topics, topic_fields):
+    topic = None
+    if topic_fields['url'] in row:
+        topic_id = row[topic_fields['url']]['value']
+        n = list(filter(lambda x: x.get('url') == topic_id, topics))
+        if len(n) == 0:
+            topic = dict()
+            for field, value in topic_fields.items():
+                if value in row:
+                    topic[field] = row[value]['value']
+                else:
+                    topic[field] = ''
     return topic
 
 

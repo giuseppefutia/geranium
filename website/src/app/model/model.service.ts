@@ -5,7 +5,7 @@ import { TopicNoImg, Topic } from './topic.model';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, throwError, from } from 'rxjs';
-import { SimplifiedPaper } from './simplified-paper.model';
+import { SimplifiedPaper } from './paper.model';
 import { ConfigService } from '../config/config.service';
 
 /**

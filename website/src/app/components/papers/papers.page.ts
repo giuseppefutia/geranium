@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 
 // Import models
-import { SimplifiedPaper } from '../../model/simplified-paper.model';
+import { SimplifiedPaper } from '../../model/paper.model';
 import { SimplifiedAuthor } from '../../model/simplified-author.model';
 import { Topic } from '../../model/topic.model';
 

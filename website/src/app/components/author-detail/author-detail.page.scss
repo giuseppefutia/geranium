@@ -7,7 +7,7 @@ $cardHeight: 8.5em;
 $paperTitleLines: 2;
 $slideHeight: 14em;
 $slideTopicLabelSize: 1em;
-$slideTopicLines: 2;
+$slideTopicLines: 3;
 
 /* mixin for multiline */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
@@ -65,6 +65,25 @@ hr {
   height: calc(100% - 5em);
   object-fit: cover;
   pointer-events: auto;
+}
+
+// AVATAR
+.avatarInCard {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  height: calc(100% - 6em);
+  pointer-events: auto;
+}
+
+.avatarInCard h1 {
+  color: white;
+  font-size: 2em;
+  position: relative;
+  float: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .authorCard p {

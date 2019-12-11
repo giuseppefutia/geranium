@@ -9,14 +9,14 @@ import { NavController, AlertController } from '@ionic/angular';
 
 import { ModelService } from '../../model/model.service';
 import { ResultsService } from '../../services/results.service';
-import { ExpandedAuthor } from '../../model/author.model';
+import { ExpandedAuthor, Author } from '../../model/author.model';
 
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { ActivatedRoute } from '@angular/router';
 import { Topic } from '../../model/topic.model';
-import { SimplifiedPaper } from '../../model/simplified-paper.model';
+import { SimplifiedPaper } from '../../model/paper.model';
 
 am4core.useTheme(am4themes_animated);
 
@@ -47,6 +47,8 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   selectedAuthor: ExpandedAuthor; // This is read by the HTML page
   isLoading = false;
   private topicsList: Array<StyledTopic>;
+  private suggestedTopicsList: Array<Topic>;
+  private suggestedAuthorsList: Array<Author>;
   private filteredPapers: Array<SimplifiedPaper>;
   private chart: am4charts.XYChart;
   private topicsInHeatMap = 4;
@@ -61,6 +63,8 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.isLoading = true;
     this.topicsList = [];
+    this.suggestedTopicsList = [];
+    this.suggestedAuthorsList = [];
   }
 
   slidesOptions = {
@@ -101,9 +105,9 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
               this.dataModel.searchTopic.label
             )
             .subscribe(author => {
-              this.isLoading = false;
               this.selectedAuthor = this.dataModel.getAuthorDetails();
               this.makeDataUseful();
+              this.isLoading = false;
               this.updateHeatMap();
             });
         }
@@ -138,6 +142,26 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
     mainTopic.selected = true;
     this.topicsList.splice(0, 0, mainTopic);
     this.filteredPapers = [...this.selectedAuthor.papers];
+    this.selectedAuthor.papers.forEach(paper => {
+      for (const topic of paper.suggestedTopics) {
+        if (this.suggestedTopicsList.find(t => t.url === topic.url) === undefined) {
+          this.suggestedTopicsList.push(topic);
+        }
+      }
+    });
+    this.selectedAuthor.papers.forEach(paper => {
+      for (const author of paper.suggestedCoAuthors) {
+        if (this.suggestedAuthorsList.find(a => a.id === author.id) === undefined) {
+          this.suggestedAuthorsList.push(author);
+        }
+      }
+      for (const author of paper.suggestedAuthors) {
+        if (this.suggestedAuthorsList.find(a => a.id === author.id) === undefined) {
+          this.suggestedAuthorsList.push(author);
+        }
+      }
+    });
+    console.log(this.suggestedAuthorsList);
   }
 
   onTopicChipClick(topicUrl: string) {
@@ -344,7 +368,7 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onCloseClick() {
-    this.navCtrl.navigateForward([
+    this.navCtrl.navigateBack([
       '/',
       'results',
       'tabs',

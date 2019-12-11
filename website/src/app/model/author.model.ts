@@ -1,4 +1,4 @@
-import { SimplifiedPaper } from './simplified-paper.model';
+import { Paper } from './paper.model';
 
 export interface PapersPerTopics {
     url: string;
@@ -33,7 +33,7 @@ export class ExpandedAuthor extends Author {
         imageUrl: string,
         numberOfPapers: number,
         papersPerTopics: PapersPerTopics[],
-        public papers: SimplifiedPaper[],
+        public papers: Paper[],
         public style: object
     ) {
         super(id, name, initials, url, department, topics, imageUrl, numberOfPapers, papersPerTopics, style);

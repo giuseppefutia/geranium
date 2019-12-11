@@ -41,7 +41,7 @@ export class PapersService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
-      'http://' +
+      'https://' +
       this.config.apiDomain +
       ':' +
       this.config.apiPort +
@@ -121,7 +121,7 @@ export class PapersService {
 
   getPaperFromURI(paperURI: string): Observable<ResponsePaper[] | Paper> {
     const url =
-      'http://' +
+      'https://' +
       this.config.apiDomain +
       ':' +
       this.config.apiPort +

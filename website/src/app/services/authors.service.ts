@@ -85,7 +85,7 @@ export class AuthorsService {
     const linesPerQuery = 300;
     const linesOffset = linesPerQuery * block;
     const url =
-      'http://' +
+      'https://' +
       this.config.apiDomain +
       ':' +
       this.config.apiPort +
@@ -151,7 +151,7 @@ export class AuthorsService {
     // Get the author data using its URI and the topicLabel through the API
     const authorURI = this.dataModel.getAuthorURLFromID(authorID);
     const url =
-      'http://' +
+      'https://' +
       this.config.apiDomain +
       ':' +
       this.config.apiPort +

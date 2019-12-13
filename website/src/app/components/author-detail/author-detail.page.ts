@@ -47,8 +47,8 @@ export class AuthorDetailPage implements OnInit, OnDestroy, AfterViewInit {
   selectedAuthor: ExpandedAuthor; // This is read by the HTML page
   isLoading = false;
   private topicsList: Array<StyledTopic>;
-  private suggestedTopicsList: Array<Topic>;
-  private suggestedAuthorsList: Array<Author>;
+  public suggestedTopicsList: Array<Topic>;
+  public suggestedAuthorsList: Array<Author>;
   private filteredPapers: Array<SimplifiedPaper>;
   private chart: am4charts.XYChart;
   private topicsInHeatMap = 4;

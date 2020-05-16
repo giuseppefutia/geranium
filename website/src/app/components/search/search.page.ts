@@ -38,7 +38,7 @@ export class SearchPage implements OnInit {
   ) {
     this.backgroundProcessInPlace = false;
     this.searchBarLabel =
-      'Digita un argomento di ricerca e clicca tra quelli suggeriti nel menu';
+      'Digita un argomento di ricerca e poi clicca su una delle voci suggerite';
     this.myWorker.onmessage = event => {
       this.ngZone.run(() => {
         this.searchSuggestions = event.data;

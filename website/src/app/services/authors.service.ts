@@ -7,8 +7,9 @@ import { Observable } from 'rxjs';
 import { Author, ExpandedAuthor, PapersPerTopics } from '../model/author.model';
 import { Topic, TopicNoImg } from '../model/topic.model';
 import { ModelService } from '../model/model.service';
-import { SimplifiedPaper } from '../model/simplified-paper.model';
+import { SimplifiedPaper, Paper } from '../model/paper.model';
 import { ConfigService } from '../config/config.service';
+import { Journal } from '../model/journal.model';
 
 // Set interfaces to parse data
 interface Publication {
@@ -18,6 +19,10 @@ interface Publication {
   co_authors: Author[];
   topics: Topic[];
   submitted_date: string;
+  suggested_topics: Topic[];
+  suggested_co_authors: Author[];
+  suggested_authors: Author[];
+  suggested_journal: Journal[];
 }
 
 export interface ResponseAuthors {
@@ -191,19 +196,37 @@ export class AuthorsService {
           }
 
           // XXX Papers and Publications should have the same structure
-          const papers: SimplifiedPaper[] = [];
+          const papers: Paper[] = [];
           for (const publication of author.publications) {
             let authors: Author[] = [];
             authors.push(publication.author);
             authors = authors.concat(publication.co_authors);
+
+            publication.suggested_co_authors.forEach(author_ => {
+              author_.initials = this.dataModel.getInitials(author_.name);
+              author_.name = this.dataModel.normalizeAuthorName(author_.name);
+              author_.style = { 'background-image': this.name2ColorString(author_.name) };
+            });
+
+            publication.suggested_authors.forEach(author_ => {
+              author_.initials = this.dataModel.getInitials(author_.name);
+              author_.name = this.dataModel.normalizeAuthorName(author_.name);
+              author_.style = { 'background-image': this.name2ColorString(author_.name) };
+            });
+            
             papers.push(
-              new SimplifiedPaper(
+              new Paper(
                 this.dataModel.cleanID(publication.id),
                 publication.title,
+                '',
                 authors,
                 publication.topics,
                 new Date(publication.submitted_date),
-                ''
+                '',
+                publication.suggested_authors,
+                publication.suggested_co_authors,
+                publication.suggested_journal,
+                publication.suggested_topics
               )
             );
           }

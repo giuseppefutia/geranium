@@ -18,7 +18,10 @@
 
 <ion-content>
   <ion-grid style="height: 100%" *ngIf="isLoading">
-    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
+    <ion-row
+      class="ion-justify-content-center ion-align-items-center"
+      style="height: 100%"
+    >
       <ion-col style="height: 100%">
         <div style="text-align: center; height: 100%;">
           <ion-spinner color="primary" style="margin: auto;"></ion-spinner>
@@ -55,15 +58,20 @@
         (click)="onTopicChipClick(topic.topic.url)"
         [color]="(topic.selected) ? ((i === 0) ? 'success' : 'primary') : 'medium'"
       >
-        <ion-icon [color]="(i === 0) ? 'success' : 'primary'" name="bulb"></ion-icon>
-        <ion-label >{{ topic.topic.label }}</ion-label>
+        <ion-icon
+          [color]="(i === 0) ? 'success' : 'primary'"
+          name="bulb"
+        ></ion-icon>
+        <ion-label>{{ topic.topic.label }}</ion-label>
       </ion-chip>
     </div>
     <hr />
     <h3 class="ion-padding-start">
       Publications on these topics
     </h3>
-    <ion-grid class="ion-padding-start ion-padding-end ion-padding-bottom ion-no-margin">
+    <ion-grid
+      class="ion-padding-start ion-padding-end ion-padding-bottom ion-no-margin"
+    >
       <ion-row class="ion-no-padding ion-no-margin">
         <ion-col
           size="12"
@@ -75,7 +83,9 @@
           <ion-card class="paperCard">
             <ion-img src="assets/img/defaultPaper.jpg"></ion-img>
             <h1 class="ion-no-padding ion-no-margin">{{ paper.title }}</h1>
-            <p class="ion-no-padding ion-no-margin">{{ paper.authors[0].name }}</p>
+            <p class="ion-no-padding ion-no-margin">
+              {{ paper.authors[0].name }}
+            </p>
             <ion-button
               fill="clear"
               class="ion-no-padding ion-no-margin"
@@ -92,5 +102,63 @@
     </h3>
   </div>
   <div id="topicmapdiv" style="width: 100%; height: 320px;"></div>
-
+  <div
+    *ngIf="suggestedTopicsList.length !== 0"
+    class="ion-no-padding ion-no-margin"
+  >
+    <hr />
+    <h3 class="ion-padding-start ion-margin-top ion-margin-start">
+      Suggested topics
+    </h3>
+    <div
+      class="ion-padding-start ion-padding-end ion-padding-bottom ion-margin-start"
+    >
+      <ion-chip
+        *ngFor="let topic of suggestedTopicsList"
+        (click)="onSuggestedTopicClick(topic.label)"
+        color="secondary"
+      >
+        <ion-icon name="bulb"></ion-icon>
+        <ion-label>{{ topic.label }}</ion-label>
+      </ion-chip>
+    </div>
+  </div>
+  <div *ngIf="suggestedAuthorsList.length !== 0">
+    <hr />
+    <h3 class="ion-padding-start ion-margin-top ion-margin-start">
+      Suggested authors
+    </h3>
+    <ion-slides [options]="slidesOptions" class="ion-padding ion-margin-start">
+      <ion-slide *ngFor="let author of suggestedAuthorsList">
+        <ion-card class="authorCard ion-no-margin ion-no-padding">
+          <div class="avatarInCard" [ngStyle]="author.style">
+            <h1 class="ion-no-margin ion-no-padding">
+              <b>{{ author.initials }}</b>
+            </h1>
+          </div>
+          <p class="ion-padding-start ion-no-margin ion-padding-bottom ion-padding-top">
+            {{ author.name }}
+          </p>
+          <ion-button
+            shape="round"
+            size="small"
+            fill="clear"
+            color="success"
+            (click)="onAuthorThumbsUp()"
+          >
+            <ion-icon slot="icon-only" name="thumbs-up"></ion-icon>
+          </ion-button>
+          <ion-button
+            shape="round"
+            size="small"
+            fill="clear"
+            color="danger"
+            (click)="onAuthorThumbsDown('Fake Author')"
+          >
+            <ion-icon slot="icon-only" name="thumbs-down"></ion-icon>
+          </ion-button>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </div>
 </ion-content>
